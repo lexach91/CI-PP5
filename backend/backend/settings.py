@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'allauth.socialaccount',
     'channels',
+    'profiles',
 ]
 
 SITE_ID = 1
@@ -71,20 +72,17 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'http://127.0.0.1:8080',
+    'http://localhost:3000',
+    'http://128.0.0.1:3000',
 ]
 
 ROOT_URLCONF = 'backend.urls'
 
-DEVELOPMENT_DIR = os.path.join(BASE_DIR, 'frontend/public')
-BUILD_DIR = os.path.join(BASE_DIR, 'frontend/build')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            DEVELOPMENT_DIR,
-            BUILD_DIR,
-            ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
