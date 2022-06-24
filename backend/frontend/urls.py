@@ -3,6 +3,5 @@ from .views import index
 
 urlpatterns = [
     path('', index, name='index'),
-    # make all paths handled by frontend
-    re_path(r'^.*', index),
+    re_path(r'^(?!api/|dj-rest-auth/|admin/).*', index),
 ]
