@@ -44,39 +44,44 @@ INSTALLED_APPS = [
     'cloudinary',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'dj_rest_auth.registration',
-    'allauth.socialaccount',
     'channels',
     'profiles',
     'frontend',
     'api',
+    'authentication',
 ]
+
+
+AUTH_USER_MODEL = 'profiles.User'
+
+# set username field to email
+AUTH_USER_MODEL_USERNAME_FIELD = 'email'
+
 
 SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
-    'http://127.0.0.1:8080',
-    'http://localhost:3000',
-    'http://128.0.0.1:3000',
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8080',
+#     'http://127.0.0.1:8080',
+#     'http://localhost:3000',
+#     'http://128.0.0.1:3000',
+# ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -102,10 +107,7 @@ ASGI_APPLICATION = 'backend.asgi.application'
 
 
 AUTHERNTATICATION_BACKENDS = [
-    'dj_rest_auth.registration.auth_backends.EmailAuthentication',
-    'dj_rest_auth.registration.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
