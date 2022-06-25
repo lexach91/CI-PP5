@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import CountriesService
-from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView
+from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView, ResetPasswordAPIView
 
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('refresh', RefreshTokenAPIView.as_view(), name='refresh'),
     path('logout', LogoutAPIView.as_view(), name='logout'),
     path('forgot-password', ForgotPasswordAPIView.as_view(), name='forgot-password'),
+    path('reset-password', ResetPasswordAPIView.as_view(), name='reset-password'),
 ]
