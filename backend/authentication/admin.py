@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserToken
+from .models import UserToken, ForgotPasswordToken
 # Register your models here.
 
 
@@ -13,3 +13,11 @@ class UserTokenAdmin(admin.ModelAdmin):
     fields = ('user_id', 'token', 'created_at', 'expired_at')
     filter_horizontal = ()
     list_per_page = 25
+    
+
+@admin.register(ForgotPasswordToken)
+class ForgotPasswordTokenAdmin(admin.ModelAdmin):
+    list_display = ('email', 'token')
+    list_filter = ('email',)
+    search_fields = ('email',)
+    
