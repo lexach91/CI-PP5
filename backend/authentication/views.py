@@ -146,3 +146,29 @@ class ForgotPasswordAPIView(APIView):
             'success': True,
             'message': 'If the email you provided is associated with an account, you will receive an email with a link to reset your password.'
         })
+        
+        
+class ResetPasswordAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        
+        if data['password'] != data['password_confirm']:
+            raise exceptions.APIException('Passwords do not match')
+        
+        reset_token = ForgotPasswordToken.objects.filter(token=data['token']).first()
+        
+        if not reset_token:
+            raise exceptions.APIException('Invalid token')
+        
+        user = User.objects.filter(email=reset_token.email).first()
+        
+        if not user:
+            raise exceptions.APIException('User not found')
+        
+        user.set_password(data['password'])
+        user.save()
+        
+        return Response({
+            'success': True,
+            'message': 'Password reset successfully'
+        })
