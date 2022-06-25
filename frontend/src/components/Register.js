@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Form, Field } from 'react-final-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -10,14 +10,20 @@ import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
 import { CountryService } from '../service/CountryService';
+import { Messages } from 'primereact/messages';
+import { Message } from 'primereact/message';
 // import './FormDemo.css';
-import '../data/countries.json';
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 const Register = () => {
     const [countries, setCountries] = useState([]);
     const [showMessage, setShowMessage] = useState(false);
     const [formData, setFormData] = useState({});
     const countryservice = new CountryService();
+    const messages = useRef(null);
+    const [redirect, setRedirect] = useState(false);
+
 
     useEffect(() => {
         countryservice.getCountries().then(data => setCountries(data));
@@ -41,8 +47,16 @@ const Register = () => {
             errors.email = 'Invalid email address. E.g. example@email.com';
         }
 
-        if (!data.password) {
-            errors.password = 'Password is required.';
+        if (!data.password1) {
+            errors.password1 = 'Password is required.';
+        }
+
+        if (!data.password2) {
+            errors.password2 = 'Confirm password is required.';
+        }
+
+        if (data.password1 !== data.password2) {
+            errors.password2 = 'Passwords must match.';
         }
 
         if (!data.date) {
@@ -53,8 +67,6 @@ const Register = () => {
         const today = new Date();
         const birthDate = new Date(data.date);
         const age = today.getFullYear() - birthDate.getFullYear();
-        console.log(age);
-        console.log(data)
         if (age < 13) {
             errors.date = 'You must be at least 13 years old to register.';
         }
@@ -70,12 +82,25 @@ const Register = () => {
         return errors;
     };
 
-    const onSubmit = (data, form) => {
-        setFormData(data);
-        setShowMessage(true);
-
-        form.restart();
+    const onSubmit = async (data, form) => {
+        setFormData(data);        
+        const payloadUser = {
+            email: data.email,
+            password: data.password1,
+            password_confirm: data.password2,        
+            first_name: data.first_name,
+            last_name: data.last_name,
+            birth_date:  data.date.toISOString().substring(0, 10),
+            country: data.country.name,
+        };
+        console.log(payloadUser);
+        await axios.post('register', payloadUser);
+        setRedirect(true);
     };
+
+    if (redirect) {
+        return <Navigate to="/login" />;
+    }
 
     const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
     const getFormErrorMessage = (meta) => {
@@ -98,21 +123,23 @@ const Register = () => {
     );
 
     return (
-        <div className="form-register">
+        <div className="form-register pt-5">
+            <Messages ref={messages}></Messages>
             <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
                 <div className="flex align-items-center flex-column pt-6 px-3">
                     <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
                     <h5>Registration Successful!</h5>
                     <p style={{ lineHeight: 1.5, textIndent: '1rem' }}>
-                        Your account is registered under name <b>{formData.first_name} {formData.last_name}</b> ; it'll be valid next 30 days without activation. Please check <b>{formData.email}</b> for activation instructions.
+                        Your account is registered under name <b>{formData.first_name} {formData.last_name}</b>. Please check <b>{formData.email}</b> for activation instructions.
                     </p>
+
                 </div>
             </Dialog>
 
-            <div className="flex justify-content-center">
-                <div className="card">
+            <div className="flex justify-content-center h-full">
+                <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6">
                     <h5 className="text-center">Register</h5>
-                    <Form onSubmit={onSubmit} initialValues={{ first_name: '', last_name: '', email: '', password: '', date: null, country: null, accept: false }} validate={validate} render={({ handleSubmit }) => (
+                    <Form onSubmit={onSubmit} initialValues={{ first_name: '', last_name: '', email: '', password1: '', password2: '', date: null, country: null, accept: false }} validate={validate} render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit} className="p-fluid">
                             <Field name="first_name" render={({ input, meta }) => (
                                 <div className="field">
@@ -142,11 +169,20 @@ const Register = () => {
                                     {getFormErrorMessage(meta)}
                                 </div>
                             )} />
-                            <Field name="password" render={({ input, meta }) => (
+                            <Field name="password1" render={({ input, meta }) => (
                                 <div className="field">
                                     <span className="p-float-label">
-                                        <Password id="password" {...input} toggleMask className={classNames({ 'p-invalid': isFormFieldValid(meta) })} header={passwordHeader} footer={passwordFooter} />
-                                        <label htmlFor="password" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Password*</label>
+                                        <Password id="password1" {...input} toggleMask className={classNames({ 'p-invalid': isFormFieldValid(meta) })} header={passwordHeader} footer={passwordFooter} />
+                                        <label htmlFor="password1" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Password*</label>
+                                    </span>
+                                    {getFormErrorMessage(meta)}
+                                </div>
+                            )} />
+                            <Field name="password2" render={({ input, meta }) => (
+                                <div className="field">
+                                    <span className="p-float-label">
+                                        <Password id="password2" {...input} toggleMask className={classNames({ 'p-invalid': isFormFieldValid(meta) })} feedback={false} />
+                                        <label htmlFor="password2" className={classNames({ 'p-error': isFormFieldValid(meta) })}>Confirm password*</label>
                                     </span>
                                     {getFormErrorMessage(meta)}
                                 </div>
@@ -176,7 +212,7 @@ const Register = () => {
                                 </div>
                             )} />
 
-                            <Button type="submit" label="Register" className="mt-2" />
+                            <Button icon="pi pi-user-plus" type="submit" label="Register" className="mt-2" />
                         </form>
                     )} />
                 </div>
