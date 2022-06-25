@@ -1,5 +1,6 @@
 import datetime
-from django.shortcuts import render
+import random
+import string
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import get_authorization_header
@@ -7,7 +8,9 @@ from rest_framework import exceptions, status
 from .serializers import UserSerializer
 from profiles.models import User
 from .authentication import JWTAuthentication, create_access_token, create_refresh_token, decode_access_token, decode_refresh_token
-from .models import UserToken
+from .models import ForgotPasswordToken, UserToken
+# need to import send_email from django
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -21,6 +24,13 @@ class RegisterAPIView(APIView):
         serializer = UserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
+        send_mail(
+            from_email="example@example.com",
+            recipient_list=[data['email']],
+            subject="Welcome to the API",
+            message="You have successfully registered for the API",
+        )
         
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
@@ -93,8 +103,12 @@ class LogoutAPIView(APIView):
         
         refresh_token = request.COOKIES.get('refresh_token')
         
-        UserToken.objects.filter(token=refresh_token).delete()
-            
+        token = UserToken.objects.filter(token=refresh_token)
+        
+        if not token.exists():
+            raise exceptions.AuthenticationFailed('Unauthenticated')
+        
+        token.delete()            
         
         response = Response()
         response.delete_cookie('refresh_token')
@@ -104,3 +118,31 @@ class LogoutAPIView(APIView):
         }
         
         return response
+    
+    
+class ForgotPasswordAPIView(APIView):
+    def post(self, request):
+        email = request.data['email']
+        user = User.objects.filter(email=email).first()
+        
+        if user:            
+            token = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=32))
+            
+            ForgotPasswordToken.objects.create(
+                email=email,
+                token=token
+            )
+            
+            url = 'http://localhost:8000/forgot-password/' + token
+            
+            send_mail(
+                subject="Reset Password",
+                message='Click the link to reset your password: ' + url,
+                from_email="from@example.com",
+                recipient_list=[email],
+            )
+            
+        return Response({
+            'success': True,
+            'message': 'If the email you provided is associated with an account, you will receive an email with a link to reset your password.'
+        })
