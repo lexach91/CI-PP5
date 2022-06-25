@@ -2,9 +2,8 @@
 export class CountryService {
 
     getCountries() {
-        // console log file's location
-        console.log(__filename);
-        return fetch('api/countries/').then(res => res.json())
+        const url = window.location.origin + '/api/countries';
+        return fetch(url).then(res => res.json())
             .then(d => d.data);
     }
 }
