@@ -40,8 +40,8 @@ class LoginAPIView(APIView):
         email = request.data['email']
         password = request.data['password']
         
-        user = User.objects.filter(email=email).first()
-        
+        user = User.objects.filter(email=email).first()        
+       
         if user is None:
             raise exceptions.AuthenticationFailed('Invalid credentials')
         
@@ -61,7 +61,12 @@ class LoginAPIView(APIView):
         response = Response()
         
         
-        response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
+        response.set_cookie(
+            key='refresh_token',
+            value=refresh_token,
+            httponly=True,
+        )
+        
         response.data = {
             'token': access_token
         }

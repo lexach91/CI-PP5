@@ -14,7 +14,7 @@ class JWTAuthentication(BaseAuthentication):
             
             user = User.objects.get(pk=id)
             
-            return user            
+            return (user, None)            
             
         
         raise exceptions.AuthenticationFailed('Unauthenticated')
