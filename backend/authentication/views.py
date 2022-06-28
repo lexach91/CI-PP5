@@ -19,7 +19,7 @@ class RegisterAPIView(APIView):
         data = request.data
         
         if data['password'] != data['password_confirm']:
-            raise exceptions.APIException('Passwords do not match')
+            return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer = UserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -43,20 +43,25 @@ class LoginAPIView(APIView):
         user = User.objects.filter(email=email).first()        
        
         if user is None:
-            raise exceptions.AuthenticationFailed('Invalid credentials')
+            return Response({'error': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
         
         if not user.check_password(password):
-            raise exceptions.AuthenticationFailed('Invalid credentials')
+            return Response({'error': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
         
+        request_access_token = request.COOKIES.get('access_token')
+        request_refresh_token = request.COOKIES.get('refresh_token')
+        
+        if request_access_token or request_refresh_token:
+            return Response({'error': 'You are already logged in'}, status=status.HTTP_400_BAD_REQUEST)
         
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)
         
-        UserToken.objects.create(
-            user_id=user.id,
-            token=refresh_token,
-            expired_at=datetime.datetime.utcnow() + datetime.timedelta(days=7)
-        )
+        # UserToken.objects.create(
+        #     user_id=user.id,
+        #     token=refresh_token,
+        #     expired_at=datetime.datetime.utcnow() + datetime.timedelta(days=7)
+        # )
         
         response = Response()
         
@@ -65,14 +70,23 @@ class LoginAPIView(APIView):
             key='refresh_token',
             value=refresh_token,
             httponly=True,
+            expires=datetime.datetime.utcnow() + datetime.timedelta(days=7)
         )
         
-        response.data = {
-            'token': access_token
-        }
+        response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            expires=datetime.datetime.utcnow() + datetime.timedelta(seconds=600)
+        )
         
+        response.status_code = status.HTTP_200_OK
         
         return response
+        
+        
+        
+        
     
     
 class UserAPIView(APIView):
@@ -80,47 +94,74 @@ class UserAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     
     def get(self, request):
-        return Response(UserSerializer(request.user).data)
+        user = request.user
+        if user is None:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
     
     
 class RefreshTokenAPIView(APIView):
     def post(self, request):
         refresh_token = request.COOKIES.get('refresh_token')
         
+        if not refresh_token:
+            return Response({'error': 'No refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+        
         id = decode_refresh_token(refresh_token)
         
-        if not UserToken.objects.filter(
-            user_id=id,
-            token=refresh_token,
-            expired_at__gt=datetime.datetime.now(tz=datetime.timezone.utc)
-        ).exists():
-            raise exceptions.AuthenticationFailed('Unauthenticated')
+        if not id:
+            return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
+        # if not UserToken.objects.filter(
+        #     user_id=id,
+        #     token=refresh_token,
+        #     expired_at__gt=datetime.datetime.now(tz=datetime.timezone.utc)
+        # ).exists():
+        #     raise exceptions.AuthenticationFailed('Unauthenticated')
         
         access_token = create_access_token(id)
         
-        return Response({
-            'token': access_token
-        })
+        response = Response()
+        
+        response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            expires=datetime.datetime.utcnow() + datetime.timedelta(seconds=600)
+        )
+        
+        response.status_code = status.HTTP_200_OK
+        
+        return response
         
         
 class LogoutAPIView(APIView):
     def post(self, request):
+        print(request.COOKIES)
         
+        access_token = request.COOKIES.get('access_token')
         refresh_token = request.COOKIES.get('refresh_token')
         
-        token = UserToken.objects.filter(token=refresh_token)
+        if not refresh_token:
+            return Response({'error': 'No refresh token'}, status=status.HTTP_400_BAD_REQUEST)
         
-        if not token.exists():
-            raise exceptions.AuthenticationFailed('Unauthenticated')
+        if not access_token:
+            return Response({'error': 'No access token'}, status=status.HTTP_400_BAD_REQUEST)
         
-        token.delete()            
+        id = decode_refresh_token(refresh_token)
+        
+        if not id:
+            return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
         
         response = Response()
         response.delete_cookie('refresh_token')
+        response.delete_cookie('access_token')
         response.data = {
             'success': True,
             'message': 'Logged out'
         }
+        response.status_code = status.HTTP_200_OK
         
         return response
     
@@ -150,7 +191,7 @@ class ForgotPasswordAPIView(APIView):
         return Response({
             'success': True,
             'message': 'If the email you provided is associated with an account, you will receive an email with a link to reset your password.'
-        })
+        }, status=status.HTTP_200_OK)
         
         
 class ResetPasswordAPIView(APIView):
@@ -158,17 +199,17 @@ class ResetPasswordAPIView(APIView):
         data = request.data
         
         if data['password'] != data['password_confirm']:
-            raise exceptions.APIException('Passwords do not match')
+            return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
         
         reset_token = ForgotPasswordToken.objects.filter(token=data['token']).first()
         
         if not reset_token:
-            raise exceptions.APIException('Invalid token')
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         
         user = User.objects.filter(email=reset_token.email).first()
         
         if not user:
-            raise exceptions.APIException('User not found')
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         
         user.set_password(data['password'])
         user.save()
@@ -176,4 +217,4 @@ class ResetPasswordAPIView(APIView):
         return Response({
             'success': True,
             'message': 'Password reset successfully'
-        })
+        }, status=status.HTTP_200_OK)
