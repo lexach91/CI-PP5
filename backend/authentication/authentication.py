@@ -1,23 +1,43 @@
 import jwt, datetime
-from rest_framework import exceptions
-from rest_framework.authentication import BaseAuthentication, get_authorization_header
+from rest_framework import status, exceptions
+from rest_framework.response import Response
+from rest_framework.authentication import BaseAuthentication
 from profiles.models import User
 
 
 class JWTAuthentication(BaseAuthentication):
     def authenticate(self, request):
-        auth = get_authorization_header(request).split()
         
-        if auth and len(auth) == 2:
-            token = auth[1].decode('utf-8')
-            id = decode_access_token(token)
-            
-            user = User.objects.get(pk=id)
-            
-            return (user, None)            
-            
+        access_token = request.COOKIES.get('access_token')
         
-        raise exceptions.AuthenticationFailed('Unauthenticated')
+        if access_token is None:
+            raise exceptions.AuthenticationFailed('No access token')
+        
+        id = decode_access_token(access_token)
+        
+        if id is None:
+            raise exceptions.AuthenticationFailed('Invalid access token')
+        
+        user = User.objects.get(id=id)
+        
+        if user is None:
+            raise exceptions.AuthenticationFailed('User not found')
+        
+        return (user, None)
+        
+        # # if auth and len(auth) == 2:
+        # #     token = auth[1].decode('utf-8')
+        # #     print(token)
+        # #     id = decode_access_token(token)
+        # #     print(id)
+            
+        # #     user = User.objects.get(pk=id)
+        # #     print(user)
+            
+        # #     return (user, None)            
+            
+        # print('no token')
+        # raise exceptions.AuthenticationFailed('Unauthenticated')
             
 
 
@@ -27,7 +47,7 @@ def create_access_token(user_id):
     """    
     return jwt.encode({
         'user_id': user_id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=600),
         'iat': datetime.datetime.utcnow()
     }, 'access_secret', algorithm='HS256')
     
@@ -51,7 +71,7 @@ def decode_access_token(token):
         payload = jwt.decode(token, 'access_secret', algorithms=['HS256'])
         return payload['user_id']
     except:
-        raise exceptions.AuthenticationFailed('Unauthenticated')
+        return None
     
     
 def decode_refresh_token(token):
@@ -62,4 +82,4 @@ def decode_refresh_token(token):
         payload = jwt.decode(token, 'refresh_secret', algorithms=['HS256'])
         return payload['user_id']
     except:
-        raise exceptions.AuthenticationFailed('Unauthenticated')
+        return None
