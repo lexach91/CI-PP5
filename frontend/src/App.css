@@ -1,19 +1,19 @@
-.form-register .card {
+.form-register .surface-card {
     min-width: 450px;
 }
-.form-register .card form {
+.form-register .surface-card form {
     margin-top: 2rem;
 }
-.form-register .card .field {
+.form-register .surface-card .field {
     margin-bottom: 1.5rem;
 }
 @media screen and (max-width: 960px) {
-    .form-register .card {
+    .form-register .surface-card {
         width: 80%;
     }
 }
 @media screen and (max-width: 640px) {
-    .form-register .card {
+    .form-register .surface-card {
         width: 100%;
         min-width: 0;
         padding: 1rem;
