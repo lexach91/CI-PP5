@@ -85,7 +85,11 @@ class LoginAPIView(APIView):
         return response
         
         
-        
+class VerifyTokenAPIView(APIView):
+    authentication_classes = (JWTAuthentication,)
+    
+    def get(self, request):
+        return Response({'success': True})
         
     
     
