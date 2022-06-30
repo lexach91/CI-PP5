@@ -6,6 +6,7 @@ from profiles.models import User
 
 
 class JWTAuthentication(BaseAuthentication):
+    """Custom JWT authentication class for DRF"""
     def authenticate(self, request):
         
         access_token = request.COOKIES.get('access_token')
@@ -25,20 +26,6 @@ class JWTAuthentication(BaseAuthentication):
         
         return (user, None)
         
-        # # if auth and len(auth) == 2:
-        # #     token = auth[1].decode('utf-8')
-        # #     print(token)
-        # #     id = decode_access_token(token)
-        # #     print(id)
-            
-        # #     user = User.objects.get(pk=id)
-        # #     print(user)
-            
-        # #     return (user, None)            
-            
-        # print('no token')
-        # raise exceptions.AuthenticationFailed('Unauthenticated')
-            
 
 
 def create_access_token(user_id):
