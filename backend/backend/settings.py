@@ -54,9 +54,10 @@ INSTALLED_APPS = [
 
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'authentication.exceptions.status_code_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
 }
 
 AUTH_USER_MODEL = 'profiles.User'
