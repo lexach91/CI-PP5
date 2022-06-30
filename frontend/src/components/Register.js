@@ -15,10 +15,11 @@ import { Message } from "primereact/message";
 // import './FormDemo.css';
 import axios from "axios";
 import { Navigate } from "react-router-dom";
-import { register } from "../redux/authSlice";
+import { register, resetRedirect } from "../redux/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import RotateLoader from "react-spinners/RotateLoader";
+import VisitorLayout from "../layouts/VisitorLayout";
 
 const Register = () => {
   const [countries, setCountries] = useState([]);
@@ -27,7 +28,7 @@ const Register = () => {
   const countryservice = new CountryService();
   const messages = useRef(null);
   // const [redirect, setRedirect] = useState(false);
-  const { redirect, loading } = useSelector((state) => state.auth);
+  const { redirect, loading, isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const Register = () => {
     dispatch(register(payloadUser));
   };
 
-  if (redirect) {
+  if (redirect || isAuthenticated) {
     console.log("redirect");
     return <Navigate to="/login" />;
   }
@@ -159,6 +160,7 @@ const Register = () => {
       />
     </div>
   ) : (
+    <VisitorLayout title="Register">
     <div className="form-register pt-5">
       <Messages ref={messages}></Messages>
       <Dialog
@@ -405,6 +407,7 @@ const Register = () => {
         </div>
       </div>
     </div>
+    </VisitorLayout>
   );
 };
 
