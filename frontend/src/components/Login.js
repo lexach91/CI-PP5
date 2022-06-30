@@ -10,12 +10,13 @@ import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, resetRedirect } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
+import VisitorLayout from "../layouts/VisitorLayout";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
   // const [redirect, setRedirect] = useState(false);
   const dispatch = useDispatch();
-  const { loading, redirect } = useSelector((state) => state.auth);
+  const { loading, redirect, isAuthenticated } = useSelector((state) => state.auth);
 
   const validate = (data) => {
     let errors = {};
@@ -43,10 +44,15 @@ const Login = () => {
   };
 
   useEffect(() => {
-    dispatch(resetRedirect());
-  }, []);
+    if (redirect) {
+      dispatch(resetRedirect());
+    }
+    // if (isAuthenticated) {
+    //   return <Navigate to="/" />;
+    // }
+  }, [redirect]);
 
-  if (redirect) {
+  if (redirect || isAuthenticated) {
     return <Navigate to="/" />;
   }
 
@@ -80,6 +86,7 @@ const Login = () => {
       />
     </div>
   ) : (
+    <VisitorLayout title="Login">
     <div className="form-login pt-5">
       <div className="flex justify-content-center h-full">
         <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6">
@@ -154,6 +161,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+    </VisitorLayout>
   );
 };
 
