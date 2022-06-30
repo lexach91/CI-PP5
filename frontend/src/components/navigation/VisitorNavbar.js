@@ -6,12 +6,12 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 // import { setAuth, setUser, setToken } from '../redux/authSlice';
-import { store } from '../redux/store';
-import { logout, resetError } from '../redux/authSlice';
+import { store } from '../../redux/store';
+import { logout, resetError } from '../../redux/authSlice';
 import { Toast } from 'primereact/toast';
 
 
-const Navbar = () => {
+const VisitorNavbar = () => {
     // const auth = useSelector(state => state.auth.isAuthenticated);
     // const user = useSelector(state => state.auth.user);
     // const token = useSelector(state => state.auth.token);
@@ -92,4 +92,4 @@ const Navbar = () => {
     );
 }
 
-export default Navbar;
+export default VisitorNavbar;
