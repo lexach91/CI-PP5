@@ -58,6 +58,8 @@ export const getUser = createAsyncThunk(
             if (response.status === 200) {
                 return response.data;
             } else {
+                const {dispatch} = thunkAPI;
+                dispatch(refreshToken());
                 return thunkAPI.rejectWithValue(response.response.data.error);
             }
         } catch (error) {
@@ -81,7 +83,7 @@ export const login = createAsyncThunk(
             } else {
                 console.log("Login failed");
                 console.log(response);
-                return thunkAPI.rejectWithValue(response.response.data.error);
+                return thunkAPI.rejectWithValue(response.payload.error);
             }
         } catch (error) {
             console.log("Login failed");
@@ -105,6 +107,49 @@ export const logout = createAsyncThunk(
         }
     }
 );
+
+export const checkAuth = createAsyncThunk(
+    "auth/checkAuth",
+    async (_, thunkAPI) => {
+        try {
+            const response = await axios.get("verify-token", {withCredentials: true});
+            if (response.status === 200) {
+                const {dispatch} = thunkAPI;
+                dispatch(getUser());
+                return response.data;
+            } else {
+                const {dispatch} = thunkAPI;
+                dispatch(refreshToken());
+                return thunkAPI.rejectWithValue(response.response.data.error);
+            }
+        } catch (error) {
+            const {dispatch} = thunkAPI;
+            dispatch(refreshToken());
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const refreshToken = createAsyncThunk(
+    "auth/refreshToken",
+    async (_, thunkAPI) => {
+        try {
+            const response = await axios.post("refresh", {withCredentials: true});
+            if (response.status === 200) {
+                const {dispatch} = thunkAPI;
+                dispatch(checkAuth());
+                return response.data;
+            } else {
+                const {dispatch} = thunkAPI;
+                dispatch(logout());
+                return thunkAPI.rejectWithValue(response.response.data.error);
+            }
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
 
 
 const authSlice = createSlice({
@@ -143,7 +188,7 @@ const authSlice = createSlice({
             state.loading = false;
             console.log(action);
             console.log(action.payload);
-            state.error = action.payload;
+            state.error = action.payload.error;
         })
         .addCase(getUser.pending, (state, action) => {
             state.loading = true;
@@ -170,8 +215,28 @@ const authSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         })
-
-
+        .addCase(checkAuth.pending, (state, action) => {
+            state.loading = true;
+        })
+        .addCase(checkAuth.fulfilled, (state, action) => {
+            state.loading = false;
+            state.isAuthenticated = true;
+        })
+        .addCase(checkAuth.rejected, (state, action) => {
+            state.loading = false;
+            // state.error = action.payload;
+        })
+        .addCase(refreshToken.pending, (state, action) => {
+            state.loading = true;
+        })
+        .addCase(refreshToken.fulfilled, (state, action) => {
+            state.loading = false;
+            state.isAuthenticated = true;
+        })
+        .addCase(refreshToken.rejected, (state, action) => {
+            state.loading = false;
+            // state.error = action.payload;
+        })
   },
 });
 
