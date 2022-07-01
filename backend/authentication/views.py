@@ -102,7 +102,10 @@ class UserAPIView(APIView):
         if user is None:
             return Response({'error': 'You are not logged in'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = serializer.data
+        if user.avatar:
+            data['avatar'] = user.avatar.url
+        return Response(data, status=status.HTTP_200_OK)
         # return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
     
     
