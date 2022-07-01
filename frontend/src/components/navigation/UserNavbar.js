@@ -8,6 +8,9 @@ import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { logout } from "../../redux/authSlice";
 import { Toast } from "primereact/toast";
+import { Card } from "primereact/card";
+import { Avatar } from "primereact/avatar";
+import { Divider } from "primereact/divider";
 
 
 const UserNavbar = () => {
@@ -62,14 +65,43 @@ const UserNavbar = () => {
         </React.Fragment>
     );
 
-    return (
+    return isAuthenticated && user ? (
         <header className="navbar">
             <Toast ref={toast} />
             <nav className="navbar-nav">
                 <Menubar start={userButton} end={logoutButton} />
             </nav>
-            <Sidebar visible={sidebarVisible} onHide={() => setSidebarVisible(false)} />
+            <Sidebar visible={sidebarVisible} onHide={() => setSidebarVisible(false)}>
+                <div className="p-grid">
+                    <div className="p-col-12">
+                        <Card>
+                            <div className="flex">
+                                <div className="p-col-4 flex justify-center align-center">
+                                    <Avatar size="xlarge" image={user.avatar} />
+                                </div>
+                                <Divider layout="vertical" />
+                                <div className="p-col-8">
+                                    <h5>{user.first_name + " " + user.last_name}</h5>
+                                    <p>{user.email}</p>
+                                </div>
+                            </div>
+                        </Card>
+                    </div>
+                    <div className="p-col-12">
+                        <Button label="Profile" icon="pi pi-user" className="p-button-secondary mb-2 w-full" onClick={() => {
+                            window.location.href = '/profile'
+                        } } />
+                    </div>
+                    <div className="p-col-12">
+                        <Button label="Settings" icon="pi pi-cog" className="p-button-secondary mb-2 w-full" onClick={() => {
+                            window.location.href = '/settings'
+                        } } />
+                    </div>
+                </div>
+            </Sidebar>
         </header>
+    ) : (
+        <>      </>
     );
 }
 
