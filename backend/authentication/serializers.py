@@ -15,10 +15,14 @@ class UserSerializer(ModelSerializer):
             'country',
             'birth_date',
             'password',
+            'avatar',
         ]
         extra_kwargs = {
             'password': {'write_only': True},
+            # avatar is not required
+            'avatar': {'required': False},
         }
+        
         
     def create(self, validated_data):
         password = validated_data.pop('password', None)
