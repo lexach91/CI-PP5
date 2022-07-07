@@ -18,12 +18,15 @@ import { useDispatch } from 'react-redux';
 import { checkAuth } from './redux/authSlice';
 import { useEffect } from 'react';
 import PrimeReact from 'primereact/api';
+import Profile from './components/Profile';
+import Settings from './components/Settings';
 
 
 
 
 const App = () => {
   PrimeReact.ripple = true;
+  PrimeReact.cssTransitions = true;
 
   const dispatch = useDispatch();
 
@@ -39,6 +42,8 @@ const App = () => {
             <Route exact path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Router>
