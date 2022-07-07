@@ -1,7 +1,5 @@
-import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setAuth } from "../redux/authSlice";
 import { useSelector } from "react-redux";
 import { resetRedirect } from "../redux/authSlice";
 import { RotateLoader } from "react-spinners";
@@ -28,21 +26,7 @@ const Home = () => {
     }, [isAuthenticated, user, redirect]);
 
 
-    // useEffect(() => {
-    //     (async () => {
-    //         try {
-    //             const {data} = await axios.get("user");
-    
-    
-    //             setMessage(`Welcome ${data.first_name} ${data.last_name}`);
-    //             dispatch(setAuth(true));
-    //         } catch (error) {
-    //             setMessage("You are not logged in");
-    //             dispatch(setAuth(false));
-    //         }
-    //     })();
-    // }, []);
-    
+        
     return loading ? (
         <div
           className="loader-container"
