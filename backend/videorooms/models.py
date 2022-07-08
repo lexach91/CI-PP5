@@ -35,3 +35,12 @@ class VideoRoom(models.Model):
     
     def is_guest(self, user):
         return self.guests.filter(id=user.id).exists()
+
+
+
+class VideoRoomMessage(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
+    room = models.ForeignKey(VideoRoom, on_delete=models.CASCADE, related_name='messages')
+    content = models.TextField(max_length=200)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
