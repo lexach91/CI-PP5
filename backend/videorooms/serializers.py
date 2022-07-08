@@ -30,3 +30,12 @@ class VideoRoomSerializer(ModelSerializer):
         instance.save()
         return instance
         
+class VideoRoomMessageSerializer(ModelSerializer):
+    class Meta:
+        model = VideoRoomMessage
+        fields = [
+            'id',
+            'author',
+            'room',
+            'content',
+        ]
