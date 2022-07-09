@@ -3,8 +3,7 @@ import random
 import string
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authentication import get_authorization_header
-from rest_framework import exceptions, status
+from rest_framework import status
 from .serializers import UserSerializer
 from profiles.models import User
 from .authentication import JWTAuthentication, create_access_token, create_refresh_token, decode_access_token, decode_refresh_token
