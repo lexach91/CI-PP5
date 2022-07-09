@@ -76,3 +76,23 @@ class LeaveRoomAPIView(APIView):
         
         room.guests.remove(user)
         return Response({'success': 'You have left the room'}, status=status.HTTP_200_OK)
+        
+
+class DeleteRoomAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    
+    def post(self, request):
+        user = request.user
+        room_token = request.data['room_token']
+        if user is None:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+        # check if room exists
+        if not VideoRoom.objects.filter(token=room_token).exists():
+            return Response({'error': 'Room does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        room = VideoRoom.objects.get(token=room_token)
+        
+        if room.host == user:
+            room.delete()
+            return Response({'success': 'Room deleted'}, status=status.HTTP_200_OK)
+        return Response({'error': 'You cannot delete other users rooms'}, status=status.HTTP_400_BAD_REQUEST)
