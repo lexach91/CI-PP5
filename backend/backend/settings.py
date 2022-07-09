@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'frontend',
     'api',
     'authentication',
+    'videorooms',
 ]
 
 
