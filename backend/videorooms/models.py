@@ -14,15 +14,16 @@ class VideoRoom(models.Model):
     token = models.CharField(max_length=32, default=create_room_token)
     host = models.OneToOneField(User, on_delete=models.CASCADE, related_name='hosting_room')
     max_guests = models.IntegerField(default=5)
-    guests = models.ManyToManyField(User, related_name='current_rooms')
+    guests = models.ManyToManyField(User, related_name='current_rooms', blank=True)
     screen_sharing_enabled = models.BooleanField(default=False)
     presentation_enabled = models.BooleanField(default=False)
     chat_enabled = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
     guests_input_control = models.BooleanField(default=False)
+    password = models.CharField(max_length=32, default='')
     
     def __str__(self):
-        return self.host.first_name + ' ' + self.host.last_name + ' - ' + self.id
+        return f'VideoRoom {self.token}, host: {self.host}'
     
     def is_full(self):
         return self.guests.count() >= self.max_guests
@@ -35,6 +36,7 @@ class VideoRoom(models.Model):
     
     def is_guest(self, user):
         return self.guests.filter(id=user.id).exists()
+
 
 
 
