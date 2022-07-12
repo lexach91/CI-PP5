@@ -21,15 +21,7 @@ class VideoRoomSerializer(ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
         }
-        
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
-        
+
 class VideoRoomMessageSerializer(ModelSerializer):
     class Meta:
         model = VideoRoomMessage
