@@ -16,6 +16,9 @@ class CreateRoomAPIView(APIView):
         if VideoRoom.objects.filter(host=user).exists():
             return Response({'error': 'You already have a room'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = VideoRoomSerializer(data=request.data)
+        # insert the user as the host of the room
+        serializer.initial_data['host'] = user.id
+        
         if serializer.is_valid():
             serializer.save(host=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -139,3 +142,27 @@ class ResetPasswordAPIView(APIView):
         
         room.reset_password()
         return Response({'success': 'Password reset'}, status=status.HTTP_200_OK)
+    
+
+class CheckUserInRoomAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request):
+        user = request.user
+        
+        if user is None:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        user_host = VideoRoom.objects.filter(host=user).exists()
+        
+        if user_host:
+            room = VideoRoom.objects.get(host=user)
+            return Response({'host': True, 'room_token': room.token}, status=status.HTTP_200_OK)
+        
+        user_guest = VideoRoom.objects.filter(guests__in=[user]).exists()
+        
+        if user_guest:
+            room = VideoRoom.objects.get(guests__in=[user])
+            return Response({'host': False, 'room_token': room.token}, status=status.HTTP_200_OK)
+        
+        return Response({'host': False, 'room_token': None}, status=status.HTTP_200_OK)
