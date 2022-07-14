@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 import PrimeReact from 'primereact/api';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
+import CreateRoom from './components/CreateRoom';
 
 
 
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/create-room" element={<CreateRoom />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Router>
