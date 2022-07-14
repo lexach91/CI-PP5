@@ -97,6 +97,11 @@ const UserNavbar = () => {
                             window.location.href = '/settings'
                         } } />
                     </div>
+                    <div className="p-col-12">
+                        <Button label="Create Room" icon="pi pi-plus" className="p-button-secondary mb-2 w-full" onClick={() => {
+                            window.location.href = '/create-room'
+                        } } />
+                    </div>
                 </div>
             </Sidebar>
         </header>
