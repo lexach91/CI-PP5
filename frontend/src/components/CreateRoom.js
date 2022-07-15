@@ -9,6 +9,7 @@ import { Button } from "primereact/button";
 import { InputSwitch } from "primereact/inputswitch";
 import { Password } from "primereact/password";
 import { Messages } from "primereact/messages";
+import { Navigate } from "react-router-dom";
 
 
 
@@ -88,6 +89,10 @@ const CreateRoom = () => {
                 });
             }
         }
+    };
+
+    if (created) {
+        return <Navigate to={`/room/${token}`} />;
     };
     
 
