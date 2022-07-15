@@ -166,3 +166,43 @@ class CheckUserInRoomAPIView(APIView):
             return Response({'host': False, 'room_token': room.token}, status=status.HTTP_200_OK)
         
         return Response({'host': False, 'room_token': None}, status=status.HTTP_200_OK)
+
+
+class GetRoomAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request):
+        user = request.user
+        print(request.query_params)
+        print(request.data)
+        # print(request.args)
+        print(request.headers)
+        print(request.method)
+        print(request.path)
+        print(request.content_type)
+        print(request.accepted_renderer)
+        
+        # room_token = request.data['room_token']
+        room_token = request.query_params['room_token']
+        
+        if user is None:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not VideoRoom.objects.filter(token=room_token).exists():
+            return Response({'error': 'Room does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        room = VideoRoom.objects.get(token=room_token)
+        
+        if room.host != user and not room.guests.filter(id=user.id).exists():
+            return Response({'error': 'You are not in this room'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = VideoRoomSerializer(room)
+        
+        data = serializer.data
+        
+        if room.host == user:
+            data['is_host'] = True
+        
+        return Response(data, status=status.HTTP_200_OK)
+        
+        
