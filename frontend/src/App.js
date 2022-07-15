@@ -21,6 +21,9 @@ import PrimeReact from 'primereact/api';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
 import CreateRoom from './components/CreateRoom';
+import Room from './components/Room';
+import axios from 'axios';
+// import { Navigate } from 'react-router-dom';
 
 
 
@@ -35,6 +38,27 @@ const App = () => {
     dispatch(checkAuth());
   }, []);
 
+  const checkUserInRoom = async () => {
+    await axios.get('/rooms/check-user-in-room')
+      .then(res => {
+        console.log(res);
+        if (res.data.room_token && window.location.pathname !== `/room/${res.data.room_token}`) {
+          console.log('user is in room');
+          window.location.href = `/room/${res.data.room_token}`;
+        }
+      }
+      )
+      .catch(err => {
+        console.log(err);
+      }
+      );
+  };
+
+  useEffect(() => {
+    checkUserInRoom();
+  }, []);
+
+
   return (
     <div className="App">
       
@@ -46,6 +70,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/create-room" element={<CreateRoom />} />
+            <Route path="/room/:roomToken" element={<Room />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Router>
