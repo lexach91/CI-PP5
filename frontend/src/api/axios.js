@@ -1,6 +1,9 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://127.0.0.1:8080/api/";
+
+const baseUrl = window.location.origin;
+
+axios.defaults.baseURL = baseUrl + "/api";
 axios.defaults.withCredentials = true;
 
 
@@ -29,6 +32,12 @@ axios.interceptors.response.use(
         }
     }
 );
+
+export const getRoom = () => async (data) => {
+    const response = await axios.get("rooms/get");
+    console.log(response);
+    return response.data;
+}
 
 
 
@@ -61,3 +70,11 @@ export const isRoomProtected = (data) => async () => {
     const response = await axios.post("rooms/is-protected", data);
     return response.data;
 };
+
+// export const getRoom = (data) => async () => {
+//     const response = await axios.post("rooms/get", data);
+//     return response.data;
+// };
+
+
+export default baseUrl;
