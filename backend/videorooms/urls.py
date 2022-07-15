@@ -6,7 +6,8 @@ from .views import (
     DeleteRoomAPIView,
     SetPasswordAPIView,
     ResetPasswordAPIView,
-    CheckUserInRoomAPIView
+    CheckUserInRoomAPIView,
+    GetRoomAPIView,
 )
 
 urlpatterns = [
@@ -16,5 +17,6 @@ urlpatterns = [
     path('delete', DeleteRoomAPIView.as_view(), name='delete'),
     path('set-password', SetPasswordAPIView.as_view(), name='set-password'),
     path('reset-password', ResetPasswordAPIView.as_view(), name='reset-password'),
-    path('check-user-in-room', CheckUserInRoomAPIView.as_view(), name='check-user-in-room'),    
+    path('check-user-in-room', CheckUserInRoomAPIView.as_view(), name='check-user-in-room'),
+    path('get', GetRoomAPIView.as_view(), name='get'),  
 ]
