@@ -17,6 +17,7 @@ if os.path.exists('env.py'):
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,12 +131,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
@@ -196,12 +191,42 @@ STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
-CHANNEL_LAYERS = {
+
+if 'DEVELOPMENT' in os.environ:
+    print('Development environment')
+    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        },
+    }
+    CHANNEL_LAYERS = {
         'default': {
             'BACKEND': 'channels_redis.core.RedisChannelLayer',
             'CONFIG': {
                 "hosts": [('127.0.0.1', 6379)],
                 # "capacity": 200,
+            },
+        },
+    }
+else:
+    print('Production environment')
+    # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    # EMAIL_USE_TLS = True
+    # EMAIL_PORT = 587
+    # EMAIL_HOST = 'smtp.gmail.com'
+    # EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+    # EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+    # DEFAULT_FROM_EMAIL = 'django.social.network@example.com'
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL")),
+    }
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [(os.environ.get("REDIS_URL"))],
             },
         },
     }
