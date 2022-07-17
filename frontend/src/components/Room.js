@@ -13,6 +13,7 @@ const Room = () => {
         loading,
         redirect,
         isAuthenticated,
+        user,
     } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const { roomToken } = useParams();
@@ -20,9 +21,16 @@ const Room = () => {
     const [error, setError] = useState("");
     const messageRef = useRef();
     const hostVideoRef = useRef();
-    const [guestsVideoRefs, setGuestsVideoRefs] = useState([]);
-    const [guests, setGuests] = useState([]);
-    const [guestsStreams, setGuestsStreams] = useState([]);
+    const userVideoRef = useRef();
+    const userStreamRef = useRef();
+    const socketRef = useRef();
+    const peerRef = useRef();
+    const [guestsRefs, setGuestsRefs] = useState([]);
+    const [isHost, setIsHost] = useState(false);
+    // const [isLoading, setIsLoading] = useState(true);
+    // const [isMuted, setIsMuted] = useState(false);
+    // const [isStarted, setIsStarted] = useState(false);
+    // const [isEnded, setIsEnded] = useState(false);
 
     useEffect(() => {
         if (redirect) {
@@ -46,6 +54,31 @@ const Room = () => {
         console.log(room);
     };
 
+    const createPeer = async (userId) => {
+        let peer = new RTCPeerConnection({
+            iceServers: [
+                {
+                    urls: "stun:stun.stunprotocol.org",
+                },
+                {
+                    urls: "turn:numb.viagenie.ca",
+                    credential: "muazkh",
+                    username: "webrtc@live.com",
+                },
+            ],
+        });
+        //
+        peerRef.current = peer;
+        addTracksToPeer(peer);
+        }
+
+    const addTracksToPeer = (peer) => {
+        userStreamRef.current.getTracks().forEach((track) => {
+            peer.addTrack(track, userStreamRef.current);
+        }
+        );
+
+
     const startStream = async () => {
         const constraints = {
             audio: true,
@@ -55,7 +88,24 @@ const Room = () => {
             },
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        hostVideoRef.current.srcObject = stream;
+        if(isHost) {
+            hostVideoRef.current.srcObject = stream;
+            userStreamRef.current = stream;
+        } else {
+            userVideoRef.current.srcObject = stream;
+            userStreamRef.current = stream;
+        }
+        // socketRef.current = io.connect(`${baseUrl}/room/${roomToken}`);
+        // socketRef.current.emit("join room", {
+        //     room_token: roomToken,
+        //     user_id: user.id,
+        //     user_first_name: user.first_name,
+        //     user_last_name: user.last_name,
+        // });
+        // socketRef.current.on("user joined", (data) => {
+
+
+            
     };
 
     useEffect(() => {
@@ -69,6 +119,7 @@ const Room = () => {
             startStream();
         }
     }, [room]);
+
 
     
 
