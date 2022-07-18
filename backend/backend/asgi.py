@@ -11,22 +11,22 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.backend.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
 # application = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from channels.security.websocket import AllowedHostsOriginValidator
-# import videorooms.routing
+import videorooms.routing
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
-    # "websocket": AllowedHostsOriginValidator(
-    #     AuthMiddlewareStack(
-    #         URLRouter(
-    #             videorooms.routing.websocket_urlpatterns
-    #         )
-    #     )
-    # ),
+    "websocket": AllowedHostsOriginValidator(
+        AuthMiddlewareStack(
+            URLRouter(
+                videorooms.routing.websocket_urlpatterns
+            )
+        )
+    ),
 })
