@@ -77,6 +77,7 @@ const Room = () => {
             peer.addTrack(track, userStreamRef.current);
         }
         );
+    };
 
 
     const startStream = async () => {
@@ -161,7 +162,7 @@ const Room = () => {
                 </div>
             </div>
         );
+
 }
 
-export default Room;
-        
+export default Room;        
