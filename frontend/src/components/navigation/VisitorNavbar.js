@@ -19,7 +19,7 @@ const VisitorNavbar = () => {
     const dispatch = useDispatch();
     const navList = [
         { label: 'Home', icon: 'pi pi-home', url: '/' },
-        { label: 'About', icon: 'pi pi-info', url: '/about' },
+        { label: 'Pricing', icon: 'pi pi-info', url: '/pricing' },
         { label: 'Contact', icon: 'pi pi-phone', url: '/contact' },
     ]
     const toast = useRef(null);
