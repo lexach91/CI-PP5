@@ -25,6 +25,25 @@ class JWTAuthentication(BaseAuthentication):
             raise exceptions.AuthenticationFailed('User not found')
         
         return (user, None)
+    
+    def websocket_authenticate(scope):
+        """Authenticate websocket request"""
+        access_token = scope['cookies'].get('access_token')
+        
+        if access_token is None:
+            raise exceptions.AuthenticationFailed('No access token')
+        
+        id = decode_access_token(access_token)
+        
+        if id is None:
+            raise exceptions.AuthenticationFailed('Invalid access token')
+        
+        user = User.objects.get(id=id)
+        
+        if user is None:
+            raise exceptions.AuthenticationFailed('User not found')
+        
+        return user
         
 
 
