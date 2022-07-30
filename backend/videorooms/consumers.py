@@ -5,6 +5,7 @@ from .models import VideoRoom, VideoRoomMessage
 from .serializers import VideoRoomSerializer, VideoRoomMessageSerializer
 from authentication.authentication import JWTAuthentication
 from profiles.models import User
+from authentication.serializers import UserSerializer
 from channels.layers import get_channel_layer
 
 channel_layer = get_channel_layer()
@@ -27,16 +28,30 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         self.room_token = self.scope['url_route']['kwargs']['room_token']
         self.room_group_name = 'videoroom_%s' % self.room_token
         self.user = await self.get_user()
+        self.room = await self.get_room()
+        self.is_host = self.user['id'] == self.room['host']
+        
+        if self.user is None or self.room is None:
+            await self.close()
+            return
+        
+        print(self.room, 'ROOOOM')
+        print(self.user, 'USER')
+        print(self.is_host)
+        
+        # if self.user not in self.room.guests.all() and self.user != self.room.host:
+        #     await self.close()
+        #     return
         
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
         
-        print('Connected to group %s' % self.room_group_name)
-        # print the request
-        print(self.scope)
-        print(self.user)
+        # print('Connected to group %s' % self.room_group_name)
+        # # print the request
+        # print(self.scope)
+        # print(self.user)
         
         await self.accept()
         
@@ -48,24 +63,7 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         
     async def receive(self, text_data):
         data = json.loads(text_data)
-        user_id = data['user_id']
-        action = data['action']
         message = data['message']
-        
-        if action == 'sdp_offer' or action == 'sdp_answer':
-            receiver_channel_name = data['message']['receiver_channel_name']
-            
-            data['message']['receiver_channel_name'] = self.channel_name
-            
-            await self.channel_layer.group_send(
-                receiver_channel_name,
-                {
-                    'type': 'send_sdp',
-                    'data': data
-                }
-            )
-            
-            return
         
         data['message']['receiver_channel_name'] = self.channel_name
         
@@ -80,17 +78,25 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
     async def send_sdp(self, event):
         data = event['data']
         
-        this_peer = data['peer']
-        action = data['action']
-        message = data['message']
+        # this_peer = data['peer']
+        # action = data['action']
+        # message = data['message']
         
-        await self.send(text_data=json.dumps({
-            'peer': this_peer,
-            'action': action,
-            'message': message
-        }))
+        await self.send(text_data=json.dumps(data))
+            #     {
+            #     'peer': this_peer,
+            #     'action': action,
+            #     'message': message
+            # }))
 
     @database_sync_to_async
     def get_user(self):
         user = JWTAuthentication.websocket_authenticate(self.scope)
-        return user
+        user_serializer = UserSerializer(user)
+        return user_serializer.data
+    
+    @database_sync_to_async
+    def get_room(self):
+        room = VideoRoom.objects.get(token=self.room_token)
+        room_serializer = VideoRoomSerializer(room)
+        return room_serializer.data
