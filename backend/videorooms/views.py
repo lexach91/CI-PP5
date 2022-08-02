@@ -173,16 +173,6 @@ class GetRoomAPIView(APIView):
     
     def get(self, request):
         user = request.user
-        print(request.query_params)
-        print(request.data)
-        # print(request.args)
-        print(request.headers)
-        print(request.method)
-        print(request.path)
-        print(request.content_type)
-        print(request.accepted_renderer)
-        
-        # room_token = request.data['room_token']
         room_token = request.query_params['room_token']
         
         if user is None:
