@@ -35,9 +35,9 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         
-        print(self.room, 'ROOOOM')
-        print(self.user, 'USER')
-        print(self.is_host)
+        # print(self.room, 'ROOOOM')
+        # print(self.user, 'USER')
+        # print(self.is_host)
         
         # if self.user not in self.room.guests.all() and self.user != self.room.host:
         #     await self.close()
@@ -55,6 +55,21 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         
         await self.accept()
         
+        # send room details to client
+        await self.send(text_data=json.dumps({
+            'type': 'room_details',
+            'action': 'joined',
+            'room': self.room,
+        }))
+        
+        # send all messages to client
+        # messages = await self.get_messages()
+        # for message in messages:
+        #     await self.send(text_data=json.dumps({
+        #         'type': 'message',
+        #         'message': VideoRoomMessageSerializer(message).data,
+        #     }))
+        
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -64,6 +79,22 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
+        action = data['action']
+        print(data)
+        
+        if action == 'new-offer' or action == 'new-answer':
+            receiver_channel_name = data['message']['receiver_channel_name']
+            
+            data['message']['receiver_channel_name'] = self.channel_name
+            
+            await self.channel_layer.send(
+                receiver_channel_name,
+                {
+                    'type': 'send_sdp',
+                    'data': data
+                }
+            )
+            return
         
         data['message']['receiver_channel_name'] = self.channel_name
         
