@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { resetRedirect } from "../redux/authSlice";
-// import UserLayout from "../layouts/UserLayout";
 import RotateLoader from "react-spinners/RotateLoader";
-import baseUrl from "../api/axios";
 import { useParams } from "react-router-dom";
+import * as ReactDOM from 'react-dom';
+import VideoElement from "./Video";
 
 const servers = {
   iceServers: [
@@ -41,71 +40,33 @@ const Room = () => {
   const wsUrl = `${wsProtocol}://${window.location.host}/ws/videorooms/${roomToken}/`;
   const webSocket = useRef();
   const [isHost, setIsHost] = useState(false);
-  const [localStream, setLocalStream] = useState(null);
-  const [hostStream, setHostStream] = useState(null);
-  const [guests, setGuests] = useState({});
-  const [guestVideos, setGuestVideos] = useState([]);
+  const localVideo = useRef();
+  const [guests, setGuests] = useState([]);
+  const guestsRef = useRef({});
+  const [remoteVideos, setRemoteVideos] = useState([]);
+  const [peerConnections, setPeerConnections] = useState([]);
 
   useEffect(() => {
     if (redirect) {
       dispatch(resetRedirect());
     }
     if (isAuthenticated && user) {
-      const response = axios
-        .get("rooms/get", {
-          params: {
-            room_token: roomToken,
-          },
-        })
-        .then((res) => {
-          setRoom(res.data);
-          if (res.data.host === user.id) {
-            setIsHost(true);
-            setHostStream(new MediaStream());
-          }
-          // setIsHost(res.data.host === user.id);
-
-          webSocket.current = new WebSocket(wsUrl);
-          webSocket.current.onopen = () => {
-            console.log("Connected to WebSocket");
-            console.log(user);
-            console.log(roomToken);
-            console.log(room);
-          };
-          webSocket.current.onmessage = (event) => {
-            console.log(event.data);
-          };
-          webSocket.current.onclose = () => {
-            console.log("Disconnected from WebSocket");
-          };
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      // console.log(response);
-      // console.log(response.data);
-      // setRoom(response.data);
+      webSocket.current = new WebSocket(wsUrl);
+      webSocket.current.onopen = () => {
+        console.log("connected");
+        wsOnOpen();
+      };
+      webSocket.current.onmessage = (event) => {
+        wsOnMessage(event);
+      };
+      webSocket.current.onclose = () => {
+        console.log("disconnected");
+      };
+      webSocket.current.onerror = (error) => {
+        console.log(error);
+      };
     }
   }, [roomToken, isAuthenticated, user]);
-
-  // useEffect(() => {
-  //   if (isAuthenticated && user) {
-  //     // open websocket connection sending cookies to the server
-  //     webSocket.current = new WebSocket(wsUrl);
-  //     webSocket.current.onopen = () => {
-  //       console.log("Connected to WebSocket");
-  //       console.log(user);
-  //       console.log(roomToken);
-  //       console.log(room);
-  //     }
-  //     webSocket.current.onmessage = (event) => {
-  //       console.log(event.data);
-  //     }
-  //     webSocket.current.onclose = () => {
-  //       console.log("Disconnected from WebSocket");
-  //     }
-  //   }
-  // }, [room, isAuthenticated, user]);
 
   const sendSignal = (action, message) => {
     let data = {
@@ -116,11 +77,26 @@ const Room = () => {
     webSocket.current.send(JSON.stringify(data));
   };
 
+  const wsOnOpen = () => {
+    console.log("Connected to WebSocket");
+    sendSignal("new-peer", {});
+    getUserMedia();
+  };
+
   const wsOnMessage = (event) => {
     let data = JSON.parse(event.data);
-    let peer = data.peer;
     let action = data.action;
+    if (action === "joined") {
+      console.log("joined");
+      console.log(data);
+      let room = data.room;
+      setRoom(room);
+      return;
+    }
+    let peer = data.peer;
     let message = data.message;
+
+    
 
     if (peer === user.id) {
       return;
@@ -130,12 +106,19 @@ const Room = () => {
 
     if (action === "new-peer") {
       createOffer(peer, receiver_channel_name);
+      return;
     }
-  };
+    if (action === "new-offer") {
+      let offer = data["message"]["sdp"];
 
-  const wsOnOpen = () => {
-    console.log("Connected to WebSocket");
-    sendSignal("new-peer", {});
+      createAnswer(offer, peer, receiver_channel_name);
+    }
+    if (action === "new-answer") {
+      let answer = data["message"]["sdp"];
+      let peer_connection = guestsRef.current[peer].peer_connection;
+      peer_connection.setRemoteDescription(answer);
+      console.log(peer_connection);
+    }
   };
 
   const createOffer = (peer, receiver_channel_name) => {
@@ -145,130 +128,202 @@ const Room = () => {
 
     let dataChannel = peer_connection.createDataChannel("data-channel");
     dataChannel.onopen = () => {
-      console.log("data-channel open");
+        console.log("data channel open");
     };
     dataChannel.onclose = () => {
-      console.log("data-channel closed");
+        console.log("data channel closed");
     };
     dataChannel.onmessage = (event) => {
-      console.log(event.data);
-      dcOnMessage(event);
+        console.log(event.data);
+        dcOnMessage(event);
     };
+    dataChannel.onerror = (error) => {
+        console.log(error);
+    };
+    guestsRef.current[peer] = {
+        peer_connection: peer_connection,
+        data_channel: dataChannel,
+        receiver_channel_name: receiver_channel_name,
+    };
+    setGuests([...guests, peer]);
 
-    let remoteVideo = createVideo(peer);
-    setOnTrack(peer_connection, remoteVideo);
-
-    setGuests((prevGuests) => {
-      return {
-        ...prevGuests,
-        [peer]: {
-          peer_connection,
-          dataChannel,
-        },
-      };
-    });
+    
 
     peer_connection.oniceconnectionstatechange = () => {
-      let iceConnectionState = peer_connection.iceConnectionState;
+        let state = peer_connection.iceConnectionState;
 
-      if (
-        iceConnectionState === "disconnected" ||
-        iceConnectionState === "failed"
-      ) {
-        console.log("iceConnectionState: " + iceConnectionState);
-        peer_connection.close();
-        deleteGuest(peer);
-        if (iceConnectionState !== "closed") {
-          peer_connection.close();
+        if (state === "disconnected" || state === "failed") {
+            console.log("disconnected");
+            peer_connection.close();
+            deleteGuest(peer);
+            if(state !== "closed"){
+                peer_connection.close();
+            }
+
         }
-      }
     };
-  };
 
-  const addLocalTracks = (peer_connection) => {
-    if (isHost && hostStream) {
-      hostStream.getTracks().forEach((track) => {
-        peer_connection.addTrack(track, hostStream);
-      });
-      return;
-    }
-    if (localStream) {
-      localStream.getTracks().forEach((track) => {
-        peer_connection.addTrack(track, localStream);
-      });
-      return;
-    }
-  };
-
-  const dcOnMessage = (event) => {
-    let message = event.data;
-  };
-
-  const createVideo = (peer) => {
-    let video = document.createElement("video");
-    video.id = `video-${peer}`;
-    video.autoplay = true;
-    video.playsInline = true;
-
-    setGuestVideos((prevState) => [...prevState, video]);
-  };
-
-  const setOnTrack = (peer_connection, remoteVideo) => {
-    let remoteStream = new MediaStream();
-
-    remoteVideo.srcObject = remoteStream;
-    peer_connection.ontrack = async (event) => {
-      remoteStream.addTrack(event.track, remoteStream);
+    peer_connection.onicecandidate = (event) => {
+        if (event.candidate) {
+            console.log("ice candidate", event.candidate);
+            return;
+        }
+        sendSignal("new-offer", {
+            sdp: peer_connection.localDescription,
+            receiver_channel_name: receiver_channel_name,
+        });
     };
+
+    peer_connection.createOffer().then((offer) => {
+        peer_connection.setLocalDescription(offer);
+    }).then(() => {
+        console.log("offer created");
+    });
+
+    setPeerConnections([...peerConnections, peer_connection]);
+
+    // peer_connection.addEventListener("track", pcOnTrack);
   };
 
-  const deleteGuest = (peer) => {
-    setGuests((prevGuests) => {
-      return {
-        ...prevGuests,
-        [peer]: {
-          peer_connection: null,
-          dataChannel: null,
-        },
-      };
+  const createAnswer = (offer, peer, receiver_channel_name) => {
+    let peer_connection = new RTCPeerConnection(servers);
+
+    addLocalTracks(peer_connection);
+
+    
+    peer_connection.ondatachannel = (event) => {
+        peer_connection.dc = event.channel;
+        peer_connection.dc.onopen = () => {
+            console.log("data channel open");
+        };
+        peer_connection.dc.onclose = () => {
+            console.log("data channel closed");
+        };
+        peer_connection.dc.onmessage = (event) => {
+            console.log(event.data);
+            dcOnMessage(event);
+        };
+        peer_connection.dc.onerror = (error) => {
+            console.log(error);
+        };
+
+        guestsRef.current[peer] = {
+            peer_connection: peer_connection,
+            data_channel: peer_connection.dc,
+            receiver_channel_name: receiver_channel_name,
+        };
+
+        setGuests([...guests, peer]);
+    };
+
+    peer_connection.oniceconnectionstatechange = () => {
+        let state = peer_connection.iceConnectionState;
+
+        if (state === "disconnected" || state === "failed") {
+            console.log("disconnected");
+            peer_connection.close();
+            deleteGuest(peer);
+            if (state !== "closed") {
+                peer_connection.close();
+            }
+
+        }
+    };
+
+    peer_connection.onicecandidate = (event) => {
+        if (event.candidate) {
+            console.log(event.candidate, 'candidate');
+            return;
+        }
+        
+        sendSignal("new-answer", {
+            sdp: peer_connection.localDescription,
+            receiver_channel_name: receiver_channel_name,
+        });
+    };
+
+    peer_connection.setRemoteDescription(offer).then(() => {
+        console.log("Set remote description");
+        return peer_connection.createAnswer();
+    }).then((answer) => {
+        console.log("Created answer");
+        peer_connection.setLocalDescription(answer);
     });
-    setGuestVideos((prevState) => {
-      return prevState.filter((video) => video.id !== `video-${peer}`);
-    });
+
+    setPeerConnections([...peerConnections, peer_connection]);
+    // peer_connection.addEventListener("track", pcOnTrack);
+
   };
 
-  return loading ? (
-    <div
-      className="loader-container"
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100vw",
-        backgroundColor: "#f5f5f5",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        zIndex: "9999",
-      }}>
-      <RotateLoader
-        sizeUnit={"px"}
-        size={150}
-        color={"#123abc"}
-        loading={loading}
-      />
-    </div>
-  ) : isAuthenticated && room ? (
-    <div>
-      <h1>{room.id}</h1>
-      <h2>{isHost ? "You are the host" : "You are not the host"}</h2>
-    </div>
-  ) : (
-    <div>
-      <h1>You are not logged in</h1>
-    </div>
-  );
+    const addLocalTracks = (peer_connection) => {
+        localVideo?.current?.srcObject?.getTracks().forEach((track) => {
+            peer_connection.addTrack(track, localVideo.current.srcObject);
+        });
+        return;
+    };
+
+    const dcOnMessage = (event) => {
+        let data = event.data;
+        console.log(data);
+    };
+
+    const deleteGuest = (peer) => {
+        let index = guests.indexOf(peer);
+        guests.splice(index, 1);
+        let remoteVideo = document.getElementById(peer);
+        // ReactDOM.unmountComponentAtNode(remoteVideo);
+        // remoteVideo.remove();
+        setRemoteVideos([...remoteVideos.slice(0, index), ...remoteVideos.slice(index + 1)]);
+        delete guestsRef.current[peer];
+    };
+
+    const getUserMedia = () => {
+        navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+        }).then((stream) => {
+            localVideo.current.srcObject = stream;
+            // localVideo.current.play();
+        }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    // const pcOnTrack = (event) => {
+    //     console.log("ontrack");
+    //     let stream = event.streams[0];
+    //     console.log(stream);
+    //     let video = <React.Fragment>
+    //         <video autoPlay playsInline id={event.track.id} />
+    //     </React.Fragment>;
+    //     setRemoteVideos([...remoteVideos, video]);
+
+    //     // ReactDOM.render(video, document.getElementsByClassName("remote-video")[0]);
+    //     // setRemoteVideos([...remoteVideos, video]);
+    // }
+
+    return (
+        <div className="video-chat">
+            <div className="video-chat-container">
+                <div className="video-chat-left">
+                    <div className="video-chat-left-container">
+                        <div className="video-chat-left-container-video">
+                            <video ref={localVideo} autoPlay playsInline muted />
+                        </div>
+                    </div>
+                </div>
+                <div className="video-chat-right">
+                    <div className="video-chat-right-container">
+                        {peerConnections.map((peer_connection, index) => {
+                            return (
+                                <VideoElement key={index} peer_connection={peer_connection} />
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 };
 
 export default Room;
