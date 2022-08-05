@@ -21,7 +21,7 @@ import PrimeReact from 'primereact/api';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
 import CreateRoom from './components/CreateRoom';
-import Room from './components/Room';
+import Room from './components/Room3';
 import axios from 'axios';
 // import { Navigate } from 'react-router-dom';
 import Pricing from './components/Pricing';
