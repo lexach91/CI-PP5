@@ -7,6 +7,14 @@
 .form-register .surface-card .field {
     margin-bottom: 1.5rem;
 }
+.video-element {
+    width: 100%;
+    aspect-ratio: 16/9;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid #464680;
+}
 @media screen and (max-width: 960px) {
     .form-register .surface-card {
         width: 80%;
