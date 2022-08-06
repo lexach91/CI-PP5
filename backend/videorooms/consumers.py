@@ -23,6 +23,8 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
     - Receive video room messages from everyone in the room
     """
     
+    connected_peers = {}
+    
     async def connect(self):
         """Connect to group websocket"""
         self.room_token = self.scope['url_route']['kwargs']['room_token']
@@ -48,6 +50,7 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         
+        self.connected_peers[self.user['id']] = self.channel_name
         # print('Connected to group %s' % self.room_group_name)
         # # print the request
         # print(self.scope)
@@ -60,7 +63,10 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
             'type': 'room_details',
             'action': 'joined',
             'room': self.room,
+            'connected_peers': self.connected_peers,
+            'is_host': self.is_host
         }))
+        print('Connected peers:', self.connected_peers)
         
         # send all messages to client
         # messages = await self.get_messages()
@@ -70,17 +76,39 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         #         'message': VideoRoomMessageSerializer(message).data,
         #     }))
         
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
+    
         
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
         action = data['action']
-        print(data)
+        # print(data)
+        
+        if action == 'mute-all':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'send_sdp',
+                    'data': {
+                        'peer': self.user['id'],
+                        'action': 'mute-all',
+                    }
+                }
+            )
+            return
+        
+        if action == 'unmute-all':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'send_sdp',
+                    'data': {
+                        'peer': self.user['id'],
+                        'action': 'unmute-all',
+                    }
+                }
+            )
+            return
         
         if action == 'new-offer' or action == 'new-answer':
             receiver_channel_name = data['message']['receiver_channel_name']
@@ -119,6 +147,29 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
             #     'action': action,
             #     'message': message
             # }))
+        
+            
+    async def disconnect(self, close_code):
+        self.connected_peers.pop(self.user['id'], None)
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'send_sdp',
+                'data': {
+                    'peer': self.user['id'],
+                    'action': 'disconnected',
+                    'message': {
+                        'receiver_channel_name': self.channel_name,
+                    }
+                }
+            }
+        )
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+        print('Connected peers:', self.connected_peers)
+        
 
     @database_sync_to_async
     def get_user(self):
@@ -131,3 +182,5 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         room = VideoRoom.objects.get(token=self.room_token)
         room_serializer = VideoRoomSerializer(room)
         return room_serializer.data
+    
+    
