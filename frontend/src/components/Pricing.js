@@ -77,7 +77,9 @@ const Pricing = () => {
                                 <ul className="list-none p-0 m-0 flex-grow-1">
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                        <span>Up to 5 guests at a meeting</span>
+                                        <span>
+                                            Up to 4 people in a room
+                                        </span>
                                     </li>
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
@@ -107,7 +109,7 @@ const Pricing = () => {
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
                                         <span>
-                                            Up to 10 guests at a meeting
+                                            Up to 9 people in a room
                                         </span>
                                     </li>
                                     <li className="flex align-items-center mb-3">
@@ -144,7 +146,7 @@ const Pricing = () => {
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
                                         <span>
-                                            Up to 20 guests at a meeting
+                                            Up to 12 people in a room
                                         </span>
                                     </li>
                                     <li className="flex align-items-center mb-3">
