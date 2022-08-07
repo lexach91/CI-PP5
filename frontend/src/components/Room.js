@@ -9,6 +9,9 @@ import Peer from "simple-peer";
 import { ContextMenu } from "primereact/contextmenu";
 import { Button } from "primereact/button";
 import { Dock } from "primereact/dock";
+import axios from "axios";
+import { Navigate } from "react-router-dom";
+import { Toast } from "primereact/toast";
 
 const servers = {
   iceServers: [
@@ -49,8 +52,12 @@ const Room = () => {
   const guestsRef = useRef([]);
   const hostId = useRef();
   const [isLoading, setIsLoading] = useState(true);
+  const [localMicOn, setLocalMicOn] = useState(true);
+  const [localCamOn, setLocalCamOn] = useState(true);
+  const [guestsMicsOn, setGuestsMicsOn] = useState(true);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const toast = useRef();
 
   useEffect(() => {
     if (redirect) {
@@ -73,11 +80,21 @@ const Room = () => {
           webSocket.current.onmessage = (event) => {
             wsOnMessage(event);
           };
-          webSocket.current.onclose = () => {
+          webSocket.current.onclose = (event) => {
+            console.log(event);
             console.log("Websocket disconnected");
           };
           webSocket.current.onerror = (error) => {
             console.log(error, "Websocket error");
+            toast.current.show({
+              severity: "error",
+              detail: "Something went wrong or you are not allowed to join this room.",
+            });
+            // after the toast is hidden, redirect to home page
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 3000);
+            
           };
         })
         .catch((error) => {
@@ -109,6 +126,7 @@ const Room = () => {
 
   const wsOnMessage = (event) => {
     let data = JSON.parse(event.data);
+    console.log(data);
     let action = data.action;
     if (action === "joined") {
       console.log("joined");
@@ -130,15 +148,31 @@ const Room = () => {
 
     if (action === "mute-all") {
       console.log("mute-all");
-      if (!isHost) {
+      if (user.id != hostId.current) {
+        console.log("mute-all host");
         turnOffYourMic();
       }
       return;
     }
     if (action === "unmute-all") {
       console.log("unmute-all");
-      if (!isHost) {
+      if (user.id != hostId.current) {
+        console.log("unmute-all host");
         turnOnYourMic();
+      }
+      return;
+    }
+    if (action === "room-deleted") {
+      console.log("room-deleted");
+      if (user.id != hostId.current) {
+        toast.current.show({
+          severity: "error",
+          detail: "This room has been deleted.",
+        });
+        // after the toast is hidden, redirect to home page
+        setTimeout(() => {
+          window.location.href = "/";
+        } , 3000);
       }
       return;
     }
@@ -273,6 +307,7 @@ const Room = () => {
   const muteAllGuestsHandler = () => {
     if (isHost) {
       muteAllGuests();
+      setGuestsMicsOn(false);
     }
   };
 
@@ -283,6 +318,7 @@ const Room = () => {
   const unmuteAllGuestsHandler = () => {
     if (isHost) {
       unmuteAllGuests();
+      setGuestsMicsOn(true);
     }
   };
 
@@ -296,6 +332,7 @@ const Room = () => {
     localVideo.current.srcObject.getVideoTracks().forEach((track) => {
       track.enabled = true;
     });
+    setLocalCamOn(true);
   };
 
   const turnOffYourCamera = () => {
@@ -308,6 +345,7 @@ const Room = () => {
     localVideo.current.srcObject.getVideoTracks().forEach((track) => {
       track.enabled = false;
     });
+    setLocalCamOn(false);
   };
 
   const turnOnYourMic = () => {
@@ -320,6 +358,7 @@ const Room = () => {
     localVideo.current.srcObject.getAudioTracks().forEach((track) => {
       track.enabled = true;
     });
+    setLocalMicOn(true);
   };
   const turnOffYourMic = () => {
     // let localAudioTrack = localVideo.current.srcObject.getAudioTracks()[0];
@@ -331,7 +370,45 @@ const Room = () => {
     localVideo.current.srcObject.getAudioTracks().forEach((track) => {
       track.enabled = false;
     });
+    setLocalMicOn(false);
   };
+
+  const leaveRoom = async () => {
+    const response = await axios.post(
+      "rooms/leave",
+      {
+        room_token: roomToken,
+      }
+    );
+    if (response.status === 200) {
+      toast.current.show({severity: "success", detail: "You left the room"});
+      setTimeout(() => {
+        window.location.href = "/";
+      } , 3000);
+    } else {
+      console.log(response);
+      toast.current.show({severity: "error", detail: response.data.message});
+    }
+  };
+
+  const deleteRoom = async () => {
+    const response = await axios.post(
+      "rooms/delete",
+      {
+        room_token: roomToken,
+      }
+    );
+    if (response.status === 200) {
+      sendSignal("room-deleted", {});
+      toast.current.show({severity: "success", detail: "You deleted the room"});
+      setTimeout(() => {
+        window.location.href = "/";
+      } , 3000);
+    } else {
+      console.log(response);
+      toast.current.show({severity: "error", detail: response.data.message});
+    }
+  }
 
   // return isLoading ? (
   //     <div className="loading">
@@ -376,6 +453,7 @@ const Room = () => {
   // );
   return isLoading ? (
     <div className="loading">
+      <Toast ref={toast} />
       <video
         ref={localVideo}
         autoPlay
@@ -401,64 +479,60 @@ const Room = () => {
         width: "100%",
         height: "100%",
       }}>
+      <Toast ref={toast} />
       <div className="grid grid-nogutter">
         <div className="col-fixed room-controls" style={{ width: "100px" }}>
-          {isHost ? (
-            <>
-              <Button
-                label="Turn on your camera"
-                icon="pi pi-video"
-                onClick={turnOnYourCamera}
-              />
-              <Button
-                label="Turn off your camera"
-                icon="pi pi-video"
-                onClick={turnOffYourCamera}
-              />
-              <Button
-                label="Turn on your mic"
-                icon="pi pi-microphone"
-                onClick={turnOnYourMic}
-              />
-              <Button
-                label="Turn off your mic"
-                icon="pi pi-microphone"
-                onClick={turnOffYourMic}
-              />
-              <Button
-                label="Mute all guests"
-                icon="pi pi-volume-off"
-                onClick={muteAllGuestsHandler}
-              />
-              <Button
-                label="Unmute all guests"
-                icon="pi pi-volume-up"
-                onClick={unmuteAllGuestsHandler}
-              />
-            </>
+          {localCamOn ? (
+            <Button
+              label="Turn off your camera"
+              icon="pi pi-video"
+              onClick={turnOffYourCamera}
+            />
           ) : (
-            <>
-              <Button
-                label="Turn on your camera"
-                icon="pi pi-video"
-                onClick={turnOnYourCamera}
-              />
-              <Button
-                label="Turn off your camera"
-                icon="pi pi-video"
-                onClick={turnOffYourCamera}
-              />
-              <Button
-                label="Turn on your mic"
-                icon="pi pi-microphone"
-                onClick={turnOnYourMic}
-              />
-              <Button
-                label="Turn off your mic"
-                icon="pi pi-microphone"
-                onClick={turnOffYourMic}
-              />
-            </>
+            <Button
+              label="Turn on your camera"
+              icon="pi pi-video"
+              onClick={turnOnYourCamera}
+            />
+          )}
+          {localMicOn ? (
+            <Button
+              label="Turn off your mic"
+              icon="pi pi-volume-off"
+              onClick={turnOffYourMic}
+            />
+          ) : (
+            <Button
+              label="Turn on your mic"
+              icon="pi pi-volume-up"
+              onClick={turnOnYourMic}
+            />
+          )}
+          {isHost && ( guestsMicsOn ? (
+            <Button
+              label="Mute all guests"
+              icon="pi pi-volume-off"
+              onClick={muteAllGuestsHandler}
+            />            
+          ) : (
+            <Button
+              label="Unmute all guests"
+              icon="pi pi-volume-up"
+              onClick={unmuteAllGuestsHandler}
+            />
+          ))}
+          {isHost ? (
+            <Button
+              label="Delete room"
+              icon="pi pi-trash"
+              onClick={deleteRoom}
+            />
+          ) : (
+            <Button
+              label="Leave room"
+              icon="pi pi-power-off"
+              onClick={leaveRoom}
+            />
           )}
         </div>
         <div className="col grid grid-nogutter">
