@@ -7,6 +7,8 @@ import { RotateLoader } from "react-spinners";
 import { Dropdown } from "primereact/dropdown";
 import { ProgressBar } from "primereact/progressbar";
 import { Knob } from "primereact/knob";
+import axios from "axios";
+import { Button } from "primereact/button";
 
 
 const Settings = () => {
@@ -169,7 +171,16 @@ const Settings = () => {
             console.log(error);
         }
         );
-    }
+    };
+
+    const saveSettings = async () => {
+        const settings = {
+            camera_id: currentCamera,
+            microphone_id: currentMicrophone,
+        };
+        const response = await axios.post("devices-settings", settings);
+        console.log(response);
+    };
 
     
     
@@ -262,6 +273,7 @@ const Settings = () => {
                     <div className="volume-bar-inner" style={{ width: `${volumeLvl}%` , height: "100%", backgroundColor: "red"}}></div>
                 </div> */}
                 <Knob value={volumeLvl} readOnly min={0} max={150} />
+                <Button onClick={saveSettings}>Save settings</Button>
 
             </UserLayout>
         );
