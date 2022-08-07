@@ -16,11 +16,14 @@ class UserSerializer(ModelSerializer):
             'birth_date',
             'password',
             'avatar',
+            'microphone_id',
+            'camera_id',
         ]
         extra_kwargs = {
             'password': {'write_only': True},
-            # avatar is not required
             'avatar': {'required': False},
+            'microphone_id': {'required': False},
+            'camera_id': {'required': False},
         }
         
         
