@@ -76,10 +76,10 @@ class User(AbstractUser):
     username = None
     birth_date = models.DateField()
     first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    timezone = models.CharField(max_length=50, blank=True, null=True)
-    profession = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50)    
     country = models.CharField(max_length=50)
+    camera_id = models.CharField(max_length=100, null=True, blank=True)
+    microphone_id = models.CharField(max_length=100, null=True, blank=True)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['birth_date', 'first_name', 'last_name', 'country']
