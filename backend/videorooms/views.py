@@ -65,10 +65,11 @@ class LeaveRoomAPIView(APIView):
         room_token = request.data['room_token']
         if user is None:
             return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+        if room_token is None:
+            return Response({'error': 'No room token provided'}, status=status.HTTP_400_BAD_REQUEST)
         # check if room exists
         if not VideoRoom.objects.filter(token=room_token).exists():
             return Response({'error': 'Room does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        
         room = VideoRoom.objects.get(token=room_token)
         
         if room.host == user:
