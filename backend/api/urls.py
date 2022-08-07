@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import CountriesService
 from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView, ResetPasswordAPIView, VerifyTokenAPIView
-from profiles.views import EditProfileAPIView
+from profiles.views import EditProfileAPIView, EditDevicesSettingsAPIView
 
 urlpatterns = [
     path('countries', CountriesService.as_view(), name='countries'),
@@ -14,4 +14,5 @@ urlpatterns = [
     path('reset-password', ResetPasswordAPIView.as_view(), name='reset-password'),
     path('verify-token', VerifyTokenAPIView.as_view(), name='verify-token'),
     path('edit-profile', EditProfileAPIView.as_view(), name='edit-profile'),
+    path('devices-settings', EditDevicesSettingsAPIView.as_view(), name='devices-settings'),
 ]
