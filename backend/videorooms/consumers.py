@@ -11,6 +11,8 @@ from channels.layers import get_channel_layer
 channel_layer = get_channel_layer()
 
 
+
+
 class VideoRoomConsumer(AsyncWebsocketConsumer):
     """
     Consumer for video rooms, that handles the following:
@@ -34,8 +36,22 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         self.is_host = self.user['id'] == self.room['host']
         
         if self.user is None or self.room is None:
-            await self.close()
+            # need to send error message to client
+            error_message = {
+                "error": "You are not logged in or the room does not exist"
+            }
+            # await self.send(text_data=json.dumps(error_message))
+            await self.close(code=error_message['error'])
             return
+            
+        if not self.is_host and not self.user['id'] in self.room['guests']:
+            error_message = {
+                "error": "You are not in the room"
+            }
+            # await self.send(text_data=json.dumps(error_message))
+            await self.close(code=error_message['error'])
+            return
+        
         
         # print(self.room, 'ROOOOM')
         # print(self.user, 'USER')
@@ -110,6 +126,19 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
             )
             return
         
+        if action == 'room-deleted':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'send_sdp',
+                    'data': {
+                        'peer': self.user['id'],
+                        'action': 'room-deleted',
+                    }
+                }
+            )
+            return
+        
         if action == 'new-offer' or action == 'new-answer':
             receiver_channel_name = data['message']['receiver_channel_name']
             
@@ -150,6 +179,13 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         
             
     async def disconnect(self, close_code):
+        if close_code:
+            await self.channel_layer.group_discard(
+                self.room_group_name,
+                self.channel_name
+            )
+            await self.close(code=close_code)
+            return
         self.connected_peers.pop(self.user['id'], None)
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -175,12 +211,10 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
     def get_user(self):
         user = JWTAuthentication.websocket_authenticate(self.scope)
         user_serializer = UserSerializer(user)
-        return user_serializer.data
+        return user_serializer.data if user else None
     
     @database_sync_to_async
     def get_room(self):
         room = VideoRoom.objects.get(token=self.room_token)
         room_serializer = VideoRoomSerializer(room)
-        return room_serializer.data
-    
-    
+        return room_serializer.data if room else None
