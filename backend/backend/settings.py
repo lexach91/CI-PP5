@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'api',
     'authentication',
     'videorooms',
+    'payments',
+    'subscriptions',
 ]
 
 
