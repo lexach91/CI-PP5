@@ -20,7 +20,7 @@ class VideoRoom(models.Model):
     chat_enabled = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
     guests_input_control = models.BooleanField(default=False)
-    password = models.CharField(max_length=32, default='')
+    password = models.CharField(max_length=32, default='', blank=True, null=True)
     
     def __str__(self):
         return f'VideoRoom {self.token}, host: {self.host}'
