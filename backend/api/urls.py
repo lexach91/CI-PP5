@@ -2,7 +2,7 @@ from django.urls import path
 from .views import CountriesService
 from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView, ResetPasswordAPIView, VerifyTokenAPIView
 from profiles.views import EditProfileAPIView, EditDevicesSettingsAPIView
-from payments.views import TestPaymentAPIView, TestSubscriptionAPIView
+from payments.views import CreateCheckoutSessionView, StripeWebhookListener, CheckoutSessionView
 
 urlpatterns = [
     path('countries', CountriesService.as_view(), name='countries'),
@@ -16,6 +16,7 @@ urlpatterns = [
     path('verify-token', VerifyTokenAPIView.as_view(), name='verify-token'),
     path('edit-profile', EditProfileAPIView.as_view(), name='edit-profile'),
     path('devices-settings', EditDevicesSettingsAPIView.as_view(), name='devices-settings'),
-    path('test-payment', TestPaymentAPIView.as_view(), name='test-payment'),
-    path('test-subscription', TestSubscriptionAPIView.as_view(), name='test-subscription'),
+    path('checkout-session', CheckoutSessionView.as_view(), name='checkout-session'),
+    path('create-checkout-session', CreateCheckoutSessionView.as_view(), name='create-checkout-session'),
+    path('stripe-webhooks', StripeWebhookListener.as_view(), name='stripe-webhooks'),
 ]
