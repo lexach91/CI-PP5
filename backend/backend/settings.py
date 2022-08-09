@@ -195,6 +195,8 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+STRIPE_WEBHOOK_KEY = os.environ.get('STRIPE_WEBHOOK_KEY')
+BASE_URL = os.environ.get('BASE_URL')
 
 if 'DEVELOPMENT' in os.environ:
     print('Development environment')
