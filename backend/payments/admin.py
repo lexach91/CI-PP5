@@ -4,7 +4,7 @@ from .models import Payment, PaymentHistory
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('membership', 'is_complete', 'is_canceled', 'created_at', 'updated_at')
+    list_display = ('membership', 'amount', 'created_at')
     
 @admin.register(PaymentHistory)
 class PaymentHistoryAdmin(admin.ModelAdmin):
