@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetRedirect } from "../redux/authSlice";
 import { RotateLoader } from "react-spinners";
@@ -6,6 +6,9 @@ import { VisitorLayout } from "../layouts/VisitorLayout";
 import { UserLayout } from "../layouts/UserLayout";
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
+import { Navigate } from "react-router-dom";
+import axios from "axios";
+import { Toast } from "primereact/toast";
 
 
 const Pricing = () => {
@@ -13,24 +16,63 @@ const Pricing = () => {
         (state) => state.auth
     );
     const dispatch = useDispatch();
-    // const [layoutComponent, setLayoutComponent] = useState(VisitorLayout);
-
+    const toastRef = useRef();
     useEffect(() => {
         if (redirect) {
             dispatch(resetRedirect());
         }
     }, [redirect]);
 
-    // useEffect(() => {
-    //     if (isAuthenticated && user) {
-    //         setLayoutComponent(UserLayout);
-    //     } else {
-    //         setLayoutComponent(VisitorLayout);
-    //     }
-    // }, [isAuthenticated, user]);
+    const LayoutComponent = isAuthenticated ? UserLayout : VisitorLayout;
 
 
-    // const layoutComponent = isAuthenticated ? UserLayout : VisitorLayout;
+    
+    const redirectToRegister = () => {
+        return <Navigate to="/register" />;
+    };
+
+    
+    const redirectToCheckoutSession = async (sessionId) => {
+        const response = await axios.post('checkout-session', {
+            session_id: sessionId
+        });
+        const session_url = response.data.session.url;
+        window.location.href = session_url;
+    };
+
+    const createCheckoutSession = async (planId) => {
+        let payload = {
+            plan_id: planId,
+        };
+        await axios.post("create-checkout-session", payload)
+            .then((response) => {
+                let sessionId = response.data.sessionId;
+                redirectToCheckoutSession(sessionId);}
+                )
+            .catch((error) => {
+            toastRef.current.show({
+                severity: "error",
+                detail: error.response.data.error,
+            });
+            console.log(error);
+        });
+    };
+
+    const handleOnClick = (planId) => {
+        if(isAuthenticated && user) {
+            createCheckoutSession(planId);
+        } else {
+            toastRef.current.show({
+                severity: "info",
+                detail: "You need to be logged in to subscribe",
+            });
+            
+        }
+    };
+
+
+
+
 
     return loading ? (
         <div
@@ -55,9 +97,10 @@ const Pricing = () => {
             />
         </div>
     ) : (
-        <VisitorLayout title="Pricing">
+        <LayoutComponent title="Pricing">
+            <Toast ref={toastRef} />
             <div className="surface-0">
-                <div className="text-900 font-bold text-6xl mb-4 text-center">Pricing Plans</div>
+                <div className="text-900 font-bold text-6xl mb-4 mt-4 text-center">Pricing Plans</div>
                 <div className="text-700 text-xl mb-6 text-center line-height-3">
                     Choose the plan that best fits your needs.
                 </div>
@@ -89,7 +132,7 @@ const Pricing = () => {
                                     </li>                                    
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300 mt-auto" />
-                                <Button label="Buy Now" className="p-3 w-full mt-auto" />
+                                <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={() => handleOnClick(2)} />
                             </div>
                         </div>
                     </div>
@@ -126,7 +169,7 @@ const Pricing = () => {
                                     </li>                                    
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                <Button label="Buy Now" className="p-3 w-full" />
+                                <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(3)} />
                             </div>
                         </div>
                     </div>
@@ -169,13 +212,33 @@ const Pricing = () => {
                                     </li>
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                <Button label="Buy Now" className="p-3 w-full" />
+                                <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(4)} />
                             </div>
                         </div>
                     </div>
                 </div>
+                {
+                !isAuthenticated &&
+                <div className="surface-0 text-700 text-center mt-8 mb-8 p-8">
+                    <div className="text-900 font-bold text-5xl mb-3">
+                    Want to be able just to join meetings?
+                    </div>
+                    <div className="text-700 text-2xl mb-5">
+                    Open a free account now and you can join other people's meetings if you have a link.
+                    </div>
+                    <Button
+                    label="Register"
+                    icon="pi pi-user-plus"
+                    className="font-bold px-5 py-3 p-button-raised p-button-rounded white-space-nowrap"
+                    onClick={() => {
+                        window.location.href = "/register";
+                    }}
+                    />
+                </div>
+                }
+
             </div>
-        </VisitorLayout>
+        </LayoutComponent>
     );
 }
 
