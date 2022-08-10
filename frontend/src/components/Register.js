@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import RotateLoader from "react-spinners/RotateLoader";
 import VisitorLayout from "../layouts/VisitorLayout";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [countries, setCountries] = useState([]);
@@ -212,7 +213,6 @@ const Register = () => {
                         <InputText
                           id="first_name"
                           {...input}
-                          autoFocus
                           className={classNames({
                             "p-invalid": isFormFieldValid(meta),
                           })}
@@ -404,6 +404,9 @@ const Register = () => {
               </form>
             )}
           />
+          <p className="text-muted mt-3">
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
         </div>
       </div>
     </div>
