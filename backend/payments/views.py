@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from django.utils.timezone import localtime
 # import datetime
 import json
 from django.shortcuts import render
@@ -31,8 +32,8 @@ class CreateCheckoutSessionView(APIView):
             return Response({'error': 'Plan not found'}, status=status.HTTP_404_NOT_FOUND)
         if plan.price == 0:
             return Response({'error': 'Free plan'}, status=status.HTTP_400_BAD_REQUEST)
-        user_membership = Membership.objects.get(user=user)
-        if user_membership is not None and user_membership.type.name != 'Free' and (user_membership.expires_at - datetime.now()).days > 0:
+        user_membership = Membership.objects.get_or_create(user=user)[0]
+        if user_membership is not None and user_membership.type.name != 'Free' and (user_membership.expires_at - localtime()).days > 0:
             return Response({'error': 'You already have a membership'}, status=status.HTTP_400_BAD_REQUEST)                
         # create checkout session
         customer = stripe.Customer.list(email=user.email)
