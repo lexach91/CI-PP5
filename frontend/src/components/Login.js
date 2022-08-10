@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, resetRedirect } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
 import VisitorLayout from "../layouts/VisitorLayout";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
@@ -105,7 +106,6 @@ const Login = () => {
                         <InputText
                           id="email"
                           {...input}
-                          autoFocus
                           className={classNames({
                             "p-invalid": isFormFieldValid(meta),
                           })}
@@ -158,6 +158,9 @@ const Login = () => {
               </form>
             )}
           />
+          <p className="text-muted mt-3">
+            Don't have an account? <Link to="/register">Register</Link>
+          </p>
         </div>
       </div>
     </div>
