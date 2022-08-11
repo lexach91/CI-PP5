@@ -8,6 +8,8 @@ const initialState = {
   error: null,
   loading: false,
   redirect: false,
+  membership: null,
+  membershipLoading: false,
 };
 
 export const register = createAsyncThunk(
