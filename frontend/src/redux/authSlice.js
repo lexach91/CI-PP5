@@ -152,6 +152,22 @@ export const refreshToken = createAsyncThunk(
     }
 );
 
+export const getMembership = createAsyncThunk(
+    "auth/getMembership",
+    async (_, thunkAPI) => {
+        try {
+            const response = await axios.get("membership");
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                return thunkAPI.rejectWithValue(response.response.data.error);
+            }
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);
+
 
 
 const authSlice = createSlice({
