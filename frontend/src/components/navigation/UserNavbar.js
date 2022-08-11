@@ -14,7 +14,15 @@ import { Divider } from "primereact/divider";
 
 
 const UserNavbar = () => {
-    const { isAuthenticated, user, error, loading, redirect } = useSelector(state => state.auth);
+    const { 
+        isAuthenticated,
+        user,
+        error,
+        loading,
+        redirect,
+        membershipLoading,
+        membership,
+     } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const toast = useRef(null);
@@ -38,6 +46,7 @@ const UserNavbar = () => {
             <div className="p-menuitem">
                 <Button label="Logout" icon="pi pi-power-off" className="p-button-danger" onClick={async () => {
                     dispatch(logout());
+                    window.location.href = "/";
                 } } />
             </div>
         </React.Fragment>
@@ -71,13 +80,13 @@ const UserNavbar = () => {
             <nav className="navbar-nav">
                 <Menubar start={userButton} end={logoutButton} />
             </nav>
-            <Sidebar visible={sidebarVisible} onHide={() => setSidebarVisible(false)}>
+            <Sidebar visible={sidebarVisible} onHide={() => setSidebarVisible(false)} style={{width: "fit-content"}}>
                 <div className="p-grid">
                     <div className="p-col-12">
                         <Card>
                             <div className="flex">
                                 <div className="p-col-4 flex justify-center align-center">
-                                    <Avatar size="xlarge" image={user.avatar} />
+                                    <Avatar size="xlarge" image={user.avatar ? user.avatar : "https://res.cloudinary.com/lexach91/image/upload/v1653724113/lklqlcqgl2pklvdi9rbt.svg"} />
                                 </div>
                                 <Divider layout="vertical" />
                                 <div className="p-col-8">
@@ -97,11 +106,14 @@ const UserNavbar = () => {
                             window.location.href = '/settings'
                         } } />
                     </div>
+                    {!membershipLoading && membership && membership.can_create_rooms && (
                     <div className="p-col-12">
                         <Button label="Create Room" icon="pi pi-plus" className="p-button-secondary mb-2 w-full" onClick={() => {
                             window.location.href = '/create-room'
                         } } />
                     </div>
+
+                    )}
                 </div>
             </Sidebar>
         </header>
