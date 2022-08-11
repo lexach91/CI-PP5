@@ -41,7 +41,12 @@ const CreateRoom = () => {
         if (membershipLoading) {
             return;
         }
-        if (!membership?.can_create_room) {
+        if (!membership) {
+            return;
+        }
+        if (!membership.can_create_rooms) {
+            console.log("cannot create room");
+            console.log(membership);
             setError("You do not have permission to create a room.");
             messageRef.current.show({
                 severity: "error",
@@ -180,7 +185,7 @@ const CreateRoom = () => {
                                     loading={submitting}
                                     loadingIcon="pi pi-spinner pi-spin"
                                     className="w-full"
-                                    disabled={!membership?.can_create_room || submitting}
+                                    disabled={!membership?.can_create_rooms || submitting}
                                 />
                             </div>
                         </div>
