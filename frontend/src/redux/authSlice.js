@@ -58,6 +58,8 @@ export const getUser = createAsyncThunk(
         try {
             const response = await axios.get("user");
             if (response.status === 200) {
+                const { dispatch } = thunkAPI;
+                dispatch(getMembership());
                 return response.data;
             } else {
                 const {dispatch} = thunkAPI;
@@ -256,14 +258,14 @@ const authSlice = createSlice({
             // state.error = action.payload;
         })
         .addCase(getMembership.pending, (state, action) => {
-            state.loading = true;
+            state.membershipLoading = true;
         })
         .addCase(getMembership.fulfilled, (state, action) => {
-            state.loading = false;
+            state.membershipLoading = false;
             state.membership = action.payload;
         })
         .addCase(getMembership.rejected, (state, action) => {
-            state.loading = false;
+            state.membershipLoading = false;
             state.error = action.payload;
         })
   },
