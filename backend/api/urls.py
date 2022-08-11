@@ -3,6 +3,7 @@ from .views import CountriesService
 from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView, ResetPasswordAPIView, VerifyTokenAPIView
 from profiles.views import EditProfileAPIView, EditDevicesSettingsAPIView
 from payments.views import CreateCheckoutSessionView, StripeWebhookListener, CheckoutSessionView
+from subscriptions.views import GetUsersSubscriptionPlanAPIView
 
 urlpatterns = [
     path('countries', CountriesService.as_view(), name='countries'),
@@ -19,4 +20,5 @@ urlpatterns = [
     path('checkout-session', CheckoutSessionView.as_view(), name='checkout-session'),
     path('create-checkout-session', CreateCheckoutSessionView.as_view(), name='create-checkout-session'),
     path('stripe-webhooks', StripeWebhookListener.as_view(), name='stripe-webhooks'),
+    path('membership', GetUsersSubscriptionPlanAPIView.as_view(), name='membership'),
 ]
