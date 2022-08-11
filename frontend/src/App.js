@@ -22,6 +22,7 @@ import Profile from './components/Profile';
 import Settings from './components/Settings';
 import CreateRoom from './components/CreateRoom';
 import Room from './components/Room';
+import JoinRoom from './components/JoinRoom';
 import axios from 'axios';
 // import { Navigate } from 'react-router-dom';
 import Pricing from './components/Pricing';
@@ -72,6 +73,7 @@ const App = () => {
             <Route path="/settings" element={<Settings />} />
             <Route path="/create-room" element={<CreateRoom />} />
             <Route path="/room/:roomToken" element={<Room />} />
+            <Route path="/join-room/:roomToken" element={<JoinRoom />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
