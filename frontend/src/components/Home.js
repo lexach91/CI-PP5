@@ -7,13 +7,19 @@ import { VisitorLayout } from "../layouts/VisitorLayout";
 import { UserLayout } from "../layouts/UserLayout";
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
+import { Avatar } from "primereact/avatar";
 
 const Home = () => {
   // const auth = useSelector(state => state.auth.isAuthenticated);
   // const user = useSelector(state => state.auth.user);
-  const { isAuthenticated, user, redirect, loading } = useSelector(
-    (state) => state.auth
-  );
+  const {
+    isAuthenticated,
+    user,
+    redirect,
+    loading,
+    membershipLoading,
+    membership,
+  } = useSelector((state) => state.auth);
   const [message, setMessage] = React.useState("");
   const dispatch = useDispatch();
 
@@ -27,6 +33,191 @@ const Home = () => {
       setMessage("You are not logged in");
     }
   }, [isAuthenticated, user, redirect]);
+
+  const cameraName = () => {
+    let cameraId = user.camera_id;
+    if (cameraId) {
+      let devices = navigator.mediaDevices.enumerateDevices();
+      let camera = devices.find((device) => device.deviceId === cameraId);
+      return camera.label;
+    } else {
+      return "";
+    }
+  };
+
+  const microphoneName = () => {
+    let microphoneId = user.microphone_id;
+    if (microphoneId) {
+      let devices = navigator.mediaDevices.enumerateDevices();
+      let microphone = devices.find((device) => device.deviceId === microphoneId);
+      return microphone.label;
+    } else {
+      return "";
+    }
+  };
+
+
+  const userDashboard = () => {
+    if (!membershipLoading && membership) {
+      return (
+        <div className="card grid" style={{width: "100%", padding:"1rem"}}>
+        <div className="grid col-12 col-offset-0 md:col-8 md:col-offset-2">
+          <h2 className="text-center col-12">
+            {message}
+          </h2>
+          <div className="col-12 xl:col-6">
+            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+              <div className="flex justify-content-between mb-3">
+                <div>
+                  <span className="block text-green-500 font-medium mb-3">
+                    Profile
+                  </span>
+                  <div className="block font-medium text-xl">
+                    <p className="text-500">{user.first_name} {user.last_name}</p>
+                    <p className="text-500">{user.email}</p>
+                  </div>
+                </div>
+                <div
+                  className="flex align-items-center justify-content-center bg-blue-100 border-round"
+                  style={{ width: "2.5rem", height: "2.5rem" }}>
+                  <i className="pi pi-user text-blue-500 text-xl"></i>
+                </div>
+              </div>
+              <Button
+                label="Profile page"
+                icon="pi pi-user"
+                className="p-button-success w-full"
+                onClick={() => {
+                  window.location.href = "/profile";
+                } }
+              />
+            </div>
+          </div>
+          <div className="col-12 xl:col-6">
+            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+              <div className="flex justify-content-between mb-3">
+                <div>
+                  <span className="block text-green-500 font-medium mb-3">
+                    Membership plan
+                  </span>
+                  <div className="block font-medium text-xl">
+                    <p className="text-500">{membership.name}</p>
+                    <p className="text-500">
+                      You can join {membership.can_create_rooms && "and create"} rooms
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="flex align-items-center justify-content-center bg-orange-100 border-round"
+                  style={{ width: "2.5rem", height: "2.5rem" }}>
+                  <i className="pi pi-dollar text-orange-500 text-xl"></i>
+                </div>
+              </div>
+              {membership.can_create_rooms ? (
+                <Button
+                  label="See subscription"
+                  icon="pi pi-dollar"
+                  className="p-button-success w-full"
+                  onClick={() => {
+                    window.location.href = "/subscription";
+                  } }
+                />
+              ) : (
+                <Button
+                  label="See pricing"
+                  icon="pi pi-dollar"
+                  className="p-button-success w-full"
+                  onClick={() => {
+                    window.location.href = "/pricing";
+                  } }
+                />
+              )}
+
+            </div>
+          </div>
+          <div className="col-12 xl:col-6">
+            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+              <div className="flex justify-content-between mb-3">
+                <div>
+                  <span className="block text-green-500 font-medium mb-3">
+                    Settings
+                  </span>
+                  <div className="block font-medium text-xl">
+                    <p className="text-500">
+                      Current camera: {cameraName()}
+                    </p>
+                    <p className="text-500">
+                      Current microphone: {microphoneName()}
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="flex align-items-center justify-content-center bg-cyan-100 border-round"
+                  style={{ width: "2.5rem", height: "2.5rem" }}>
+                  <i className="pi pi-cog text-cyan-500 text-xl"></i>
+                </div>
+              </div>
+              <Button
+                label="Settings"
+                icon="pi pi-cog"
+                className="p-button-success w-full"
+                onClick={() => {
+                  window.location.href = "/settings";
+                } }
+              />
+            </div>
+          </div>
+          <div className="col-12 xl:col-6">
+            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+              <div className="flex justify-content-between mb-3">
+                <div>
+                  <span className="block text-green-500 font-medium mb-3">
+                    Meetings
+                  </span>
+                  <div className="block font-medium text-xl">
+                    <p className="text-500">
+                      Start or join a meeting
+                    </p>
+                    <p className="text-500">
+                      Use the buttons bellow
+                    </p>
+                  </div>
+                  
+
+                </div>
+                <div
+                  className="flex align-items-center justify-content-center bg-purple-100 border-round"
+                  style={{ width: "2.5rem", height: "2.5rem" }}>
+                  <i className="pi pi-video text-purple-500 text-xl"></i>
+                </div>
+              </div>
+                <span className="p-buttonset w-full">     
+                    <Button
+                      label="Create meeting"
+                      icon="pi pi-plus"
+                      className="p-button-success w-6"
+                      disabled={!membership.can_create_rooms}
+                      onClick={() => {
+                        window.location.href = "/create-room";
+                      } }
+                    />                    
+                    <Button
+                      label="Join meeting"
+                      icon="pi pi-link"
+                      className="p-button-success w-6"
+                      onClick={() => {
+                        console.log("join meeting");
+                      }}
+                    />
+                </span>
+              
+            </div>
+          </div>
+        </div>
+        </div>
+      );
+    }
+  };
 
   return loading ? (
     <div
@@ -51,9 +242,7 @@ const Home = () => {
       />
     </div>
   ) : isAuthenticated ? (
-    <UserLayout title="Home">
-      <h1>{message}</h1>
-    </UserLayout>
+    <UserLayout title="Home">{userDashboard()}</UserLayout>
   ) : (
     <VisitorLayout title="Home">
       <div className="grid grid-nogutter surface-50 text-800 h-30rem">
@@ -66,7 +255,8 @@ const Home = () => {
               cloud meetings
             </div>
             <p className="mt-0 mb-4 text-700 line-height-3">
-              Our platform is the best way to manage your meetings and video calls.
+              Our platform is the best way to manage your meetings and video
+              calls.
             </p>
 
             <Button
@@ -77,7 +267,6 @@ const Home = () => {
                 // scroll to the next section
                 const element = document.getElementById("features");
                 element.scrollIntoView({ behavior: "smooth" });
-
               }}
             />
             <Button
@@ -115,9 +304,7 @@ const Home = () => {
               style={{ borderRadius: "10px" }}>
               <i className="pi pi-desktop text-4xl text-blue-500"></i>
             </span>
-            <div className="text-900 mb-3 font-medium">
-              Built for Everyone
-            </div>
+            <div className="text-900 mb-3 font-medium">Built for Everyone</div>
             <span className="text-700 text-sm line-height-3">
               It doesn't matter what you do, we have a solution for you.
             </span>
@@ -156,7 +343,8 @@ const Home = () => {
               Fast & Global Support
             </div>
             <span className="text-700 text-sm line-height-3">
-              Let's imagine that we are the real business and we are there for you 24/7.
+              Let's imagine that we are the real business and we are there for
+              you 24/7.
             </span>
           </div>
           <div className="col-12 md:col-4 mb-4 px-5">
