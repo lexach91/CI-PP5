@@ -255,6 +255,17 @@ const authSlice = createSlice({
             state.loading = false;
             // state.error = action.payload;
         })
+        .addCase(getMembership.pending, (state, action) => {
+            state.loading = true;
+        })
+        .addCase(getMembership.fulfilled, (state, action) => {
+            state.loading = false;
+            state.membership = action.payload;
+        })
+        .addCase(getMembership.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
   },
 });
 
