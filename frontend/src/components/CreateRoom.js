@@ -14,7 +14,7 @@ import { Navigate } from "react-router-dom";
 
 
 const CreateRoom = () => {
-    const { loading, redirect, isAuthenticated } = useSelector((state) => state.auth);
+    const { loading, redirect, isAuthenticated, membership, membershipLoading } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const [roomProtected, setRoomProtected] = useState(false);
     const [roomPassword, setRoomPassword] = useState("");
@@ -36,6 +36,22 @@ const CreateRoom = () => {
         //   return <Navigate to="/" />;
         // }
     }, [redirect]);
+
+    useEffect(() => {
+        if (membershipLoading) {
+            return;
+        }
+        if (!membership?.can_create_room) {
+            setError("You do not have permission to create a room.");
+            messageRef.current.show({
+                severity: "error",
+                detail: "You do not have permission to create a room.",
+            });    
+            setTimeout(() => {
+                window.location.href = "/";
+            } , 3000);
+        }
+    } , [membershipLoading, membership]);
 
     const onSubmit = async () => {
         setSubmitting(true);
@@ -117,6 +133,8 @@ const CreateRoom = () => {
             color={"#123abc"}
             loading={loading}
           />
+        <Messages ref={messageRef} />
+
         </div>
         ) : (
             <UserLayout title='Create Room'>
@@ -162,6 +180,7 @@ const CreateRoom = () => {
                                     loading={submitting}
                                     loadingIcon="pi pi-spinner pi-spin"
                                     className="w-full"
+                                    disabled={!membership?.can_create_room || submitting}
                                 />
                             </div>
                         </div>
