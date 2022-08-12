@@ -35,21 +35,12 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         self.room = await self.get_room()
         self.is_host = self.user['id'] == self.room['host']
         
-        if self.user is None or self.room is None:
-            # need to send error message to client
-            error_message = {
-                "error": "You are not logged in or the room does not exist"
-            }
-            # await self.send(text_data=json.dumps(error_message))
-            await self.close(code=error_message['error'])
+        if self.user is None or self.room is None:            
+            await self.close()
             return
             
         if not self.is_host and not self.user['id'] in self.room['guests']:
-            error_message = {
-                "error": "You are not in the room"
-            }
-            # await self.send(text_data=json.dumps(error_message))
-            await self.close(code=error_message['error'])
+            await self.close()
             return
         
         
@@ -137,6 +128,7 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
                     }
                 }
             )
+            self.connected_peers.clear()
             return
         
         if action == 'new-offer' or action == 'new-answer':
@@ -179,14 +171,7 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         
             
     async def disconnect(self, close_code):
-        if close_code:
-            await self.channel_layer.group_discard(
-                self.room_group_name,
-                self.channel_name
-            )
-            await self.close(code=close_code)
-            return
-        self.connected_peers.pop(self.user['id'], None)
+        self.connected_peers.pop(self.user['id'], None)        
         await self.channel_layer.group_send(
             self.room_group_name,
             {
