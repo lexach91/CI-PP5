@@ -28,7 +28,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
     "simple-peer": "^9.11.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "react-scripts": "^5.0.1"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
