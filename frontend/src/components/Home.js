@@ -10,6 +10,7 @@ import { Divider } from "primereact/divider";
 import { Avatar } from "primereact/avatar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Tooltip } from "primereact/tooltip";
 
 const Home = () => {
   // const auth = useSelector(state => state.auth.isAuthenticated);
@@ -27,6 +28,8 @@ const Home = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [roomToken, setRoomToken] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [cameraName, setCameraName] = useState("");
+  const [microphoneName, setMicrophoneName] = useState("");
 
   useEffect(() => {
     if (redirect) {
@@ -39,27 +42,36 @@ const Home = () => {
     }
   }, [isAuthenticated, user, redirect]);
 
-  const cameraName = () => {
-    let cameraId = user.camera_id;
+  const getCameraName = async () => {
+    let cameraId = user?.camera_id;
     if (cameraId) {
-      let devices = navigator.mediaDevices.enumerateDevices();
+      let devices = await navigator.mediaDevices.enumerateDevices();
       let camera = devices.find((device) => device.deviceId === cameraId);
-      return camera.label;
+      if (camera) {
+        setCameraName(camera.label);
+      }      
     } else {
-      return "Not selected";
+      setCameraName("Not set");
     }
   };
 
-  const microphoneName = () => {
-    let microphoneId = user.microphone_id;
+  const getMicrophoneName = async () => {
+    let microphoneId = user?.microphone_id;
     if (microphoneId) {
-      let devices = navigator.mediaDevices.enumerateDevices();
+      let devices = await navigator.mediaDevices.enumerateDevices();
       let microphone = devices.find((device) => device.deviceId === microphoneId);
-      return microphone.label;
+      if (microphone) {
+        setMicrophoneName(microphone.label);
+      }
     } else {
-      return "Not selected";
+      setMicrophoneName("Not set");
     }
   };
+
+  useEffect(() => {
+    getCameraName();
+    getMicrophoneName();
+  } , [user]);
 
 
   const userDashboard = () => {
@@ -149,10 +161,14 @@ const Home = () => {
                   </span>
                   <div className="block font-medium text-xl">
                     <p className="text-500">
-                      Current camera: {cameraName()}
+                      Current camera: 
+                      <Tooltip target=".pi-video" showDelay={100}/>
+                      <i className="pi pi-video text-green-500 text-xl" data-pr-tooltip={cameraName}></i>
                     </p>
                     <p className="text-500">
-                      Current microphone: {microphoneName()}
+                      Current microphone:
+                      <Tooltip target=".pi-volume-up" showDelay={100}/>
+                      <i className="pi pi-volume-up text-green-500 text-xl" data-pr-tooltip={microphoneName}></i>
                     </p>
                   </div>
                 </div>
