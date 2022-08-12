@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { resetRedirect } from "../redux/authSlice";
@@ -8,6 +8,8 @@ import { UserLayout } from "../layouts/UserLayout";
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
 import { Avatar } from "primereact/avatar";
+import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
 
 const Home = () => {
   // const auth = useSelector(state => state.auth.isAuthenticated);
@@ -22,6 +24,9 @@ const Home = () => {
   } = useSelector((state) => state.auth);
   const [message, setMessage] = React.useState("");
   const dispatch = useDispatch();
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [roomToken, setRoomToken] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (redirect) {
@@ -41,7 +46,7 @@ const Home = () => {
       let camera = devices.find((device) => device.deviceId === cameraId);
       return camera.label;
     } else {
-      return "";
+      return "Not selected";
     }
   };
 
@@ -52,7 +57,7 @@ const Home = () => {
       let microphone = devices.find((device) => device.deviceId === microphoneId);
       return microphone.label;
     } else {
-      return "";
+      return "Not selected";
     }
   };
 
@@ -103,7 +108,7 @@ const Home = () => {
                   <div className="block font-medium text-xl">
                     <p className="text-500">{membership.name}</p>
                     <p className="text-500">
-                      You can join {membership.can_create_rooms && "and create"} rooms
+                      You can {membership.can_create_rooms ? "join and create" : "only join"} rooms
                     </p>
                   </div>
                 </div>
@@ -206,10 +211,11 @@ const Home = () => {
                       icon="pi pi-link"
                       className="p-button-success w-6"
                       onClick={() => {
-                        console.log("join meeting");
+                        setDialogVisible(true);
                       }}
                     />
                 </span>
+                {dialog()}
               
             </div>
           </div>
@@ -218,6 +224,77 @@ const Home = () => {
       );
     }
   };
+
+  const dialogFooter = () => {
+    return (
+      <div className="flex justify-content-center">
+        <Button
+          label="Cancel"
+          icon="pi pi-times"
+          className="p-button-secondary w-6 m-2"
+          onClick={() => {
+            setDialogVisible(false);
+            setErrorMessage("");
+            setRoomToken("");
+          } }
+        />
+        <Button
+          label="Join"
+          icon="pi pi-login"
+          className="p-button-success w-6 m-2"
+          onClick={() => {
+            if(roomToken && roomToken.length === 32) {
+              setDialogVisible(false);
+              window.location.href = "/join-room/" + roomToken;
+            } else if (!roomToken) {
+              setErrorMessage("Room token is required");
+            } else if (roomToken.length !== 32) {
+              setErrorMessage("Room token should be 32 characters long");
+            } else {
+              setErrorMessage("Something went wrong");
+            }
+            setTimeout(() => {
+              setErrorMessage("");
+            }, 3000);
+
+
+          } }
+        />
+      </div>
+            
+    )
+  }
+
+  const dialog = () => {
+    return (
+      <Dialog
+        header="Join meeting"
+        visible={dialogVisible}
+        style={{ width: "50vw" }}
+        footer={dialogFooter()}
+        onHide={() => {
+          setDialogVisible(false);
+          setRoomToken("");
+          setErrorMessage("");
+        } }
+      >
+        <div className="flex flex-column">
+          <InputText
+            placeholder="Room token"
+            value={roomToken}
+            className={errorMessage ? "p-invalid w-full" : "w-full"}
+            onChange={(e) => {
+              setRoomToken(e.target.value);
+            } }
+          />
+          <div className="text-red-500 text-left w-full mt-2">{errorMessage}</div>
+        </div>
+      </Dialog>
+    );
+  }
+
+
+
 
   return loading ? (
     <div
