@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'django-react-video-meetings.herokuapp.com']
 
 
 # Application definition
@@ -94,6 +94,18 @@ CORS_ALLOWED_ORIGINS = [
     # 'localhost:8080',
     # '127.0.0.1:8080',
     # 'django-react-video-meetings.herokuapp.com',
+    'https://django-react-video-meetings.herokuapp.com',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    'https://django-react-video-meetings.herokuapp.com',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
     'https://django-react-video-meetings.herokuapp.com',
 ]
 
