@@ -13,25 +13,38 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 
+// const servers = {
+//   iceServers: [
+//     {
+//       urls: "stun:openrelay.metered.ca:80",
+//     },
+//     {
+//       urls: "turn:openrelay.metered.ca:80",
+//       username: "openrelayproject",
+//       credential: "openrelayproject",
+//     },
+//     {
+//       urls: "turn:openrelay.metered.ca:443",
+//       username: "openrelayproject",
+//       credential: "openrelayproject",
+//     },
+//     {
+//       urls: "turn:openrelay.metered.ca:443?transport=tcp",
+//       username: "openrelayproject",
+//       credential: "openrelayproject",
+//     },
+//   ],
+// };
+
 const servers = {
   iceServers: [
     {
-      urls: "stun:openrelay.metered.ca:80",
+      urls: "stun:stun.l.google.com:19302",
     },
     {
-      urls: "turn:openrelay.metered.ca:80",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-    {
-      urls: "turn:openrelay.metered.ca:443",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-    {
-      urls: "turn:openrelay.metered.ca:443?transport=tcp",
-      username: "openrelayproject",
-      credential: "openrelayproject",
+      urls: "turn:numb.viagenie.ca",
+      credential: "muazkh",
+      username: "webrtc@live.com",
     },
   ],
 };
