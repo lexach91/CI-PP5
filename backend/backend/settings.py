@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['localhost', 'django-react-video-meetings.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -88,16 +88,16 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:8080',
-#     'http://127.0.0.1:8080',
-#     'http://localhost:3000',
-#     'http://128.0.0.1:3000',
-#     'localhost:3000',
-#     'localhost:8080',
-# ]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    # 'localhost:8080',
+    # '127.0.0.1:8080',
+    # 'django-react-video-meetings.herokuapp.com',
+    'https://django-react-video-meetings.herokuapp.com',
+]
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 
@@ -200,7 +200,7 @@ BASE_URL = os.environ.get('BASE_URL')
 
 if 'DEVELOPMENT' in os.environ:
     print('Development environment')
-    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'    
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

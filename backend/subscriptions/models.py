@@ -52,7 +52,7 @@ class SubscriptionPlan(models.Model):
 class Membership(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='membership')
     is_active = models.BooleanField(default=True)
-    type = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name='memberships', default=SubscriptionPlan.objects.get(id=1).id)
+    type = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, related_name='memberships', default=SubscriptionPlan.objects.get(name='Free').id)
     opened_at = models.DateTimeField(auto_now_add=True)
     renewed_at = models.DateTimeField(auto_now=True)
     expires_at = models.DateTimeField(null=True, blank=True)
