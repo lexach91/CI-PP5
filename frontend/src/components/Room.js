@@ -139,6 +139,9 @@ const Room = () => {
       Object.entries(connectedPeers).forEach(([peer, channelName]) => {
         console.log(peer, channelName);
         if (peer != user.id) {
+          console.log("new peer huiyr");
+          console.log(peer);
+          console.log(user.id);
           createOffer(peer, channelName);
         }
       });
@@ -202,6 +205,7 @@ const Room = () => {
       console.log(guests);
     }
     if (action === "disconnected") {
+      console.log(`${peer} disconnected`);
       deleteGuest(peer);
     }
   };
@@ -274,11 +278,11 @@ const Room = () => {
   const deleteGuest = (peer) => {
     let peerConnection = guestsRef.current.find(
       (guest) => guest.peer == peer
-    ).peerConnection;
+    )?.peerConnection;
     guestsRef.current = guestsRef.current.filter((guest) => guest.peer != peer);
     setGuests((prevGuests) => prevGuests.filter((guest) => guest.peer != peer));
-    peerConnection.removeAllListeners();
-    peerConnection.destroy();
+    peerConnection?.removeAllListeners();
+    peerConnection?.destroy();
     console.log(guestsRef.current);
     console.log(guests);
   };
@@ -382,6 +386,17 @@ const Room = () => {
     );
     if (response.status === 200) {
       toast.current.show({severity: "success", detail: "You left the room"});
+      // destroy all guests
+      guestsRef.current.forEach((guest) => {
+        guest.peerConnection.removeAllListeners();
+        guest.peerConnection.destroy();
+      });
+      setGuests([]);
+      guestsRef.current = [];
+      setIsHost(false);
+      setLocalCamOn(false);
+      setLocalMicOn(false);
+      setGuestsMicsOn(false);
       setTimeout(() => {
         window.location.href = "/";
       } , 3000);
@@ -408,7 +423,12 @@ const Room = () => {
       console.log(response);
       toast.current.show({severity: "error", detail: response.data.message});
     }
-  }
+  };
+
+  const copyRoomTokenToClipboard = () => {
+    navigator.clipboard.writeText(roomToken);
+    toast.current.show({severity: "success", detail: "Room token copied to clipboard"});
+  };
 
   // return isLoading ? (
   //     <div className="loading">
@@ -482,6 +502,13 @@ const Room = () => {
       <Toast ref={toast} />
       <div className="grid grid-nogutter">
         <div className="col-fixed room-controls" style={{ width: "100px" }}>
+          {isHost && (
+            <Button
+              icon="pi pi-copy"
+              title="Copy room token"
+              onClick={copyRoomTokenToClipboard}
+            />
+          )}
           {localCamOn ? (
             <Button
               label="Turn off your camera"
