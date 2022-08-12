@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 import PrimeReact from 'primereact/api';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
+import Checkout from './components/Checkout';
 import CreateRoom from './components/CreateRoom';
 import Room from './components/Room';
 import JoinRoom from './components/JoinRoom';
@@ -75,6 +76,7 @@ const App = () => {
             <Route path="/room/:roomToken" element={<Room />} />
             <Route path="/join-room/:roomToken" element={<JoinRoom />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Router>
