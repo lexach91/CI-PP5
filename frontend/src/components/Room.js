@@ -155,7 +155,10 @@ const Room = () => {
           console.log("new peer huiyr");
           console.log(peer);
           console.log(user.id);
-          createOffer(peer, channelName);
+          if(!guestsRef.current.find((guest) => guest.peer == peer)) {
+            createOffer(peer, channelName);
+          }
+
         }
       });
       return;
@@ -201,8 +204,11 @@ const Room = () => {
     let receiverChannelName = data.message.receiver_channel_name;
 
     if (action === "new-offer") {
+      console.log("new-offer");
       let offer = message.sdp;
-      createAnswer(offer, peer, receiverChannelName);
+      if(!guestsRef.current.find((guest) => guest.peer == peer)) {
+        createAnswer(offer, peer, receiverChannelName);
+      }      
       console.log(guestsRef.current);
       console.log(guests);
     }
@@ -226,7 +232,7 @@ const Room = () => {
   const createOffer = (peer, channelName) => {
     let peerConnection = new Peer({
       initiator: true,
-      trickle: false,
+      trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
     });
@@ -259,7 +265,7 @@ const Room = () => {
   const createAnswer = (offer, peer, receiverChannelName) => {
     let peerConnection = new Peer({
       initiator: false,
-      trickle: false,
+      trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
     });
