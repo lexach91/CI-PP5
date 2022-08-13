@@ -224,7 +224,16 @@ if 'DEVELOPMENT' in os.environ:
             'BACKEND': 'channels_redis.core.RedisChannelLayer',
             'CONFIG': {
                 "hosts": [('127.0.0.1', 6379)],
-                # "capacity": 200,
+                "capacity": 3000,
+                "channel_capacity": {
+                    "http.request": 3000,
+                    "http.response": 3000,
+                    "http.websocket": 3000,
+                    "websocket.receive": 3000,
+                    "websocket.send": 3000,
+                    "websocket.disconnect": 3000,
+                    "websocket.connect": 3000,
+                    },
             },
         },
     }
@@ -245,6 +254,16 @@ else:
             'BACKEND': 'channels_redis.core.RedisChannelLayer',
             'CONFIG': {
                 "hosts": [(os.environ.get("REDIS_URL"))],
+                "capacity": 3000,
+                "channel_capacity": {
+                    "http.request": 3000,
+                    "http.response": 3000,
+                    "http.websocket": 3000,
+                    "websocket.receive": 3000,
+                    "websocket.send": 3000,
+                    "websocket.disconnect": 3000,
+                    "websocket.connect": 3000,
+                    },
             },
         },
     }
