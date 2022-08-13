@@ -45,8 +45,9 @@ const UserNavbar = () => {
         <React.Fragment>
             <div className="p-menuitem">
                 <Button label="Logout" icon="pi pi-power-off" className="p-button-danger" onClick={async () => {
-                    dispatch(logout());
+                    await dispatch(logout());
                     window.location.href = "/";
+
                 } } />
             </div>
         </React.Fragment>
