@@ -57,7 +57,9 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         
-        self.connected_peers[self.user['id']] = self.channel_name
+        # self.connected_peers[self.user['id']] = self.channel_name
+        if not self.user['id'] in self.connected_peers:
+            self.connected_peers[self.user['id']] = self.channel_name
         # print('Connected to group %s' % self.room_group_name)
         # # print the request
         # print(self.scope)
