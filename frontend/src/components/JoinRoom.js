@@ -40,7 +40,11 @@ const JoinRoom = () => {
         return <Navigate to={`/room/${roomToken}`} />;
     };
 
-    joinRoom();
+
+    if (!joined && !error) {
+        joinRoom();
+    }
+    
     
 
     return loading || !isAuthenticated || (!joined && !error) ? (
