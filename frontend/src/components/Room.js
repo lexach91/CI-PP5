@@ -248,6 +248,10 @@ const Room = () => {
       deleteGuest(peer);
     });
 
+    peerConnection.on("error", (error) => {
+      console.log(error);
+    });
+
     let newGuest = {
       peer: peer,
       channelName: channelName,
@@ -276,10 +280,13 @@ const Room = () => {
       });
     });
     peerConnection.signal(offer);
-    // peerConnection.on("close", () => {
-    //   console.log("peerConnection closed");
-    //   deleteGuest(peer);
-    // });
+    peerConnection.on("close", () => {
+      console.log("peerConnection closed");
+      deleteGuest(peer);
+    });
+    peerConnection.on("error", (error) => {
+      console.log(error);
+    } );
     let newGuest = {
       peer: peer,
       channelName: receiverChannelName,
