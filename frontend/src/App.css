@@ -17,6 +17,7 @@
 }
 .host-video-container {
     border: 1px solid #626277;
+    position: relative;
 }
 .guest-video-container {
     border: 1px solid #2c8d39;
