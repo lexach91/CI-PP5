@@ -101,13 +101,13 @@ const Room = () => {
             console.log(error, "Websocket error");
             toast.current.show({
               severity: "error",
-              detail: "Something went wrong or you are not allowed to join this room.",
+              detail:
+                "Something went wrong or you are not allowed to join this room.",
             });
             // after the toast is hidden, redirect to home page
             setTimeout(() => {
               window.location.href = "/";
             }, 3000);
-            
           };
         })
         .catch((error) => {
@@ -155,10 +155,9 @@ const Room = () => {
           console.log("new peer huiyr");
           console.log(peer);
           console.log(user.id);
-          if(!guestsRef.current.find((guest) => guest.peer == peer)) {
+          if (!guestsRef.current.find((guest) => guest.peer == peer)) {
             createOffer(peer, channelName);
           }
-
         }
       });
       return;
@@ -191,7 +190,7 @@ const Room = () => {
         // after the toast is hidden, redirect to home page
         setTimeout(() => {
           window.location.href = "/";
-        } , 3000);
+        }, 3000);
       }
       return;
     }
@@ -206,9 +205,9 @@ const Room = () => {
     if (action === "new-offer") {
       console.log("new-offer");
       let offer = message.sdp;
-      if(!guestsRef.current.find((guest) => guest.peer == peer)) {
+      if (!guestsRef.current.find((guest) => guest.peer == peer)) {
         createAnswer(offer, peer, receiverChannelName);
-      }      
+      }
       console.log(guestsRef.current);
       console.log(guests);
     }
@@ -286,7 +285,7 @@ const Room = () => {
     });
     peerConnection.on("error", (error) => {
       console.log(error);
-    } );
+    });
     let newGuest = {
       peer: peer,
       channelName: receiverChannelName,
@@ -404,14 +403,11 @@ const Room = () => {
   };
 
   const leaveRoom = async () => {
-    const response = await axios.post(
-      "rooms/leave",
-      {
-        room_token: roomToken,
-      }
-    );
+    const response = await axios.post("rooms/leave", {
+      room_token: roomToken,
+    });
     if (response.status === 200) {
-      toast.current.show({severity: "success", detail: "You left the room"});
+      toast.current.show({ severity: "success", detail: "You left the room" });
       // destroy all guests
       guestsRef.current.forEach((guest) => {
         guest.peerConnection.removeAllListeners();
@@ -425,35 +421,61 @@ const Room = () => {
       setGuestsMicsOn(false);
       setTimeout(() => {
         window.location.href = "/";
-      } , 3000);
+      }, 3000);
     } else {
       console.log(response);
-      toast.current.show({severity: "error", detail: response.data.message});
+      toast.current.show({ severity: "error", detail: response.data.message });
     }
   };
 
   const deleteRoom = async () => {
-    const response = await axios.post(
-      "rooms/delete",
-      {
-        room_token: roomToken,
-      }
-    );
+    const response = await axios.post("rooms/delete", {
+      room_token: roomToken,
+    });
     if (response.status === 200) {
       sendSignal("room-deleted", {});
-      toast.current.show({severity: "success", detail: "You deleted the room"});
+      toast.current.show({
+        severity: "success",
+        detail: "You deleted the room",
+      });
       setTimeout(() => {
         window.location.href = "/";
-      } , 3000);
+      }, 3000);
     } else {
       console.log(response);
-      toast.current.show({severity: "error", detail: response.data.message});
+      toast.current.show({ severity: "error", detail: response.data.message });
     }
   };
 
   const copyRoomTokenToClipboard = () => {
     navigator.clipboard.writeText(roomToken);
-    toast.current.show({severity: "success", detail: "Room token copied to clipboard"});
+    toast.current.show({
+      severity: "success",
+      detail: "Room token copied to clipboard",
+    });
+  };
+
+  const emptyDivsForAbsentGuests = () => {
+    let divs = [];
+    for (let i = 0; i < room.max_guests - guests.length; i++) {
+      console.log(i);
+      console.log(guests.length);
+      console.log(room.max_guests);
+      divs.push(
+        <div
+          className={
+            room.max_guests === 3
+              ? "guest-video-container col-6"
+              : room.max_guests === 8
+              ? "guest-video-container col-4"
+              : "guest-video-container col-3"
+          }
+          style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}
+        >
+          </div>
+      );
+    }
+    return divs;
   };
 
   // return isLoading ? (
@@ -527,69 +549,111 @@ const Room = () => {
       }}>
       <Toast ref={toast} />
       <div className="grid grid-nogutter">
-        <div className="col-fixed room-controls" style={{ width: "100px" }}>
+        <div
+          className="col-fixed room-controls flex flex-column justify-content-center align-items-center gap-3"
+          style={{ width: "100px" }}>
           {isHost && (
             <Button
-              icon="pi pi-copy"
-              title="Copy room token"
+              // icon="pi pi-copy"
+              label={<i className="pi pi-copy"></i>}
+              className="p-button-rounded p-button-secondary mt-3 w-7"
+              tooltip="Copy room token to clipboard to invite others"
               onClick={copyRoomTokenToClipboard}
             />
           )}
           {localCamOn ? (
             <Button
-              label="Turn off your camera"
-              icon="pi pi-video"
+              tooltip="Turn off your camera"
+              className="p-button-rounded p-button-secondary w-7"
+              // icon="pi pi-video"
+              label={<i className="pi pi-video"></i>}
               onClick={turnOffYourCamera}
             />
           ) : (
             <Button
-              label="Turn on your camera"
-              icon="pi pi-video"
+              tooltip="Turn on your camera"
+              className="p-button-rounded p-button-danger w-7"
+              // icon="pi pi-video"
+              label={<i className="pi pi-video"></i>}
               onClick={turnOnYourCamera}
             />
           )}
           {localMicOn ? (
             <Button
-              label="Turn off your mic"
-              icon="pi pi-volume-off"
+              tooltip="Turn off your mic"
+              className="p-button-rounded p-button-secondary w-7"
+              // icon="pi pi-volume-up"
+              label={<i className="pi pi-volume-up"></i>}
               onClick={turnOffYourMic}
             />
           ) : (
             <Button
-              label="Turn on your mic"
-              icon="pi pi-volume-up"
+              tooltip="Turn on your mic"
+              className="p-button-rounded p-button-danger w-7"
+              // icon="pi pi-volume-off"
+              label={<i className="pi pi-volume-off"></i>}
               onClick={turnOnYourMic}
             />
           )}
-          {isHost && ( guestsMicsOn ? (
-            <Button
-              label="Mute all guests"
-              icon="pi pi-volume-off"
-              onClick={muteAllGuestsHandler}
-            />            
-          ) : (
-            <Button
-              label="Unmute all guests"
-              icon="pi pi-volume-up"
-              onClick={unmuteAllGuestsHandler}
-            />
-          ))}
+          {isHost &&
+            (guestsMicsOn ? (
+              <Button
+                label={
+                  <span>
+                    <i className="pi pi-volume-up"></i>
+                    <i className="pi pi-users"></i>
+                  </span>
+                }
+                tooltip="Turn off all mics"
+                // icon="pi pi-volume-off pi-users"
+                className="p-button-rounded p-button-secondary w-7"
+                onClick={muteAllGuestsHandler}
+              />
+            ) : (
+              <Button
+                label={
+                  <span>
+                    <i className="pi pi-volume-off"></i>
+                    <i className="pi pi-users"></i>
+                  </span>
+                }
+                tooltip="Turn on all mics"
+                // icon="pi pi-volume-up pi-users"
+                className="p-button-rounded p-button-danger w-7"
+                onClick={unmuteAllGuestsHandler}
+              />
+            ))}
           {isHost ? (
             <Button
-              label="Delete room"
-              icon="pi pi-trash"
+              // label="Delete room"
+              tooltip="Delete room"
+              className="p-button-rounded p-button-danger w-7"
+              // icon="pi pi-trash"
+              label={<i className="pi pi-trash"></i>}
               onClick={deleteRoom}
             />
           ) : (
             <Button
-              label="Leave room"
-              icon="pi pi-power-off"
+              // label="Leave room"
+              tooltip="Leave room"
+              className="p-button-rounded p-button-danger w-7"
+              // icon="pi pi-power-off"
+              label={<i className="pi pi-power-off"></i>}
               onClick={leaveRoom}
             />
           )}
         </div>
-        <div className="col grid grid-nogutter">
-          <div className="host-video-container col-6 md:col-4 lg:col-3">
+        <div className="col grid grid-nogutter" style={{height: "100vh"}}>
+          <div
+            className={
+              room.max_guests === 3
+                ? "host-video-container col-6"
+                : room.max_guests === 8
+                ? "host-video-container col-4"
+                : "host-video-container col-3"
+            }
+            style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}>
+            
             {isHost ? (
               <video
                 ref={localVideo}
@@ -611,8 +675,17 @@ const Room = () => {
               })
             )}
           </div>
-          {!isHost ? (
-            <div className="guest-video-container col-6 md:col-4 lg:col-3">
+          {!isHost && (
+            <div
+              className={
+                room.max_guests === 3
+                  ? "guest-video-container col-6"
+                  : room.max_guests === 8
+                  ? "guest-video-container col-4"
+                  : "guest-video-container col-3"
+              }
+              style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}
+              >
               <video
                 ref={localVideo}
                 autoPlay
@@ -621,13 +694,21 @@ const Room = () => {
                 className="video-element"
               />
             </div>
-          ) : (
-            <></>
           )}
           {guests.map((guest, index) => {
             if (!guest.isHost) {
               return (
-                <div className="guest-video-container col-6 md:col-4 lg:col-3">
+                <div
+                  className={
+                    room.max_guests === 3
+                      ? "guest-video-container col-6"
+                      : room.max_guests === 8
+                      ? "guest-video-container col-4"
+                      : "guest-video-container col-3"
+                  }
+                  style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}
+
+                  >
                   <VideoElement
                     key={index}
                     peerConnection={guest.peerConnection}
@@ -636,6 +717,8 @@ const Room = () => {
               );
             }
           })}
+          {/* need to run for loop max_guests - guests.length times and return empty div */}
+          {emptyDivsForAbsentGuests()}
         </div>
       </div>
     </div>
