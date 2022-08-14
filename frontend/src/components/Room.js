@@ -174,8 +174,11 @@ const Room = () => {
         turnOffYourMic();
       }      
       guestsRef.current.forEach((guest) => {
-        setMutedGuests(prevGuests => [...prevGuests, guest.peer]);
+        if (guest.peer != hostId.current) {
+          setMutedGuests(prevGuests => [...prevGuests, guest.peer]);
+        }
       });
+      setGuestsMicsOn(false);
       return;
     }
     if (action === "unmute-all") {
@@ -187,6 +190,7 @@ const Room = () => {
       guestsRef.current.forEach((guest) => {
         setMutedGuests(prevGuests => prevGuests.filter((peer) => peer != guest.peer));
       } );
+      setGuestsMicsOn(true);
       return;
     }
     if (action === "mute-peer") {
@@ -653,6 +657,7 @@ const Room = () => {
                 turnOnYourMic();
                 sendSignal("unmute-peer", {peer: user.id});
               }}
+              disabled={!guestsMicsOn && !isHost}
             />
           )}
           {isHost &&
@@ -729,11 +734,18 @@ const Room = () => {
                     <VideoElement
                       key={index}
                       peerConnection={guest.peerConnection}
+                      muted={mutedGuests.includes(guest.peer)}
                     />
                   );
                 }
               })
             )}
+            {peerIsMuted(hostId.current) && (
+                    <div style={{position: "absolute", top: "0", right: "0", padding: "5px"}}>
+                      <i className="pi pi-volume-off"></i>
+                      <span style={{marginLeft: "5px"}}>Muted</span>
+                    </div>
+                  )}
           </div>
           {!isHost && (
             <div
@@ -753,6 +765,12 @@ const Room = () => {
                 muted
                 className="video-element"
               />
+              {!localMicOn && (
+                    <div style={{position: "absolute", top: "0", right: "0", padding: "5px"}}>
+                      <i className="pi pi-volume-off"></i>
+                      <span style={{marginLeft: "5px"}}>Muted</span>
+                    </div>
+                  )}
             </div>
           )}
           {guests.map((guest, index) => {
@@ -772,7 +790,7 @@ const Room = () => {
                   <VideoElement
                     key={index}
                     peerConnection={guest.peerConnection}
-                    muted={!guest.audioOn}
+                    muted={mutedGuests.includes(guest.peer)}
                   />
                   {isHost && (
                     !peerIsMuted(guest.peer) ? (
@@ -801,6 +819,12 @@ const Room = () => {
                         }}
                       />
                     )
+                  )}
+                  {peerIsMuted(guest.peer) && (
+                    <div style={{position: "absolute", top: "0", right: "0", padding: "5px"}}>
+                      <i className="pi pi-volume-off"></i>
+                      <span style={{marginLeft: "5px"}}>Muted</span>
+                    </div>
                   )}
                 </div>
               );
