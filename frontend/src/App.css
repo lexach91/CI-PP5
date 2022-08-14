@@ -13,7 +13,13 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-    border: 1px solid #464680;
+    /* border: 1px solid #464680; */
+}
+.host-video-container {
+    border: 1px solid #626277;
+}
+.guest-video-container {
+    border: 1px solid #2c8d39;
 }
 @media screen and (max-width: 960px) {
     .form-register .surface-card {
