@@ -13,7 +13,7 @@ def create_room_token():
 class VideoRoom(models.Model):
     token = models.CharField(max_length=32, default=create_room_token)
     host = models.OneToOneField(User, on_delete=models.CASCADE, related_name='hosting_room')
-    max_guests = models.IntegerField(default=5)
+    max_guests = models.IntegerField(default=3)
     guests = models.ManyToManyField(User, related_name='current_rooms', blank=True)
     screen_sharing_enabled = models.BooleanField(default=False)
     presentation_enabled = models.BooleanField(default=False)
