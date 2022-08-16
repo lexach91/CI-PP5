@@ -21,6 +21,7 @@ class VideoRoom(models.Model):
     protected = models.BooleanField(default=False)
     guests_input_control = models.BooleanField(default=False)
     password = models.CharField(max_length=32, default='', blank=True, null=True)
+    guests_muted = models.BooleanField(default=False)
     
     def __str__(self):
         return f'VideoRoom {self.token}, host: {self.host}'
