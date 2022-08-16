@@ -17,6 +17,7 @@ class VideoRoomSerializer(ModelSerializer):
             'protected',
             'guests_input_control',
             'password',
+            'guests_muted',
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
