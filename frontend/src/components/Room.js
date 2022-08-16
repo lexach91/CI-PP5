@@ -69,6 +69,11 @@ const Room = () => {
   const [localCamOn, setLocalCamOn] = useState(true);
   const [guestsMicsOn, setGuestsMicsOn] = useState(true);
   const [mutedGuests, setMutedGuests] = useState([]);
+  const mutedGuestsRef = useRef([]);
+  const roomMutedRef = useRef(false);
+  const selfMutedRef = useRef(false);
+  const [allowedToSpeak, setAllowedToSpeak] = useState([]);
+  const allowedToSpeakRef = useRef([]);
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const toast = useRef();
@@ -125,6 +130,24 @@ const Room = () => {
     }
   }, [hostId.current]);
 
+  // useEffect(() => {
+  //   if (room?.guests_muted === false) {
+  //     console.log(room, "ROOM USE EFFECT");
+  //     setGuestsMicsOn(false);
+  //   }
+  // }, [room]);
+
+  // useEffect(() => {
+  //   if (user?.id) {
+  //     if (mutedGuests.includes(user.id)) {
+  //       if (localMicOn) {
+  //         setLocalMicOn(false);
+  //         sendSignal("mute-peer", { peer: user.id });
+  //       }
+  //     }
+  //   }
+  // }, [mutedGuests]);
+
   const sendSignal = (action, message) => {
     let data = {
       peer: user.id,
@@ -151,7 +174,7 @@ const Room = () => {
       setRoom(room);
       setIsHost(data.is_host);
       hostId.current = room.host;
-      
+
       let connectedPeers = data.connected_peers;
       Object.entries(connectedPeers).forEach(([peer, channelName]) => {
         console.log(peer, channelName);
@@ -164,9 +187,14 @@ const Room = () => {
           }
         }
       });
-      let muted_peers = data.muted_peers;
-      console.log(muted_peers, "muted_peers");
-      setMutedGuests(muted_peers);
+      // let muted_peers = data.muted_peers;
+      // console.log(muted_peers, "muted_peers");
+      // setMutedGuests(muted_peers);
+      // mutedGuestsRef.current = muted_peers;
+      let guests_muted = data.muted_all;
+      console.log(guests_muted, "guests_muted");
+      setGuestsMicsOn(!guests_muted);
+      roomMutedRef.current = guests_muted;
       // if (muted_peers) {
       //   console.log("muted_peers", muted_peers);
       //   setMutedGuests(prevGuests => {
@@ -180,56 +208,64 @@ const Room = () => {
     }
     let peer = data.peer;
 
-    if (action === "mute-all") {
-      console.log("mute-all");
-      if (user.id != hostId.current) {
-        console.log("mute-all host");
-        turnOffYourMic();
-      }      
-      guestsRef.current.forEach((guest) => {
-        if (guest.peer != hostId.current) {
-          setMutedGuests(prevGuests => [...prevGuests, guest.peer]);
-        }
-      });
-      setGuestsMicsOn(false);
-      return;
-    }
-    if (action === "unmute-all") {
-      console.log("unmute-all");
-      if (user.id != hostId.current) {
-        console.log("unmute-all host");
-        turnOnYourMic();
-      }
-      guestsRef.current.forEach((guest) => {
-        setMutedGuests(prevGuests => prevGuests.filter((peer) => peer != guest.peer));
-      } );
-      setGuestsMicsOn(true);
-      return;
-    }
-    if (action === "mute-peer") {
-      let guestId = data.message.peer;
-      console.log("mute-peer" + guestId);
-      if (guestId == user.id) {
-        console.log("mute-peer self");
-        turnOffYourMic();
-      } else {
-        guestsRef.current.find((guest) => guest.peer == guestId).peerConnection._remoteStreams[0].getAudioTracks()[0].enabled = false;
-      }
-      setMutedGuests(prevGuests => [...prevGuests, guestId]);
-      return;
-    }
-    if (action === "unmute-peer") {
-      let guestId = data.message.peer;
-      console.log("unmute-peer" + guestId);
-      if (guestId == user.id) {
-        console.log("unmute-peer self");
-        turnOnYourMic();
-      } else {
-        guestsRef.current.find((guest) => guest.peer == guestId).peerConnection._remoteStreams[0].getAudioTracks()[0].enabled = true;
-      }
-      setMutedGuests(prevGuests => prevGuests.filter((peer) => peer != guestId));
-      return;
-    }
+    // if (action === "mute-all") {
+    //   console.log("mute-all");
+    //   if (user.id != hostId.current) {
+    //     console.log("mute-all host");
+    //     turnOffYourMic();
+    //   }
+    //   guestsRef.current.forEach((guest) => {
+    //     if (guest.peer != hostId.current) {
+    //       setMutedGuests((prevGuests) => [...prevGuests, guest.peer]);
+    //     }
+    //   });
+    //   setGuestsMicsOn(false);
+    //   return;
+    // }
+    // if (action === "unmute-all") {
+    //   console.log("unmute-all");
+    //   if (user.id != hostId.current) {
+    //     console.log("unmute-all host");
+    //     turnOnYourMic();
+    //   }
+    //   guestsRef.current.forEach((guest) => {
+    //     setMutedGuests((prevGuests) =>
+    //       prevGuests.filter((peer) => peer != guest.peer)
+    //     );
+    //   });
+    //   setGuestsMicsOn(true);
+    //   return;
+    // }
+    // if (action === "mute-peer") {
+    //   let guestId = data.message.peer;
+    //   console.log("mute-peer" + guestId);
+    //   if (guestId == user.id) {
+    //     console.log("mute-peer self");
+    //     turnOffYourMic();
+    //   } else {
+    //     guestsRef.current
+    //       .find((guest) => guest.peer == guestId)
+    //       .peerConnection._remoteStreams[0].getAudioTracks()[0].enabled = false;
+    //   }
+    //   setMutedGuests((prevGuests) => [...prevGuests, guestId]);
+    //   return;
+    // }
+    // if (action === "unmute-peer") {
+    //   let guestId = data.message.peer;
+    //   console.log("unmute-peer" + guestId);
+    //   if (guestId == user.id) {
+    //     console.log("unmute-peer self");
+    //     turnOnYourMic();
+    //   } else {
+    //     guestsRef.current
+    //       .find((guest) => guest.peer == guestId)
+    //       .peerConnection._remoteStreams[0].getAudioTracks()[0].enabled = true;
+    //   }
+    //   setMutedGuests((prevGuests) =>
+    //     prevGuests.filter((peer) => peer != guestId)
+    //   );
+    //   return;
+    // }
     if (action === "room-deleted") {
       console.log("room-deleted");
       if (user.id != hostId.current) {
@@ -307,20 +343,28 @@ const Room = () => {
       peerConnection: peerConnection,
       isHost: peer == hostId.current,
       audioOn: true,
-      videoOn: true,
     };
     guestsRef.current.push(newGuest);
     setGuests((prevGuests) => [...prevGuests, newGuest]);
     console.log(guestsRef.current);
     console.log(guests);
-    if(mutedGuests.includes(user.id)){
-      turnOffYourMic();
-      sendSignal("mute-peer", {peer: user.id});
-    }
-    if(!guestsMicsOn){
-      turnOffYourMic();
-      sendSignal("mute-all",{});
-    }
+    peerConnection.on("connect", () => {
+      if(selfMutedRef.current === true){
+        sendDataToPeer(peer, {
+          type: "i-am-muted",
+          peer: user.id,
+        });
+      }
+      if(roomMutedRef.current === true){
+        sendDataToPeer(peer, {
+          type: "mute-all",
+          // peer: user.id,
+        });
+        mutedGuestsRef.current.push(peer);
+        setMutedGuests((prevGuests) => [...prevGuests, peer]);
+      }
+    });
+    peerConnection.on("data", dataChannelOnMessage);
   };
 
   const createAnswer = (offer, peer, receiverChannelName) => {
@@ -350,19 +394,128 @@ const Room = () => {
       peerConnection: peerConnection,
       isHost: peer === hostId.current,
       audioOn: true,
-      videoOn: true,
     };
     guestsRef.current.push(newGuest);
     setGuests((prevGuests) => [...prevGuests, newGuest]);
     console.log(guestsRef.current);
     console.log(guests);
-    if(mutedGuests.includes(user.id)){
-      turnOffYourMic();
-      sendSignal("mute-peer", {peer: user.id});
+    peerConnection.on("connect", () => {
+      if(selfMutedRef.current === true){
+        sendDataToPeer(peer, {
+          type: "i-am-muted",
+          peer: user.id,
+        });
+      }
+      if(roomMutedRef.current === true){
+        sendDataToPeer(peer, {
+          type: "mute-all",
+          // peer: user.id,
+        });
+        mutedGuestsRef.current.push(peer);
+        setMutedGuests((prevGuests) => [...prevGuests, peer]);
+      }
+    });
+    peerConnection.on("data", dataChannelOnMessage);
+  };
+
+  const sendDataToPeer = (peer, data) => {
+    let guest = guestsRef.current.find((guest) => guest.peer == peer);
+    guest.peerConnection.send(JSON.stringify(data));
+  };
+
+  const sendDataToEveryone = (data) => {
+    guestsRef.current.forEach((guest) => {
+      guest.peerConnection.send(JSON.stringify(data));
+    });
+  };
+
+  const dataChannelOnMessage = (data) => {
+    let parsedData = JSON.parse(data.toString());
+    let type = parsedData.type;
+
+    if (type === "mute-peer"){
+      console.log("mute-peer by data channel");
+      let peer = parsedData.peer;
+      if (peer == user.id && hostId.current != user.id) {
+        turnOffYourMic();
+        sendDataToEveryone({
+          type: "i-am-muted",
+          peer: user.id,
+        });
+      }
+      setMutedGuests((prevGuests) => [...prevGuests, peer]);
+      mutedGuestsRef.current.push(peer);
+      if(roomMutedRef.current){
+        // remove peer from allowed to speak list
+        setAllowedToSpeak(prevGuests => prevGuests.filter(guest => guest.peer !== peer));
+        allowedToSpeakRef.current = allowedToSpeakRef.current.filter(guest => guest.peer !== peer);
+      }
     }
-    if(!guestsMicsOn){
+    if (type === "unmute-peer"){
+      console.log("unmute-peer by data channel");
+      let peer = parsedData.peer;
+      if (peer == user.id && hostId.current != user.id) {
+        turnOnYourMic();
+        sendDataToEveryone({
+          type: "i-am-unmuted",
+          peer: user.id,
+        });
+      }
+      setMutedGuests((prevGuests) => prevGuests.filter((guest) => guest != peer));
+      mutedGuestsRef.current = mutedGuestsRef.current.filter((guest) => guest != peer);
+      if(roomMutedRef.current){
+        setAllowedToSpeak(prevGuests => [...prevGuests, peer]);
+        allowedToSpeakRef.current.push(peer);
+      }
+    }
+    if (type === "i-am-muted"){
+      console.log("i-am-muted by data channel");
+      let peer = parsedData.peer;
+      setMutedGuests((prevGuests) => [...prevGuests, peer]);
+      mutedGuestsRef.current.push(peer);
+      if(roomMutedRef.current){
+        // remove peer from allowed to speak list
+        setAllowedToSpeak(prevGuests => prevGuests.filter(guest => guest.peer !== peer));
+        allowedToSpeakRef.current = allowedToSpeakRef.current.filter(guest => guest.peer !== peer);
+      }
+    }
+    if (type === "i-am-unmuted"){
+      console.log("i-am-unmuted by data channel");
+      let peer = parsedData.peer;
+      setMutedGuests((prevGuests) => prevGuests.filter((guest) => guest != peer));
+      mutedGuestsRef.current = mutedGuestsRef.current.filter((guest) => guest != peer);
+      if(roomMutedRef.current){
+        setAllowedToSpeak(prevGuests => [...prevGuests, peer]);
+        allowedToSpeakRef.current.push(peer);
+      }
+    }
+    if (type === "mute-all"){
+      console.log("mute-all by data channel");
+      setGuestsMicsOn(false);
+      roomMutedRef.current = true;
       turnOffYourMic();
-      sendSignal("mute-all",{});
+      setAllowedToSpeak([]);
+      allowedToSpeakRef.current = [];
+      if(!isHost){
+        sendDataToEveryone({
+          type: "i-am-muted",
+          peer: user.id,
+        });
+      }
+    }
+    if (type === "unmute-all"){
+      console.log("unmute-all by data channel");
+      setGuestsMicsOn(true);
+      roomMutedRef.current = false;
+      turnOnYourMic();
+      setAllowedToSpeak([]);
+      allowedToSpeakRef.current = [];
+      if(!isHost){
+        sendDataToEveryone({
+          type: "i-am-unmuted",
+          peer: user.id,
+        });
+      }
     }
   };
 
@@ -396,7 +549,14 @@ const Room = () => {
   // this function can be used by the host only
   // every guest will receive the same signal
   const muteAllGuests = () => {
-    sendSignal("mute-all", {});
+    // sendSignal("mute-all", {});
+    sendDataToEveryone({
+      type: "mute-all",
+    });
+    setGuestsMicsOn(false);
+    roomMutedRef.current = true;
+    setAllowedToSpeak([]);
+    allowedToSpeakRef.current = [];
   };
 
   const muteAllGuestsHandler = () => {
@@ -407,7 +567,14 @@ const Room = () => {
   };
 
   const unmuteAllGuests = () => {
-    sendSignal("unmute-all", {});
+    // sendSignal("unmute-all", {});
+    sendDataToEveryone({
+      type: "unmute-all",
+    });
+    setGuestsMicsOn(true);
+    roomMutedRef.current = false;
+    setAllowedToSpeak([]);
+    allowedToSpeakRef.current = [];
   };
 
   const unmuteAllGuestsHandler = () => {
@@ -454,6 +621,7 @@ const Room = () => {
       track.enabled = true;
     });
     setLocalMicOn(true);
+    selfMutedRef.current = false;
     // sendSignal("unmute-peer", {peer: user.id});
   };
   const turnOffYourMic = () => {
@@ -467,6 +635,7 @@ const Room = () => {
       track.enabled = false;
     });
     setLocalMicOn(false);
+    selfMutedRef.current = true;
     // sendSignal("mute-peer", {peer: user.id});
   };
 
@@ -538,9 +707,9 @@ const Room = () => {
               ? "guest-video-container col-4"
               : "guest-video-container col-3"
           }
-          style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}
-        >
-          </div>
+          style={
+            room.max_guests === 3 ? { height: "50vh" } : { height: "33vh" }
+          }></div>
       );
     }
     return divs;
@@ -548,24 +717,58 @@ const Room = () => {
 
   const muteGuest = (peer) => {
     console.log(peer);
-    if(isHost){
-      sendSignal("mute-peer", {peer});
+    if (isHost) {
+      // sendSignal("mute-peer", { peer });
+      sendDataToPeer(peer, {
+        type: "mute-peer",
+        peer,
+      });
+      setMutedGuests(prevGuests => {
+        return [...prevGuests, peer];
+      });
+      mutedGuestsRef.current.push(peer);
+      setAllowedToSpeak(prevGuests => {
+        return prevGuests.filter((guest) => guest !== peer);
+      })
+      allowedToSpeakRef.current = allowedToSpeakRef.current.filter((guest) => guest !== peer);
     }
   };
+
 
   const unmuteGuest = (peer) => {
     console.log(peer);
-    if(isHost){
-      sendSignal("unmute-peer", {peer});
+    if (isHost) {
+      // sendSignal("unmute-peer", { peer });
+      sendDataToPeer(peer, {
+        type: "unmute-peer",
+        peer,
+      });
+      setMutedGuests(prevGuests => {
+        return prevGuests.filter(guest => guest !== peer);
+      })
+      mutedGuestsRef.current = mutedGuestsRef.current.filter(guest => guest !== peer);
+      setAllowedToSpeak(prevGuests => {
+        return [...prevGuests, peer];
+      })
+      allowedToSpeakRef.current.push(peer);
     }
   };
 
-  const peerIsMuted = (peer) => {
-    console.log("running peerIsMuted");
-    return mutedGuests.includes(peer);
-  }
 
-  
+  const peerIsMuted = (peer) => {
+    let answer = false;
+    if(roomMutedRef.current){
+      answer = true;
+      if(allowedToSpeakRef.current.includes(peer)){
+        answer = false;
+      }
+    } else {
+      if(mutedGuestsRef.current.includes(peer)){
+        answer = true;
+      }
+    }
+    return answer;
+  };
 
   // return isLoading ? (
   //     <div className="loading">
@@ -667,7 +870,7 @@ const Room = () => {
               onClick={turnOnYourCamera}
             />
           )}
-          {localMicOn ? (
+          {!selfMutedRef.current ? (
             <Button
               tooltip="Turn off your mic"
               className="p-button-rounded p-button-secondary w-7"
@@ -675,7 +878,11 @@ const Room = () => {
               label={<i className="pi pi-volume-up"></i>}
               onClick={() => {
                 turnOffYourMic();
-                sendSignal("mute-peer", {peer: user.id});
+                // sendSignal("mute-peer", { peer: user.id });
+                sendDataToEveryone({
+                  type: "i-am-muted",
+                  peer: user.id,
+                });
               }}
             />
           ) : (
@@ -686,13 +893,17 @@ const Room = () => {
               label={<i className="pi pi-volume-off"></i>}
               onClick={() => {
                 turnOnYourMic();
-                sendSignal("unmute-peer", {peer: user.id});
+                // sendSignal("unmute-peer", { peer: user.id });
+                sendDataToEveryone({
+                  type: "i-am-unmuted",
+                  peer: user.id,
+                });
               }}
-              disabled={!guestsMicsOn && !isHost}
+              disabled={(roomMutedRef.current && !isHost)}
             />
           )}
           {isHost &&
-            (guestsMicsOn ? (
+            (!roomMutedRef.current ? (
               <Button
                 label={
                   <span>
@@ -739,7 +950,7 @@ const Room = () => {
             />
           )}
         </div>
-        <div className="col grid grid-nogutter" style={{height: "100vh"}}>
+        <div className="col grid grid-nogutter" style={{ height: "100vh" }}>
           <div
             className={
               room.max_guests === 3
@@ -748,8 +959,9 @@ const Room = () => {
                 ? "host-video-container col-4"
                 : "host-video-container col-3"
             }
-            style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}>
-            
+            style={
+              room.max_guests === 3 ? { height: "50vh" } : { height: "33vh" }
+            }>
             {isHost ? (
               <video
                 ref={localVideo}
@@ -771,12 +983,30 @@ const Room = () => {
                 }
               })
             )}
-            {peerIsMuted(hostId.current) && (
-                    <div style={{position: "absolute", top: "0", right: "0", padding: "5px"}}>
-                      <i className="pi pi-volume-off"></i>
-                      <span style={{marginLeft: "5px"}}>Muted</span>
-                    </div>
-                  )}
+            {(isHost && selfMutedRef.current) && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  right: "0",
+                  padding: "5px",
+                }}>
+                <i className="pi pi-volume-off"></i>
+                <span style={{ marginLeft: "5px" }}>Muted</span>
+              </div>
+            )}
+            {(!isHost && peerIsMuted(hostId.current)) && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  right: "0",
+                  padding: "5px",
+                }}>
+                <i className="pi pi-volume-off"></i>
+                <span style={{ marginLeft: "5px" }}>Muted</span>
+              </div>
+            )}
           </div>
           {!isHost && (
             <div
@@ -787,8 +1017,9 @@ const Room = () => {
                   ? "guest-video-container col-4"
                   : "guest-video-container col-3"
               }
-              style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}
-              >
+              style={
+                room.max_guests === 3 ? { height: "50vh" } : { height: "33vh" }
+              }>
               <video
                 ref={localVideo}
                 autoPlay
@@ -796,12 +1027,18 @@ const Room = () => {
                 muted
                 className="video-element"
               />
-              {!localMicOn && (
-                    <div style={{position: "absolute", top: "0", right: "0", padding: "5px"}}>
-                      <i className="pi pi-volume-off"></i>
-                      <span style={{marginLeft: "5px"}}>Muted</span>
-                    </div>
-                  )}
+              {selfMutedRef.current && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "0",
+                    right: "0",
+                    padding: "5px",
+                  }}>
+                  <i className="pi pi-volume-off"></i>
+                  <span style={{ marginLeft: "5px" }}>Muted</span>
+                </div>
+              )}
             </div>
           )}
           {guests.map((guest, index) => {
@@ -815,28 +1052,31 @@ const Room = () => {
                       ? "guest-video-container col-4"
                       : "guest-video-container col-3"
                   }
-                  style={room.max_guests === 3 ? { height: "50vh" } : {height:"33vh"}}
-
-                  >
+                  style={
+                    room.max_guests === 3
+                      ? { height: "50vh" }
+                      : { height: "33vh" }
+                  }>
                   <VideoElement
                     key={index}
                     peerConnection={guest.peerConnection}
-                    muted={mutedGuests.includes(guest.peer)}
+                    // muted={mutedGuests.includes(guest.peer)}
                   />
-                  {isHost && (
-                    (!mutedGuests.includes(guest.peer) && guestsMicsOn) ? (
-                    <Button
-                      tooltip="Mute guest"
-                      className="p-button-rounded p-button-secondary m-2"
-                      icon="pi pi-volume-up"
-                      onClick={() => muteGuest(guest.peer)}
-                      style={{
-                        position: "absolute",
-                        bottom: "0",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                      }}
-                    />) : (
+                  {isHost &&
+                    (!peerIsMuted(guest.peer) ? (
+                      <Button
+                        tooltip="Mute guest"
+                        className="p-button-rounded p-button-secondary m-2"
+                        icon="pi pi-volume-up"
+                        onClick={() => muteGuest(guest.peer)}
+                        style={{
+                          position: "absolute",
+                          bottom: "0",
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                        }}
+                      />
+                    ) : (
                       <Button
                         tooltip="Unmute guest"
                         className="p-button-rounded p-button-danger m-2"
@@ -849,12 +1089,17 @@ const Room = () => {
                           transform: "translateX(-50%)",
                         }}
                       />
-                    )
-                  )}
-                  {(mutedGuests.includes(guest.peer) || !guestsMicsOn) && (
-                    <div style={{position: "absolute", top: "0", right: "0", padding: "5px"}}>
+                    ))}
+                  {peerIsMuted(guest.peer) && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "0",
+                        right: "0",
+                        padding: "5px",
+                      }}>
                       <i className="pi pi-volume-off"></i>
-                      <span style={{marginLeft: "5px"}}>Muted</span>
+                      <span style={{ marginLeft: "5px" }}>Muted</span>
                     </div>
                   )}
                 </div>
