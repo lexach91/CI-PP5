@@ -182,6 +182,24 @@ const Settings = () => {
         console.log(response);
     };
 
+
+    useEffect(() => {
+        if(user?.camera_id){
+            const camera = cameras.find(camera => camera.value === user.camera_id);
+            if (camera) {
+                handleCameraChange({value: camera.value});                
+            }
+            // setCurrentCamera(camera.value);
+        }
+        if(user?.microphone_id){
+            const microphone = microphones.find(microphone => microphone.value === user.microphone_id);
+            if (microphone) {
+                handleMicrophoneChange({value: microphone.value});
+            }
+        }
+    }, [user, cameras, microphones]);
+
+    // }, [user]);
     
     
 
@@ -238,28 +256,58 @@ const Settings = () => {
           />
         </div>
       ) : (
-        <UserLayout>
-            <div className="settings">
-                <span>Choose camera:</span>
-                <Dropdown
-                    value={currentCamera}
-                    // optionLabel="label"
-                    options={cameras}
-                    onChange={handleCameraChange}
-                    placeholder="Choose camera"
-                />
-                <span>Choose microphone:</span>
-                <Dropdown
-                    value={currentMicrophone}
-                    // optionLabel="label"
-                    options={microphones}
-                    onChange={handleMicrophoneChange}
-                    placeholder="Choose microphone"
-                />
+        <UserLayout title="Settings">
+            <div className="grid grid-nogutter mt-4">
+                <div className="col-12 text-center">
+                    {/* <span>Choose camera:</span> */}
+                    <Dropdown
+                        value={currentCamera}
+                        // optionLabel="label"
+                        options={cameras}
+                        onChange={handleCameraChange}
+                        placeholder="Choose camera"
+                        style={{ minWidth: "210px" }}
+                    />
                 </div>
-                <video autoPlay playsInline muted ref={cameraRef} />
+                <div className="col-12 mt-2">
+                    {currentCamera ? (
+                        <div style={{ width: "90%", aspectRatio: "16/9", margin:"0 auto"}} className="flex justify-content-center align-items-center surface-50">
+                            <video style={{width:"100%", height: "100%", objectFit:"cover", objectPosition:"center"}} autoPlay playsInline muted ref={cameraRef} />
+                        </div>
+                    ) : (
+                        <div style={{ width: "90%", aspectRatio: "16/9", margin:"0 auto"}} className="flex justify-content-center align-items-center surface-50">
+                            <div style={{ textAlign: "center"}}>
+                                <p>No camera selected</p>
+                                <video style={{visibility: "hidden", width:"0px", height: "0px"}} autoPlay playsInline muted ref={cameraRef} />
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="col-12 mt-3 text-center">
+                    {/* <span>Choose microphone:</span> */}
+                    <Dropdown
+                        value={currentMicrophone}
+                        // optionLabel="label"
+                        options={microphones}
+                        onChange={handleMicrophoneChange}
+                        placeholder="Choose microphone"
+                        style={{ minWidth: "210px" }}
+                    />
+                </div>
+                <div className="col-12 mt-2 text-center">
+                    <audio autoPlay playsInline muted ref={microphoneRef} />
+                    {currentMicrophone ? (
+                        <Knob value={volumeLvl} readOnly min={0} max={150} />
+
+                    ) : (
+                        <div style={{ textAlign: "center"}}>
+                            <p>No microphone selected</p>
+                            {/* <audio style={{visibility: "hidden", width:"0px", height: "0px"}} autoPlay playsInline muted ref={microphoneRef} /> */}
+                        </div>
+                    )}
+
+                </div>
                 {/* microphone volume meter */}
-                <audio autoPlay playsInline muted ref={microphoneRef} />
                 {/* <ProgressBar
                     value={volumeLvl}
                     showValue={true}
@@ -272,8 +320,8 @@ const Settings = () => {
                 {/* <div className="volume-bar" style={{width: "300px", height: "10px", backgroundColor: "white"}}>
                     <div className="volume-bar-inner" style={{ width: `${volumeLvl}%` , height: "100%", backgroundColor: "red"}}></div>
                 </div> */}
-                <Knob value={volumeLvl} readOnly min={0} max={150} />
-                <Button onClick={saveSettings}>Save settings</Button>
+                <Button style={{margin:"0 auto"}} onClick={saveSettings} className="mt-2">Save settings</Button>
+            </div>
 
             </UserLayout>
         );
