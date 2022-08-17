@@ -83,11 +83,12 @@ const Room = () => {
       dispatch(resetRedirect());
     }
     if (isAuthenticated && user) {
+      const constraints = {
+        audio: user.microphone_id ? { deviceId: user.microphone_id } : true,
+        video: user.camera_id ? { deviceId: user.camera_id } : true,
+      };
       navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-          video: true,
-        })
+        .getUserMedia(constraints)
         .then((stream) => {
           webSocket.current = new WebSocket(wsUrl);
           localVideo.current.srcObject = stream;
@@ -532,11 +533,12 @@ const Room = () => {
   };
 
   const reloadLocalVideo = () => {
+    const constraints = {
+      audio: user.microphone_id ? { deviceId: user.microphone_id } : true,
+      video: user.camera_id ? { deviceId: user.camera_id } : true,
+    };
     navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
+      .getUserMedia(constraints)
       .then((stream) => {
         localVideo.current.srcObject = stream;
       })
