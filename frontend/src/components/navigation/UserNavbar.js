@@ -108,7 +108,7 @@ const UserNavbar = () => {
         style={{ cursor: "pointer", userSelect: "none" }}>
         {userAvatar()}
       </div>
-      {homeButton}
+        {window.location.pathname !== "/" ? homeButton : null}
     </React.Fragment>
   );
   return isAuthenticated && user ? (
