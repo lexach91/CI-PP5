@@ -224,3 +224,27 @@ class ResetPasswordAPIView(APIView):
             'success': True,
             'message': 'Password reset successfully'
         }, status=status.HTTP_200_OK)
+        
+        
+class ChangePasswordAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    def post(self, request):
+        user = request.user
+        if not user:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        data = request.data
+        
+        if not user.check_password(data['old_password']):
+            return Response({'error': 'Old password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if data['password'] != data['password_confirm']:
+            return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(data['password'])
+        user.save()
+        
+        return Response({
+            'success': True,
+            'message': 'Password changed successfully'
+        }, status=status.HTTP_200_OK)
