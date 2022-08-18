@@ -361,7 +361,6 @@ const Register = () => {
                           id="country"
                           {...input}
                           options={countries}
-                          optionLabel="name"
                           className={classNames({
                             "p-invalid": isFormFieldValid(meta),
                           })}
