@@ -27,6 +27,7 @@ import JoinRoom from './components/JoinRoom';
 import axios from 'axios';
 // import { Navigate } from 'react-router-dom';
 import Pricing from './components/Pricing';
+import Subscription from './components/Subscription';
 
 
 
@@ -77,6 +78,7 @@ const App = () => {
             <Route path="/join-room/:roomToken" element={<JoinRoom />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/subscription" element={<Subscription />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Router>
