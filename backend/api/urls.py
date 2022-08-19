@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import CountriesService
-from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView, ResetPasswordAPIView, VerifyTokenAPIView
+from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView, ResetPasswordAPIView, VerifyTokenAPIView, ChangePasswordAPIView
 from profiles.views import EditProfileAPIView, EditDevicesSettingsAPIView
 from payments.views import CreateCheckoutSessionView, StripeWebhookListener, CheckoutSessionView
 from subscriptions.views import GetUsersSubscriptionPlanAPIView
@@ -12,6 +12,7 @@ urlpatterns = [
     path('user', UserAPIView.as_view(), name='user'),
     path('refresh', RefreshTokenAPIView.as_view(), name='refresh'),
     path('logout', LogoutAPIView.as_view(), name='logout'),
+    path('change-password', ChangePasswordAPIView.as_view(), name='change-password'),
     path('forgot-password', ForgotPasswordAPIView.as_view(), name='forgot-password'),
     path('reset-password', ResetPasswordAPIView.as_view(), name='reset-password'),
     path('verify-token', VerifyTokenAPIView.as_view(), name='verify-token'),
