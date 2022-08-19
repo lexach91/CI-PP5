@@ -14,6 +14,9 @@ import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import axios from "axios";
 import { Toast } from "primereact/toast";
+import { Dialog } from "primereact/dialog";
+import { Password } from "primereact/password";
+
 
 const Profile = () => {
   const { isAuthenticated, user, redirect, loading } = useSelector(
@@ -39,6 +42,11 @@ const Profile = () => {
   const toast = useRef(null);
   const [avatarFile, setAvatarFile] = useState(null);
   const [formUploading, setFormUploading] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [passwordUpdating, setPasswordUpdating] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     countryservice.getCountries().then((data) => {
@@ -168,6 +176,115 @@ const Profile = () => {
       return false;
     }
   };
+
+  const changePassword = async () => {
+    setPasswordUpdating(true);
+    const payload = {
+      old_password: oldPassword,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    };
+    await axios.post("change-password", payload).then((data) => {
+      console.log(data);
+      toast.current.show({
+        severity: "success",
+        detail: "Password changed successfully",
+      });
+      setPasswordUpdating(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setDialogVisible(false);
+    }).catch((error) => {
+      console.log(error);
+      toast.current.show({
+        severity: "error",
+        detail: error.response.data.error,
+      });
+      setPasswordUpdating(false);
+    });
+  };
+
+  const onChangeOldPassword = (e) => {
+    setOldPassword(e.target.value);
+  };
+
+  const onChangeNewPassword = (e) => {
+    setNewPassword(e.target.value);
+  };
+
+  const onChangeConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const passwordDialog = () => {
+    return (
+      <Dialog
+        header="Change Password"
+        visible={dialogVisible}
+        style={{ width: "50vw" }}
+        footer={
+          <div>
+            <Button
+              label="Cancel"
+              onClick={() => {
+                setDialogVisible(false);
+                setOldPassword("");
+                setNewPassword("");
+                setConfirmPassword("");
+              }}
+            />
+            <Button
+              label="Submit"
+              disabled={
+                oldPassword.length === 0 ||
+                newPassword.length === 0 ||
+                confirmPassword.length === 0 ||
+                newPassword !== confirmPassword
+              }
+              onClick={() => {
+                changePassword();
+              }}
+            />
+          </div>
+        }
+      >
+        <div className="form-group">
+          <label htmlFor="oldPassword">Old Password</label>
+          <Password
+            id="oldPassword"
+            value={oldPassword}
+            onChange={onChangeOldPassword}
+            placeholder="Old Password"
+            feedback={false}
+            toggleMask={true}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="newPassword">New Password</label>
+          <Password
+            id="newPassword"
+            value={newPassword}
+            onChange={onChangeNewPassword}
+            placeholder="New Password"
+            toggleMask={true}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <Password
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={onChangeConfirmPassword}
+            placeholder="Confirm Password"
+            feedback={false}
+            toggleMask={true}
+          />
+        </div>
+      </Dialog>
+    );
+  };
+
 
   return loading ? (
     <div
@@ -343,6 +460,25 @@ const Profile = () => {
                 icon="pi pi-pencil"
                 className="p-button-text"
                 onClick={() => setEditCountry(!editCountry)}
+              />
+            </div>
+          </li>
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
+            <div className="text-500 w-6 md:w-2 font-medium">Password</div>
+            <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 line-height-3">
+              
+              <div className="text-900">
+                *********  
+              </div>
+              {passwordDialog()}
+              
+            </div>
+            <div className="w-6 md:w-2 flex justify-content-end">
+              <Button
+                label="Edit"
+                icon="pi pi-pencil"
+                className="p-button-text"
+                onClick={() => setDialogVisible(true)}
               />
             </div>
           </li>
