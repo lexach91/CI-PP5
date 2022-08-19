@@ -238,10 +238,13 @@ class ChangePasswordAPIView(APIView):
         if not user.check_password(data['old_password']):
             return Response({'error': 'Old password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
         
-        if data['password'] != data['password_confirm']:
+        if data['new_password'] != data['confirm_password']:
             return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
         
-        user.set_password(data['password'])
+        if user.check_password(data['new_password']):
+            return Response({'error': 'New password cannot be the same as old password'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(data['new_password'])
         user.save()
         
         return Response({
