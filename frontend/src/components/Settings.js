@@ -297,7 +297,13 @@ const Settings = () => {
                 <div className="col-12 mt-2 text-center">
                     <audio autoPlay playsInline muted ref={microphoneRef} />
                     {currentMicrophone ? (
-                        <Knob value={volumeLvl} readOnly min={0} max={150} />
+                        <Knob 
+                            value={volumeLvl} 
+                            readOnly 
+                            min={0} 
+                            max={150}
+                            valueColor={`hsl(${225 + volumeLvl}, 100%, 50%)`}
+                        />
 
                     ) : (
                         <div style={{ textAlign: "center"}}>
