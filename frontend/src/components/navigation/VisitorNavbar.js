@@ -84,7 +84,7 @@ const VisitorNavbar = () => {
 
     return (
         <header className="navbar">
-            <Toast ref={toast} />
+            <Toast ref={toast} style={{zIndex: "9999"}}/>
             <nav>
                 <Menubar model={navList} end={isAuthenticated ? logoutButton : loginRegisterButtonGroup} />
             </nav>
