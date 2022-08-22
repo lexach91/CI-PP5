@@ -338,9 +338,9 @@ const Home = () => {
     <UserLayout title="Home">{userDashboard()}</UserLayout>
   ) : (
     <VisitorLayout title="Home">
-      <div className="grid grid-nogutter surface-50 text-800 h-30rem">
+      <div className="grid grid-nogutter surface-50 text-800 md:h-30rem">
         <div className="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
-          <section>
+          <section className="my-0 mx-auto md:mx-0">
             <span className="block text-6xl font-bold mb-1">
               Absolutely new level of
             </span>
@@ -372,11 +372,11 @@ const Home = () => {
             />
           </section>
         </div>
-        <div className="col-12 md:col-6 overflow-hidden h-full">
+        <div className="col-12 md:col-6 overflow-hidden h-full md:block hidden">
           <img
             src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
             alt="hero-1"
-            className="md:ml-auto block md:h-full"
+            className="md:ml-auto md:block md:h-full hidden"
             style={{ clipPath: "polygon(8% 0, 100% 0%, 100% 100%, 0 100%)" }}
           />
         </div>
