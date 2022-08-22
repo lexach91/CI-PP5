@@ -9,13 +9,13 @@ body {
   color: rgba(255, 255, 255, 0.9);
 }
 
-#root {
+.App {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
 }
 
-.App {
+main {
   flex: 1 0 auto;
 }
 
