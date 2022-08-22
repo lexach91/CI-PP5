@@ -97,14 +97,17 @@ const Register = () => {
       first_name: data.first_name,
       last_name: data.last_name,
       birth_date: data.date.toISOString().substring(0, 10),
-      country: data.country.name,
+      country: data.country,
     };
     dispatch(register(payloadUser));
   };
 
-  if (redirect || isAuthenticated) {
-    console.log("redirect");
+  if (redirect) {
     return <Navigate to="/login" />;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
   }
 
   const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
@@ -162,7 +165,7 @@ const Register = () => {
     </div>
   ) : (
     <VisitorLayout title="Register">
-    <div className="form-register pt-5">
+    <div className="form-register p-5">
       <Messages ref={messages}></Messages>
       <Dialog
         visible={showMessage}
