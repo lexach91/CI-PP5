@@ -14,7 +14,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from './redux/authSlice';
 import { useEffect } from 'react';
 import PrimeReact from 'primereact/api';
@@ -37,6 +37,7 @@ const App = () => {
   PrimeReact.cssTransitions = true;
 
   const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -59,8 +60,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    checkUserInRoom();
-  }, []);
+    if(isAuthenticated && user) {
+      checkUserInRoom();
+    }
+  }, [ isAuthenticated, user ]);
 
 
   return (
