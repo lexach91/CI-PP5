@@ -77,7 +77,7 @@ class User(AbstractUser):
     birth_date = models.DateField()
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)    
-    country = models.CharField(max_length=50)
+    country = models.CharField(max_length=100)
     camera_id = models.CharField(max_length=100, null=True, blank=True)
     microphone_id = models.CharField(max_length=100, null=True, blank=True)
     
