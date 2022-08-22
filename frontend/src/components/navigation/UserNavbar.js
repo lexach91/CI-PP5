@@ -113,7 +113,7 @@ const UserNavbar = () => {
   );
   return isAuthenticated && user ? (
     <header className="navbar">
-      <Toast ref={toast} />
+      <Toast ref={toast} style={{ zIndex: "10000" }} />
       <nav className="navbar-nav">
         <Toolbar left={userButton} right={logoutButton} />
       </nav>
