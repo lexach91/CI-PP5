@@ -53,7 +53,7 @@ const Login = () => {
     // }
   }, [redirect]);
 
-  if (redirect || isAuthenticated) {
+  if (isAuthenticated) {
     return <Navigate to="/" />;
   }
 
@@ -88,7 +88,7 @@ const Login = () => {
     </div>
   ) : (
     <VisitorLayout title="Login">
-    <div className="form-login pt-5">
+    <div className="form-login p-5">
       <div className="flex justify-content-center h-full">
         <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6">
           <h5 className="text-center">Login</h5>
