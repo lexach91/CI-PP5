@@ -6,7 +6,7 @@ import { Chip } from "primereact/chip";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { logout } from "../../redux/authSlice";
+import { logout, resetError, resetMessage } from "../../redux/authSlice";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 import { Avatar } from "primereact/avatar";
@@ -18,6 +18,7 @@ const UserNavbar = () => {
     isAuthenticated,
     user,
     error,
+    message,
     loading,
     redirect,
     membershipLoading,
@@ -29,15 +30,42 @@ const UserNavbar = () => {
 
   useEffect(() => {
     if (error) {
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: error,
-        life: 7000,
-      });
-      dispatch(logout());
+      if(error.length > 0){
+        for(let i = 0; i < error.length; i++){
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error',
+            detail: error[i],
+            life: 7000
+          });
+        }
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: error,
+          life: 7000,
+        });
+      }
+      setTimeout(() => {
+        dispatch(resetError());
+      }, 7000);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (message) {
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: message,
+        life: 7000,
+      });
+      setTimeout(() => {
+        dispatch(resetMessage());
+      }, 7000);
+    }
+  } , [message]);
 
   const logoutButton = (
     <React.Fragment>
@@ -179,7 +207,7 @@ const UserNavbar = () => {
       </Sidebar>
     </header>
   ) : (
-    <> </>
+    <Toast ref={toast} style={{ zIndex: "10000" }} />
   );
 };
 
