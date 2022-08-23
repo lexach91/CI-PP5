@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 // import { setAuth, setUser, setToken } from '../redux/authSlice';
 import { store } from '../../redux/store';
-import { logout, resetError } from '../../redux/authSlice';
+import { logout, resetError, resetMessage } from '../../redux/authSlice';
 import { Toast } from 'primereact/toast';
 
 
@@ -15,7 +15,7 @@ const VisitorNavbar = () => {
     // const auth = useSelector(state => state.auth.isAuthenticated);
     // const user = useSelector(state => state.auth.user);
     // const token = useSelector(state => state.auth.token);
-    const { isAuthenticated, error } = useSelector(state => state.auth);
+    const { isAuthenticated, error, message } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const navList = [
         { label: 'Home', icon: 'pi pi-home', url: '/' },
@@ -49,15 +49,43 @@ const VisitorNavbar = () => {
     // }, [token]);
     useEffect(() => {
         if (error) {
-            toast.current.show({
+          if(typeof error === 'object'){
+            for(let i = 0; i < error.length; i++){
+              toast.current.show({
                 severity: 'error',
                 summary: 'Error',
-                detail: error,
+                detail: error[i],
+                life: 7000
+              });
+            }
+          } else {
+            toast.current.show({
+              severity: "error",
+              summary: "Error",
+              detail: error,
+              life: 7000,
+            });
+          }
+            setTimeout(() => {
+                dispatch(resetError());
+            }, 7000);
+        }
+      }, [error]);
+
+    useEffect(() => {
+        if (message) {
+            toast.current.show({
+                severity: 'success',
+                summary: 'Success',
+                detail: message,
                 life: 7000
             });
-            dispatch(resetError());
+            setTimeout(() => {
+                dispatch(resetMessage());
+            }, 7000);
         }
-    }, [error]);
+    } , [message]);
+
 
 
     const loginRegisterButtonGroup = (
