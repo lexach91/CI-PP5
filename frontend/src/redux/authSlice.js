@@ -6,6 +6,7 @@ const initialState = {
   isAuthenticated: false,
   user: null,
   error: null,
+  message: null,
   loading: false,
   redirect: false,
   membership: null,
@@ -34,26 +35,14 @@ export const register = createAsyncThunk(
         country,
         birth_date,
       });
-      console.log(response);
-      if (response.status === 201) {
-        return response.data;
-      } else {
-        console.log("error");
-        let errors = response.response.data;
-        console.log(errors);
-        // join all the errors into one string
-        errors = Object.values(errors).join("<br>");
-        console.log(errors);
-        return thunkAPI.rejectWithValue(errors);
-      }
+        return response.data;        
     } catch (error) {
       let errorsData = error.response.data;
-      let errors = "";
+      let errors = [];
       // join all keys and values into one string
       for (let key in errorsData) {
-        errors += key + ": " + errorsData[key] + "<br>";
+        errors.push(`${key}: ${errorsData[key]}`);
       }
-      console.log(errors);
       return thunkAPI.rejectWithValue(errors);
     }
   }
@@ -62,17 +51,13 @@ export const register = createAsyncThunk(
 export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
   try {
     const response = await axios.get("user");
-    if (response.status === 200) {
-      const { dispatch } = thunkAPI;
-      dispatch(getMembership());
-      return response.data;
-    } else {
-      const { dispatch } = thunkAPI;
-      dispatch(refreshToken());
-      return thunkAPI.rejectWithValue(response.response.data.error);
-    }
+    const { dispatch } = thunkAPI;
+    dispatch(getMembership());
+    return response.data;    
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data);
+    const { dispatch } = thunkAPI;
+    dispatch(refreshToken());
+    return thunkAPI.rejectWithValue(error.response.data.error);
   }
 });
 
@@ -80,32 +65,21 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
   const { email, password } = data;
   try {
     const response = await axios.post("login", { email, password });
-    if (response.status === 200) {
-      console.log("Login success");
-      const { dispatch } = thunkAPI;
-      dispatch(getUser());
-      return response.data;
-    } else {
-      console.log("Login failed");
-      console.log(response);
-      return thunkAPI.rejectWithValue(response.payload.error);
-    }
+    console.log("Login success");
+    const { dispatch } = thunkAPI;
+    dispatch(getUser());
+    return response.data;      
   } catch (error) {
-    console.log("Login failed");
-    return thunkAPI.rejectWithValue(error.response.data);
+    return thunkAPI.rejectWithValue(error.response.data.error);
   }
 });
 
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
     const response = await axios.post("logout", { withCredentials: true });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return thunkAPI.rejectWithValue(response.response.data.error);
-    }
+    return response.data;
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data);
+    return thunkAPI.rejectWithValue(error.response.data.error);
   }
 });
 
@@ -116,15 +90,9 @@ export const checkAuth = createAsyncThunk(
       const response = await axios.get("verify-token", {
         withCredentials: true,
       });
-      if (response.status === 200) {
-        const { dispatch } = thunkAPI;
-        dispatch(getUser());
-        return response.data;
-      } else {
-        const { dispatch } = thunkAPI;
-        dispatch(refreshToken());
-        return thunkAPI.rejectWithValue(response.response.data.error);
-      }
+      const { dispatch } = thunkAPI;
+      dispatch(getUser());
+      return response.data;
     } catch (error) {
       const { dispatch } = thunkAPI;
       dispatch(refreshToken());
@@ -138,17 +106,13 @@ export const refreshToken = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.post("refresh", { withCredentials: true });
-      if (response.status === 200) {
         const { dispatch } = thunkAPI;
         dispatch(checkAuth());
         return response.data;
-      } else {
-        const { dispatch } = thunkAPI;
-        dispatch(logout());
-        return thunkAPI.rejectWithValue(response.response.data.error);
-      }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+        // const { dispatch } = thunkAPI;
+        // dispatch(logout());
+      return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
 );
@@ -158,13 +122,9 @@ export const getMembership = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get("membership");
-      if (response.status === 200) {
         return response.data;
-      } else {
-        return thunkAPI.rejectWithValue(response.response.data.error);
-      }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
 );
@@ -179,6 +139,9 @@ const authSlice = createSlice({
     resetError: (state) => {
       state.error = null;
     },
+    resetMessage: (state) => {
+        state.message = null;
+        },
   },
   extraReducers: (builder) => {
     builder
@@ -188,6 +151,7 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.redirect = true;
+        state.message = "Registration successful";
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
@@ -199,13 +163,12 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.loading = false;
+        state.message = "Login successful";
         // state.redirect = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        console.log(action);
-        console.log(action.payload);
-        state.error = action.payload.error;
+        state.error = action.payload;
       })
       .addCase(getUser.pending, (state, action) => {
         state.loading = true;
@@ -227,6 +190,7 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
+        state.message = "Logout successful";
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
@@ -268,7 +232,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetRedirect, resetError } = authSlice.actions;
+export const { resetRedirect, resetError, resetMessage } = authSlice.actions;
 
 export default authSlice.reducer;
 
