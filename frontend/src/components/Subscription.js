@@ -22,6 +22,7 @@ const Subscription = () => {
   const [ payments, setPayments ] = useState([]);
   const paymentPanel = useRef(null);
   const [ paymentsLoading, setPaymentsLoading ] = useState(false);
+  const [ portalLoading, setPortalLoading ] = useState(false);
 
   useEffect(() => {
     if (redirect) {
@@ -73,7 +74,23 @@ const Subscription = () => {
         <Column field="amount" header="Amount" sortable={true} />
       </DataTable>
     </OverlayPanel>
-  )
+  );
+
+  const openCustomerPortal = async () => {
+    setPortalLoading(true);
+    try {
+      const res = await axios.get("customer-portal");
+      window.location.href = res.data.sessionUrl;
+    }
+    catch (err) {
+      console.log(err);
+      toast.current.show({
+        severity: "error",
+        detail: err.response.data.error,
+      });
+    }
+    setPortalLoading(false);
+  };
 
   return loading || loadingSubscription ? (
     <div
@@ -168,6 +185,8 @@ const Subscription = () => {
                 tooltip="View payment history"
                 tooltipOptions={{ position: "top" }}
                 onClick={(e) => getPaymentHistory(e)}
+                loading={paymentsLoading}
+                disabled={paymentsLoading}
               />
             </div>
             <div className="text-500 w-full md:w-4 p-2 h-full">
@@ -177,6 +196,9 @@ const Subscription = () => {
                 className="w-full h-full"
                 tooltip="Visit Stripe customer portal"
                 tooltipOptions={{ position: "top" }}
+                loading={portalLoading}
+                disabled={portalLoading}
+                onClick={() => openCustomerPortal()}
               />
             </div>
             <div className="text-500 w-full md:w-4 p-2 h-full">
