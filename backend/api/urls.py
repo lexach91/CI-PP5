@@ -2,7 +2,7 @@ from django.urls import path
 from .views import CountriesService
 from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, UserAPIView, RefreshTokenAPIView, ForgotPasswordAPIView, ResetPasswordAPIView, VerifyTokenAPIView, ChangePasswordAPIView
 from profiles.views import EditProfileAPIView, EditDevicesSettingsAPIView
-from payments.views import CreateCheckoutSessionView, StripeWebhookListener, CheckoutSessionView, GetPaymentHistoryAPIView, CreateCustomerPortalSession
+from payments.views import CreateCheckoutSessionView, StripeWebhookListener, CheckoutSessionView, GetPaymentHistoryAPIView, CreateCustomerPortalSession, CancelSubscriptionAPIView
 from subscriptions.views import GetUsersSubscriptionPlanAPIView, GetMembershipInfoAPIView
 
 urlpatterns = [
@@ -25,4 +25,5 @@ urlpatterns = [
     path('membership-stripe', GetMembershipInfoAPIView.as_view(), name='membership-stripe'),
     path('payment-history', GetPaymentHistoryAPIView.as_view(), name='payment-history'),
     path('customer-portal', CreateCustomerPortalSession.as_view(), name='customer-portal'),
+    path('cancel-subscription', CancelSubscriptionAPIView.as_view(), name='cancel-subscription'),
 ]
