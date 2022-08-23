@@ -3,14 +3,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: null,
   user: null,
   error: null,
   message: null,
-  loading: false,
-  redirect: false,
+  loading: null,
+  redirect: null,
   membership: null,
-  membershipLoading: false,
+  membershipLoading: null,
 };
 
 export const register = createAsyncThunk(
@@ -142,6 +142,9 @@ const authSlice = createSlice({
     resetMessage: (state) => {
         state.message = null;
         },
+    setError: (state, action) => {
+      state.error = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -168,6 +171,7 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
+        state.isAuthenticated = false;
         state.error = action.payload;
       })
       .addCase(getUser.pending, (state, action) => {
@@ -176,10 +180,12 @@ const authSlice = createSlice({
       .addCase(getUser.fulfilled, (state, action) => {
         state.loading = false;
         state.redirect = true;
+        state.isAuthenticated = true;
         state.user = action.payload;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
+        // state.isAuthenticated = false;
         state.error = action.payload;
       })
       .addCase(logout.pending, (state, action) => {
@@ -205,6 +211,7 @@ const authSlice = createSlice({
       })
       .addCase(checkAuth.rejected, (state, action) => {
         state.loading = false;
+        state.isAuthenticated = false;
         // state.error = action.payload;
       })
       .addCase(refreshToken.pending, (state, action) => {
@@ -216,6 +223,7 @@ const authSlice = createSlice({
       })
       .addCase(refreshToken.rejected, (state, action) => {
         state.loading = false;
+        state.isAuthenticated = false;
         // state.error = action.payload;
       })
       .addCase(getMembership.pending, (state, action) => {
@@ -232,7 +240,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetRedirect, resetError, resetMessage } = authSlice.actions;
+export const { resetRedirect, resetError, resetMessage, setError } = authSlice.actions;
 
 export default authSlice.reducer;
 
