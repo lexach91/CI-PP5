@@ -85,7 +85,7 @@ const Home = () => {
           <div className="col-12 xl:col-6">
             <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
               <div className="flex justify-content-between mb-3">
-                <div>
+                <div style={{ wordBreak:"break-all"}}>
                   <span className="block text-green-500 font-medium mb-3">
                     Profile
                   </span>
@@ -95,7 +95,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div
-                  className="flex align-items-center justify-content-center bg-blue-100 border-round"
+                  className="flex flex-shrink-0 align-items-center justify-content-center bg-blue-100 border-round"
                   style={{ width: "2.5rem", height: "2.5rem" }}>
                   <i className="pi pi-user text-blue-500 text-xl"></i>
                 </div>
@@ -113,7 +113,7 @@ const Home = () => {
           <div className="col-12 xl:col-6">
             <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
               <div className="flex justify-content-between mb-3">
-                <div>
+              <div style={{ wordBreak:"break-all"}}>
                   <span className="block text-green-500 font-medium mb-3">
                     Membership plan
                   </span>
@@ -125,7 +125,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div
-                  className="flex align-items-center justify-content-center bg-orange-100 border-round"
+                  className="flex flex-shrink-0 align-items-center justify-content-center bg-orange-100 border-round"
                   style={{ width: "2.5rem", height: "2.5rem" }}>
                   <i className="pi pi-dollar text-orange-500 text-xl"></i>
                 </div>
@@ -155,7 +155,7 @@ const Home = () => {
           <div className="col-12 xl:col-6">
             <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
               <div className="flex justify-content-between mb-3">
-                <div>
+              <div style={{ wordBreak:"break-all"}}>
                   <span className="block text-green-500 font-medium mb-3">
                     Settings
                   </span>
@@ -173,7 +173,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div
-                  className="flex align-items-center justify-content-center bg-cyan-100 border-round"
+                  className="flex flex-shrink-0 align-items-center justify-content-center bg-cyan-100 border-round"
                   style={{ width: "2.5rem", height: "2.5rem" }}>
                   <i className="pi pi-cog text-cyan-500 text-xl"></i>
                 </div>
@@ -191,7 +191,7 @@ const Home = () => {
           <div className="col-12 xl:col-6">
             <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
               <div className="flex justify-content-between mb-3">
-                <div>
+              <div style={{ wordBreak:"break-all"}}>
                   <span className="block text-green-500 font-medium mb-3">
                     Meetings
                   </span>
@@ -207,7 +207,7 @@ const Home = () => {
 
                 </div>
                 <div
-                  className="flex align-items-center justify-content-center bg-purple-100 border-round"
+                  className="flex flex-shrink-0 align-items-center justify-content-center bg-purple-100 border-round"
                   style={{ width: "2.5rem", height: "2.5rem" }}>
                   <i className="pi pi-video text-purple-500 text-xl"></i>
                 </div>
