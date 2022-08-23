@@ -47,44 +47,44 @@ const VisitorNavbar = () => {
     // useEffect(() => {
     //     checkAuth();
     // }, [token]);
-    useEffect(() => {
-        if (error) {
-          if(typeof error === 'object'){
-            for(let i = 0; i < error.length; i++){
-              toast.current.show({
-                severity: 'error',
-                summary: 'Error',
-                detail: error[i],
-                life: 7000
-              });
-            }
-          } else {
-            toast.current.show({
-              severity: "error",
-              summary: "Error",
-              detail: error,
-              life: 7000,
-            });
-          }
-            setTimeout(() => {
-                dispatch(resetError());
-            }, 7000);
-        }
-      }, [error]);
+    // useEffect(() => {
+    //     if (error) {
+    //       if(typeof error === 'object'){
+    //         for(let i = 0; i < error.length; i++){
+    //           toast.current.show({
+    //             severity: 'error',
+    //             summary: 'Error',
+    //             detail: error[i],
+    //             life: 7000
+    //           });
+    //         }
+    //       } else {
+    //         toast.current.show({
+    //           severity: "error",
+    //           summary: "Error",
+    //           detail: error,
+    //           life: 7000,
+    //         });
+    //       }
+    //         setTimeout(() => {
+    //             dispatch(resetError());
+    //         }, 7000);
+    //     }
+    //   }, [error]);
 
-    useEffect(() => {
-        if (message) {
-            toast.current.show({
-                severity: 'success',
-                summary: 'Success',
-                detail: message,
-                life: 7000
-            });
-            setTimeout(() => {
-                dispatch(resetMessage());
-            }, 7000);
-        }
-    } , [message]);
+    // useEffect(() => {
+    //     if (message) {
+    //         toast.current.show({
+    //             severity: 'success',
+    //             summary: 'Success',
+    //             detail: message,
+    //             life: 7000
+    //         });
+    //         setTimeout(() => {
+    //             dispatch(resetMessage());
+    //         }, 7000);
+    //     }
+    // } , [message]);
 
 
 
