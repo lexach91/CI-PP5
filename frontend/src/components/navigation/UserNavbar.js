@@ -151,7 +151,7 @@ const UserNavbar = () => {
         style={{ width: "fit-content" }}>
         <div className="p-grid">
           <div className="p-col-12">
-            <Card>
+            <Card style={{wordBreak:"break-all"}}>
               <div className="flex">
                 <div className="p-col-4 flex justify-center align-center">
                   <Avatar
