@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../layouts/UserLayout";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect } from "../redux/authSlice";
+import { resetRedirect, setError } from "../redux/authSlice";
 import { RotateLoader } from "react-spinners";
 import { Button } from "primereact/button";
 import axios from "axios";
@@ -10,9 +10,12 @@ import { Chip } from "primereact/chip";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { confirmPopup } from 'primereact/confirmpopup';
+import { ConfirmPopup } from 'primereact/confirmpopup';
+import { Navigate } from "react-router-dom";
 
 const Subscription = () => {
-  const { isAuthenticated, user, redirect, loading, membership } = useSelector(
+  const { isAuthenticated, user, redirect, loading, membership, membershipLoading } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
@@ -23,12 +26,14 @@ const Subscription = () => {
   const paymentPanel = useRef(null);
   const [ paymentsLoading, setPaymentsLoading ] = useState(false);
   const [ portalLoading, setPortalLoading ] = useState(false);
+  const [ deleteLoading, setDeleteLoading ] = useState(false);
+  const [ restricted, setRestricted ] = useState(false);
 
   useEffect(() => {
     if (redirect) {
       dispatch(resetRedirect());
     }
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && membership && membership.name !== "Free") {
       setLoadingSubscription(true);
       axios
         .get("membership-stripe")
@@ -46,7 +51,24 @@ const Subscription = () => {
           setLoadingSubscription(false);
         });
     }
-  }, [redirect, dispatch]);
+  }, [redirect, isAuthenticated, user, membership]);
+
+  useEffect(() => {
+    if(membership?.name === "Free") {
+      dispatch(setError("Your membership is free. You can't access this page."));
+      setRestricted(true);
+    }
+    if(isAuthenticated === false && loading === false) {
+      dispatch(setError("You must be logged in to access this page."));
+      setRestricted(true);
+    }
+  } , [membership, isAuthenticated, loading]);
+
+  if(restricted) {
+    return <Navigate to="/" />
+  }
+
+
 
   const getPaymentHistory = async (e) => {
     setPaymentsLoading(true);
@@ -92,6 +114,41 @@ const Subscription = () => {
     setPortalLoading(false);
   };
 
+  const confirmDeletion = (e) => {
+    console.log("deleting");
+    const popup = confirmPopup({
+      target: e.currentTarget,
+      message: "Are you sure you want to cancel your subscription?",
+      icon: "pi pi-exclamation-triangle",
+      accept: async () => deleteSubscription(),
+      // reject: () => {popup.hide();},
+    });
+    console.log(popup);
+    // popup.show();
+  }
+
+  const deleteSubscription = async () => {
+    setDeleteLoading(true);
+    try {
+      const res = await axios.post("cancel-subscription");
+      toast.current.show({
+        severity: "success",
+        detail: "Subscription cancelled",
+      });
+      setSubscription({});
+    }
+    catch (err) {
+      console.log(err);
+      toast.current.show({
+        severity: "error",
+        detail: err.response.data.error,
+      });
+    }
+    setDeleteLoading(false);
+  };
+
+
+
   return loading || loadingSubscription ? (
     <div
       className="loader-container"
@@ -115,7 +172,7 @@ const Subscription = () => {
         loading={loading}
       />
     </div>
-  ) : isAuthenticated && user && membership ? (
+  ) : isAuthenticated && user && membership && membership.name !== "Free" ? (
     <UserLayout title="Subscription">
       <Toast ref={toast} />
 
@@ -208,7 +265,11 @@ const Subscription = () => {
                 className="w-full h-full p-button-danger"
                 tooltip="Cancel subscription"
                 tooltipOptions={{ position: "top" }}
+                loading={deleteLoading}
+                disabled={deleteLoading}
+                onClick={confirmDeletion}
               />
+              <ConfirmPopup />
             </div>
           </li>
         </ul>
