@@ -7,6 +7,9 @@ import { Button } from "primereact/button";
 import axios from "axios";
 import { Toast } from "primereact/toast";
 import { Chip } from "primereact/chip";
+import { OverlayPanel } from "primereact/overlaypanel";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const Subscription = () => {
   const { isAuthenticated, user, redirect, loading, membership } = useSelector(
@@ -16,6 +19,9 @@ const Subscription = () => {
   const [subscription, setSubscription] = useState({});
   const [loadingSubscription, setLoadingSubscription] = useState(false);
   const toast = useRef(null);
+  const [ payments, setPayments ] = useState([]);
+  const paymentPanel = useRef(null);
+  const [ paymentsLoading, setPaymentsLoading ] = useState(false);
 
   useEffect(() => {
     if (redirect) {
@@ -40,6 +46,34 @@ const Subscription = () => {
         });
     }
   }, [redirect, dispatch]);
+
+  const getPaymentHistory = async (e) => {
+    setPaymentsLoading(true);
+    const res = await axios.get("payment-history");
+    setPayments(res.data.payments);
+    setPaymentsLoading(false);
+    paymentPanel.current.show(e);
+  };
+
+  const historyPanel = (
+    <OverlayPanel ref={paymentPanel} showCloseIcon >
+      <DataTable
+        value={payments}
+        loading={paymentsLoading}
+        paginator={true}
+        rows={10}
+        responsive={true}
+        emptyMessage="No payments found"
+      >
+        {/* <Column field="created_at" header="Date" sortable={true} /> */}
+        {/* created_at should be converted to locale date and time string */}
+        <Column header="Date" sortable={true} body={(rowData) => {
+          return new Date(rowData.created_at).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"});
+        } } />
+        <Column field="amount" header="Amount" sortable={true} />
+      </DataTable>
+    </OverlayPanel>
+  )
 
   return loading || loadingSubscription ? (
     <div
@@ -126,12 +160,14 @@ const Subscription = () => {
           </li>
           <li className="flex flex-column md:flex-row align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
             <div className="text-500 w-full md:w-4 p-2 h-full">
+              {historyPanel}
               <Button
                 label="History"
                 icon="pi pi-dollar"
                 className="w-full h-full"
                 tooltip="View payment history"
                 tooltipOptions={{ position: "top" }}
+                onClick={(e) => getPaymentHistory(e)}
               />
             </div>
             <div className="text-500 w-full md:w-4 p-2 h-full">
