@@ -12,6 +12,7 @@ from authentication.authentication import JWTAuthentication
 from subscriptions.models import SubscriptionPlan, Membership
 from profiles.models import User
 from .models import Payment, PaymentHistory
+from .serializers import PaymentHistorySerializer
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 # set up webhook key
@@ -140,3 +141,15 @@ class StripeWebhookListener(APIView):
             membership.save()
             
         return Response({'received': True}, status=status.HTTP_200_OK)
+    
+    
+class GetPaymentHistoryAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request):
+        user = request.user
+        if user is None:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+        payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
+        serializer = PaymentHistorySerializer(payment_history)
+        return Response(serializer.data, status=status.HTTP_200_OK)
