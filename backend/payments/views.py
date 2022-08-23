@@ -171,3 +171,22 @@ class CreateCustomerPortalSession(APIView):
             return_url=base_url + '/subscription',
             )
         return Response({'sessionUrl': session['url']}, status=status.HTTP_200_OK)
+    
+    
+class CancelSubscriptionAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    
+    def post(self, request):
+        user = request.user
+        if user is None:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+        customer = stripe.Customer.list(email=user.email)
+        if len(customer.data) == 0:
+            return Response({'error': 'You are not a customer'}, status=status.HTTP_400_BAD_REQUEST)
+        customer = customer.data[0]
+        subscription = stripe.Subscription.list(customer=customer.id)
+        if len(subscription.data) == 0:
+            return Response({'error': 'You are not subscribed'}, status=status.HTTP_400_BAD_REQUEST)
+        subscription = subscription.data[0]
+        stripe.Subscription.delete(subscription.id)
+        return Response({'message': 'Subscription cancelled'}, status=status.HTTP_200_OK)
