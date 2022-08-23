@@ -15,8 +15,8 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuth } from './redux/authSlice';
-import { useEffect } from 'react';
+import { checkAuth, resetError, resetMessage } from './redux/authSlice';
+import { useEffect, useRef } from 'react';
 import PrimeReact from 'primereact/api';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
@@ -28,7 +28,7 @@ import axios from 'axios';
 // import { Navigate } from 'react-router-dom';
 import Pricing from './components/Pricing';
 import Subscription from './components/Subscription';
-
+import { Toast } from 'primereact/toast';
 
 
 
@@ -37,11 +37,52 @@ const App = () => {
   PrimeReact.cssTransitions = true;
 
   const dispatch = useDispatch();
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { user, isAuthenticated, error, message } = useSelector((state) => state.auth);
+  const toast = useRef(null);
 
   useEffect(() => {
     dispatch(checkAuth());
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      if(typeof error === 'object'){
+        for(let i = 0; i < error.length; i++){
+          toast.current.show({
+            severity: 'error',
+            summary: 'Error',
+            detail: error[i],
+            life: 7000
+          });
+        }
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: error,
+          life: 7000,
+        });
+      }
+        setTimeout(() => {
+            dispatch(resetError());
+        }, 7000);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (message) {
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: message,
+        life: 7000,
+      });
+      setTimeout(() => {
+        dispatch(resetMessage());
+      } , 7000);
+    }
+  } , [message]);
+
 
   const checkUserInRoom = async () => {
     await axios.get('/rooms/check-user-in-room')
@@ -68,6 +109,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <Toast ref={toast} style={{ zIndex: 10001 }} />
       
         <Router>
           <Routes>
