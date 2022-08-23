@@ -6,9 +6,10 @@ import { RotateLoader } from "react-spinners";
 import { Button } from "primereact/button";
 import axios from "axios";
 import { Toast } from "primereact/toast";
+import { Chip } from "primereact/chip";
 
 const Subscription = () => {
-  const { isAuthenticated, user, redirect, loading } = useSelector(
+  const { isAuthenticated, user, redirect, loading, membership } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ const Subscription = () => {
         left: 0,
         zIndex: "9999",
       }}>
-        <Toast ref={toast} />
+      <Toast ref={toast} />
       <RotateLoader
         sizeUnit={"px"}
         size={150}
@@ -63,16 +64,103 @@ const Subscription = () => {
         loading={loading}
       />
     </div>
-  ) : isAuthenticated && user ? (
+  ) : isAuthenticated && user && membership ? (
     <UserLayout title="Subscription">
-        {subscription.id}
-        <Toast ref={toast} />
+      <Toast ref={toast} />
 
+      <div className="surface-0 p-card w-full md:w-8 md:mx-auto border-2 border-primary border-round my-5">
+        <div className="font-medium text-3xl text-900 mb-3 p-2">
+          My Subscription
+        </div>        
+        <ul className="list-none p-0 m-0">
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
+            <div className="text-500 w-4 font-medium">Name</div>
+            <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
+              <Chip label={membership.name} className="bg-blue-500" />
+              <i className="pi pi-money-bill text-white text-2xl"></i>
+            </div>
+          </li>
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
+            <div className="text-500 w-4 font-medium">Can create rooms</div>
+            <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
+              {membership.can_create_rooms ? (<Chip label="Yes" className="bg-blue-500" />) : (<Chip label="No" className="bg-red-500" />)}
+              <i className="pi pi-video text-white text-2xl"></i>
+            </div>
+          </li>
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
+            <div className="text-500 w-4 font-medium">Guest limit</div>
+            <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
+              <Chip label={membership.guest_limit} className="bg-blue-500" />
+              <i className="pi pi-users text-white text-2xl"></i>
+            </div>
+          </li>
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
+            <div className="text-500 w-4 font-medium">Start date</div>
+            <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
+              
+              <Chip label={new Date(subscription.start_date * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+              <i className="pi pi-calendar text-white text-2xl"></i>
+
+            </div>
+          </li>
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
+            <div className="text-500 w-4 font-medium">Previous payment</div>
+            <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
+              <Chip label={new Date(subscription.current_period_start * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+              <i className="pi pi-calendar text-white text-2xl"></i>
+            </div>            
+          </li>
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
+            <div className="text-500 w-4 font-medium">Next payment</div>
+            <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
+              <Chip label={new Date(subscription.current_period_end * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+              <i className="pi pi-calendar text-white text-2xl"></i>
+            </div>            
+          </li>
+          <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
+            <div className="text-500 w-4 font-medium">Payment amount</div>
+            <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
+              <Chip label={subscription.items.data[0].price.unit_amount / 100 + " " + subscription.items.data[0].price.currency} className="bg-blue-500" />
+              <i className="pi pi-dollar text-white text-2xl"></i>
+            </div>            
+          </li>
+          <li className="flex flex-column md:flex-row align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
+            <div className="text-500 w-full md:w-4 p-2 h-full">
+              <Button
+                label="History"
+                icon="pi pi-dollar"
+                className="w-full h-full"
+                tooltip="View payment history"
+                tooltipOptions={{ position: "top" }}
+              />
+            </div>
+            <div className="text-500 w-full md:w-4 p-2 h-full">
+              <Button
+                label="Portal"
+                icon="pi pi-user"
+                className="w-full h-full"
+                tooltip="Visit Stripe customer portal"
+                tooltipOptions={{ position: "top" }}
+              />
+            </div>
+            <div className="text-500 w-full md:w-4 p-2 h-full">
+              <Button
+                label="Cancel"
+                icon="pi pi-times"
+                className="w-full h-full p-button-danger"
+                tooltip="Cancel subscription"
+                tooltipOptions={{ position: "top" }}
+              />
+            </div>
+          </li>
+        </ul>
+      </div>
     </UserLayout>
-  ) : (<>
-        <Toast ref={toast} />
-  
-  </>)
+  ) : (
+    <>
+      <Toast ref={toast} />
+    </>
+  );
 };
 
 export default Subscription;
