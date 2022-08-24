@@ -35,12 +35,7 @@ const Home = () => {
     if (redirect) {
       dispatch(resetRedirect());
     }
-    if (isAuthenticated && user) {
-      setMessage(`Welcome ${user.first_name} ${user.last_name}`);
-    } else {
-      setMessage("You are not logged in");
-    }
-  }, [isAuthenticated, user, redirect]);
+  }, [redirect]);
 
   const getCameraName = async () => {
     let cameraId = user?.camera_id;
@@ -69,8 +64,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getCameraName();
-    getMicrophoneName();
+    if (user){
+      getCameraName();
+      getMicrophoneName();
+    }
   } , [user]);
 
 
@@ -367,7 +364,7 @@ const Home = () => {
               type="button"
               className="p-button-outlined"
               onClick={() => {
-                window.location.href = "/pricing";
+                window.location.href = "/register";
               }}
             />
           </section>
@@ -382,7 +379,7 @@ const Home = () => {
         </div>
       </div>
       <Divider />
-      <div className="surface-0 text-center mt-8 p-5">
+      <div className="surface-0 text-center mt-8 p-5" id="features">
         <div className="mb-3 font-bold text-2xl">
           <span className="text-900">One Product, </span>
           <span className="text-blue-600">Many Solutions</span>
