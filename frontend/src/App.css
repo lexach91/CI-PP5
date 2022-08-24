@@ -18,10 +18,12 @@
 .host-video-container {
     border: 1px solid #626277;
     position: relative;
+    overflow: hidden;
 }
 .guest-video-container {
     border: 1px solid #2c8d39;
     position: relative;
+    overflow: hidden;
 }
 @media screen and (max-width: 960px) {
     .form-register .surface-card {
