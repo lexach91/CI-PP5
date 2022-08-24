@@ -194,10 +194,10 @@ const Room = () => {
       // console.log(muted_peers, "muted_peers");
       // setMutedGuests(muted_peers);
       // mutedGuestsRef.current = muted_peers;
-      let guests_muted = data.muted_all;
-      console.log(guests_muted, "guests_muted");
-      setGuestsMicsOn(!guests_muted);
-      roomMutedRef.current = guests_muted;
+      // let guests_muted = data.muted_all;
+      // console.log(guests_muted, "guests_muted");
+      // setGuestsMicsOn(!guests_muted);
+      // roomMutedRef.current = guests_muted;
       // if (muted_peers) {
       //   console.log("muted_peers", muted_peers);
       //   setMutedGuests(prevGuests => {
@@ -423,12 +423,20 @@ const Room = () => {
 
   const sendDataToPeer = (peer, data) => {
     let guest = guestsRef.current.find((guest) => guest.peer == peer);
-    guest.peerConnection.send(JSON.stringify(data));
+    if (guest.peerConnection._channelReady) {
+      guest.peerConnection.send(JSON.stringify(data));
+    } else {
+      guest.peerConnection.on("open", () => {
+        guest.peerConnection.send(JSON.stringify(data));
+      }
+      );
+    }
   };
 
   const sendDataToEveryone = (data) => {
     guestsRef.current.forEach((guest) => {
-      guest.peerConnection.send(JSON.stringify(data));
+      sendDataToPeer(guest.peer, data);
+      // guest.peerConnection.send(JSON.stringify(data));
     });
   };
 
@@ -637,7 +645,7 @@ const Room = () => {
         track.enabled = true;
       });
     });
-    localVideo.current.srcObject.getAudioTracks().forEach((track) => {
+    localVideo?.current?.srcObject?.getAudioTracks().forEach((track) => {
       track.enabled = true;
     });
     setLocalMicOn(true);
@@ -651,7 +659,7 @@ const Room = () => {
         track.enabled = false;
       });
     });
-    localVideo.current.srcObject.getAudioTracks().forEach((track) => {
+    localVideo?.current?.srcObject?.getAudioTracks().forEach((track) => {
       track.enabled = false;
     });
     setLocalMicOn(false);
@@ -865,10 +873,11 @@ const Room = () => {
 
   const renderGuests = () => {
     let windowWidth = window.innerWidth;
-    if (windowWidth < 1025) {
+    let screenOrientation = window.window.screen.orientation.type;
+    if (windowWidth < 1025 && (screenOrientation === "portrait-primary" || screenOrientation === "portrait-secondary")) {
       return (
         <Galleria
-          value={guests}
+          value={guests.filter((guest) => !guest.isHost)}
           item={carouselVideoTemplate}
           thumbnail={carouselVideoTemplate}
           responsiveOptions={responsiveOptions}
@@ -876,7 +885,8 @@ const Room = () => {
           autoPlay={false}
           circular={false}
           verticalThumbnailViewPortHeight={"50px"}
-          style={isHost ? { width: "100%", height: "100%" } : { width: "100%" }}
+          style={{width: "100%"}}
+          showThumbnails={guests.filter((guest) => !guest.isHost).length > 1}
         />
       );
     } else {
@@ -1024,15 +1034,15 @@ const Room = () => {
         height: "100%",
       }}>
       <Toast ref={toast} />
-      <div className="grid grid-nogutter">
+      <div className="grid grid-nogutter h-full">
         <div
-          className="col-fixed room-controls flex flex-column justify-content-center align-items-center gap-3"
-          style={{ width: "100px" }}>
+          className={`${(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? "col-fixed flex-column p-auto  gap-3" : "col-12 flex-row p-3  gap-1"}  room-controls flex justify-content-center align-items-center`}
+          style={(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? { width: "100px" } : {height:"7%"}}>
           {isHost && (
             <Button
               // icon="pi pi-copy"
               label={<i className="pi pi-copy"></i>}
-              className="p-button-rounded p-button-secondary mt-3 w-7"
+              className="p-button-rounded p-button-secondary lg:mt-3 w-7"
               tooltip="Copy room token to clipboard to invite others"
               onClick={copyRoomTokenToClipboard}
             />
@@ -1134,10 +1144,13 @@ const Room = () => {
             />
           )}
         </div>
-        <div className="col grid grid-nogutter" style={{ height: "100vh" }}>
+        <div 
+          className={`${(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? "col" : "col-12"} grid grid-nogutter`} 
+          style={(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? { height: "100%" } : {height:"93%"}}
+          >
           <div
             className={
-              window.innerWidth > 1024 ? (
+              (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
                 room.max_guests === 3
                 ? "host-video-container col-6"
                 : room.max_guests === 8
@@ -1148,9 +1161,9 @@ const Room = () => {
                 )
             }
             style={
-              window.innerWidth > 1024 ? (
+              (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
                 room.max_guests === 3 ? { height: "50vh" } : { height: "33vh" }
-                ) : { height: "30vh" }
+                ) : (isHost ? { height: "50%" } : { height: "auto" })
             }>
             {isHost ? (
               <video
@@ -1201,20 +1214,20 @@ const Room = () => {
           {!isHost && (
             <div
               className={
-                window.innerWidth > 1024 ? (
+                (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
                   room.max_guests === 3
-                  ? "host-video-container col-6"
+                  ? "guest-video-container col-6"
                   : room.max_guests === 8
-                  ? "host-video-container col-4"
-                  : "host-video-container col-3"
+                  ? "guest-video-container col-4"
+                  : "guest-video-container col-3"
                   ) : (
-                  "host-video-container col-12"
+                  "guest-video-container col-12"
                   )
               }
               style={
-                window.innerWidth > 1024 ? (
+                (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
                   room.max_guests === 3 ? { height: "50vh" } : { height: "33vh" }
-                  ) : { height: "30vh" }
+                  ) : { height: "auto" }
               }>
               <video
                 ref={localVideo}
