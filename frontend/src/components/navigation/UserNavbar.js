@@ -26,7 +26,7 @@ const UserNavbar = () => {
   } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const toast = useRef(null);
+  // const toast = useRef(null);
 
   // useEffect(() => {
   //   if (error) {
@@ -76,7 +76,9 @@ const UserNavbar = () => {
           className="p-button-danger"
           onClick={async () => {
             await dispatch(logout());
-            window.location.href = "/";
+            if (window.location.pathname !== "/") {
+              window.location.href = "/";
+            }
           }}
         />
       </div>
@@ -139,9 +141,9 @@ const UserNavbar = () => {
         {window.location.pathname !== "/" ? homeButton : null}
     </React.Fragment>
   );
-  return isAuthenticated && user ? (
+  return (isAuthenticated && user) && (
     <header className="navbar">
-      <Toast ref={toast} style={{ zIndex: "10000" }} />
+      {/* <Toast ref={toast} style={{ zIndex: "10000" }} /> */}
       <nav className="navbar-nav">
         <Toolbar left={userButton} right={logoutButton} />
       </nav>
@@ -206,8 +208,6 @@ const UserNavbar = () => {
         </div>
       </Sidebar>
     </header>
-  ) : (
-    <Toast ref={toast} style={{ zIndex: "10000" }} />
   );
 };
 

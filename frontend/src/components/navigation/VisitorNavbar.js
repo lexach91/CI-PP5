@@ -22,7 +22,7 @@ const VisitorNavbar = () => {
         { label: 'Pricing', icon: 'pi pi-dollar', url: '/pricing' },
         { label: 'Contact', icon: 'pi pi-phone', url: '/contact' },
     ]
-    const toast = useRef(null);
+    // const toast = useRef(null);
     // const checkAuth = async () => {
     //     try {
     //         if (token){
@@ -112,7 +112,7 @@ const VisitorNavbar = () => {
 
     return (
         <header className="navbar">
-            <Toast ref={toast} style={{zIndex: "9999"}}/>
+            {/* <Toast ref={toast} style={{zIndex: "9999"}}/> */}
             <nav>
                 <Menubar model={navList} end={isAuthenticated ? logoutButton : loginRegisterButtonGroup} />
             </nav>
