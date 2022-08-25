@@ -37,6 +37,9 @@ class VideoRoom(models.Model):
     
     def is_guest(self, user):
         return self.guests.filter(id=user.id).exists()
+    
+    def check_password(self, password):
+        return self.password == password
 
 
 
