@@ -257,7 +257,7 @@ const Settings = () => {
         </div>
       ) : (
         <UserLayout title="Settings">
-            <div className="grid grid-nogutter mt-4">
+            <div className="grid grid-nogutter p-4 md:w-8 md:mx-auto">
                 <div className="col-12 text-center">
                     {/* <span>Choose camera:</span> */}
                     <Dropdown
