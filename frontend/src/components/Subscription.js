@@ -206,7 +206,10 @@ const Subscription = () => {
             <div className="text-500 w-4 font-medium">Start date</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
               
-              <Chip label={new Date(subscription.start_date * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+              {subscription?.start_date && (
+                <Chip label={new Date(subscription.start_date * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+
+              )}
               <i className="pi pi-calendar text-white text-2xl"></i>
 
             </div>
@@ -214,21 +217,30 @@ const Subscription = () => {
           <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
             <div className="text-500 w-4 font-medium">Previous payment</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
-              <Chip label={new Date(subscription.current_period_start * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+              {subscription?.current_period_start && (
+                <Chip label={new Date(subscription.current_period_start * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+
+              )}
               <i className="pi pi-calendar text-white text-2xl"></i>
             </div>            
           </li>
           <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
             <div className="text-500 w-4 font-medium">Next payment</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
-              <Chip label={new Date(subscription.current_period_end * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+              {subscription?.current_period_end && (
+                <Chip label={new Date(subscription.current_period_end * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+
+              )}
               <i className="pi pi-calendar text-white text-2xl"></i>
             </div>            
           </li>
           <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
             <div className="text-500 w-4 font-medium">Payment amount</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
-              <Chip label={subscription.items.data[0].price.unit_amount / 100 + " " + subscription.items.data[0].price.currency} className="bg-blue-500" />
+              {subscription?.items && (
+                <Chip label={subscription.items.data[0].price.unit_amount / 100 + " " + subscription.items.data[0].price.currency} className="bg-blue-500" />
+
+              )}
               <i className="pi pi-dollar text-white text-2xl"></i>
             </div>            
           </li>
