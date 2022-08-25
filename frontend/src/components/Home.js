@@ -10,7 +10,9 @@ import { Divider } from "primereact/divider";
 import { Avatar } from "primereact/avatar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
 import { Tooltip } from "primereact/tooltip";
+import axios from "axios";
 
 const Home = () => {
   // const auth = useSelector(state => state.auth.isAuthenticated);
@@ -30,6 +32,10 @@ const Home = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [cameraName, setCameraName] = useState("");
   const [microphoneName, setMicrophoneName] = useState("");
+  const [readyToJoin, setReadyToJoin] = useState(false);
+  const [roomProtected, setRoomProtected] = useState(false);
+  const [roomPassword, setRoomPassword] = useState("");
+  const [checkingRoom, setCheckingRoom] = useState(false);
 
   useEffect(() => {
     if (redirect) {
@@ -255,10 +261,15 @@ const Home = () => {
           label="Join"
           icon="pi pi-login"
           className="p-button-success w-6 m-2"
+          disabled={!readyToJoin}
           onClick={() => {
             if(roomToken && roomToken.length === 32) {
               setDialogVisible(false);
-              window.location.href = "/join-room/" + roomToken;
+              if(roomPassword) {
+                window.location.href = "/join-room/" + roomToken + `?password=${roomPassword}`;
+              } else {
+                window.location.href = "/join-room/" + roomToken;
+              }
             } else if (!roomToken) {
               setErrorMessage("Room token is required");
             } else if (roomToken.length !== 32) {
@@ -283,7 +294,7 @@ const Home = () => {
       <Dialog
         header="Join meeting"
         visible={dialogVisible}
-        style={{ width: "50vw" }}
+        className="w-full md:w-6"
         footer={dialogFooter()}
         onHide={() => {
           setDialogVisible(false);
@@ -296,15 +307,75 @@ const Home = () => {
             placeholder="Room token"
             value={roomToken}
             className={errorMessage ? "p-invalid w-full" : "w-full"}
+            loading={checkingRoom}
             onChange={(e) => {
               setRoomToken(e.target.value);
             } }
           />
+          {/* {roomProtected && (
+            <Password
+              placeholder="Room password"
+              value={roomPassword}
+              onChange={(e) => {
+                setRoomPassword(e.target.value);
+              } }
+            />
+          )} */}
           <div className="text-red-500 text-left w-full mt-2">{errorMessage}</div>
+          {roomProtected && (
+            <div className="flex flex-column">
+              <Password
+                placeholder="Room password"
+                value={roomPassword}
+                className="w-full"
+                inputClassName="w-full"
+                toggleMask
+                feedback={false}
+                onChange={(e) => {
+                  setRoomPassword(e.target.value);
+                } }
+              />
+              <div className="text-red-500 text-left w-full mt-2">
+                This room is protected. Enter the password
+                </div>
+            </div>
+          )}
         </div>
       </Dialog>
     );
   }
+
+  const checkRoom = async (token) => {
+    try {
+      const response = await axios.get(`rooms/is-protected?room_token=${token}`);
+      if(response.data.protected) {
+        setRoomProtected(true);
+      } else {
+        setRoomProtected(false);
+        setReadyToJoin(true);
+      }
+      setCheckingRoom(false);
+    } catch (error) {
+      setCheckingRoom(false);
+      setErrorMessage("Something went wrong");
+      setTimeout(() => {
+        setErrorMessage("");
+      } , 3000);
+    }
+  }
+
+  useEffect(() => {
+    if(roomToken && roomToken.length === 32) {
+      setCheckingRoom(true);
+      checkRoom(roomToken);
+    }
+  } , [roomToken]);
+
+  useEffect(() => {
+    if(roomPassword && roomPassword.length > 0) {
+      setReadyToJoin(true);
+    }
+  } , [roomPassword]);
 
 
 
