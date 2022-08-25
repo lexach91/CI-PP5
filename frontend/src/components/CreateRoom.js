@@ -162,6 +162,7 @@ const CreateRoom = () => {
                 value={roomPassword}
                 onChange={(e) => setRoomPassword(e.target.value)}
                 disabled={!roomProtected}
+                toggleMask={true}
               />
             </div>
             <div className="flex justify-content-between align-items-center m-2">
