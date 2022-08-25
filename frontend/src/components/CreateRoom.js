@@ -61,8 +61,8 @@ const CreateRoom = () => {
     setSubmitting(true);
     let payload = {
       protected: roomProtected,
-      chat_enabled: chatEnabled,
-      guests_input_control: guestControlEnabled,
+      // chat_enabled: chatEnabled,
+      // guests_input_control: guestControlEnabled,
       max_guests: maxGuests,
     };
     if (roomProtected) {
@@ -165,7 +165,7 @@ const CreateRoom = () => {
                 toggleMask={true}
               />
             </div>
-            <div className="flex justify-content-between align-items-center m-2">
+            {/* <div className="flex justify-content-between align-items-center m-2">
               <p>Chat Enabled</p>
               <InputSwitch
                 checked={chatEnabled}
@@ -178,7 +178,7 @@ const CreateRoom = () => {
                 checked={guestControlEnabled}
                 onChange={(e) => setGuestControlEnabled(e.value)}
               />
-            </div>
+            </div> */}
             <div className="flex justify-content-between align-items-center m-2">
               <p>Max Guests</p>
               <div>
