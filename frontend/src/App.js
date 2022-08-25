@@ -8,6 +8,7 @@ import Navbar from './components/navigation/VisitorNavbar';
 import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
+import ResetPassword from './components/ResetPassword';
 import {
   BrowserRouter as Router,
   Routes,
@@ -124,6 +125,8 @@ const App = () => {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/subscription" element={<Subscription />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Router>
