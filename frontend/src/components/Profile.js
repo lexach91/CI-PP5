@@ -311,7 +311,7 @@ const Profile = () => {
   ) : isAuthenticated && user ? (
     <UserLayout title="Profile">
       <Toast ref={toast} />
-      <div className="surface-0 mt-3">
+      <div className="surface-0 p-4 w-full md:w-8 md:mx-auto">
         <div className="font-medium text-3xl text-900 mb-3">My profile</div>
         <div className="text-500 mb-5">
           Here you can edit your profile and change your avatar.
@@ -487,7 +487,7 @@ const Profile = () => {
           <Button
             label="Save"
             icon="pi pi-check"
-            className="p-button-secondary"
+            className="p-button-primary"
             onClick={onSubmit}
             loading={formUploading}
             disabled={!changesMade()}
