@@ -117,9 +117,10 @@ const UserNavbar = () => {
     <React.Fragment>
       <div className="p-menuitem">
         <Button
-          label="Home"
+          // label="Home"
           icon="pi pi-home"
-          className="p-button-secondary ml-3"
+          tooltip="Home page"
+          className="p-button-secondary ml-3 p-button-rounded"
           onClick={() => {
             window.location.href = "/";
           }}
@@ -150,12 +151,15 @@ const UserNavbar = () => {
       <Sidebar
         visible={sidebarVisible}
         onHide={() => setSidebarVisible(false)}
-        style={{ width: "fit-content" }}>
-        <div className="p-grid">
-          <div className="p-col-12">
-            <Card style={{wordBreak:"break-all"}}>
+        // style={{ width: "fit-content" }}
+        >
+        <div className="grid">
+          <div className="col-12">
+            <Card
+              // style={{wordBreak:"break-all"}}
+              >
               <div className="flex">
-                <div className="p-col-4 flex justify-center align-center">
+                <div className="flex justify-content-center align-items-center">
                   <Avatar
                     size="xlarge"
                     image={
@@ -166,14 +170,24 @@ const UserNavbar = () => {
                   />
                 </div>
                 <Divider layout="vertical" />
-                <div className="p-col-8">
+                <div>
                   <h5>{user.first_name + " " + user.last_name}</h5>
                   <p>{user.email}</p>
                 </div>
               </div>
             </Card>
           </div>
-          <div className="p-col-12">
+          <div className="col-12">
+            <Button
+              label="Home"
+              icon="pi pi-home"
+              className="p-button-secondary mb-2 w-full"
+              onClick={() => {
+                window.location.href = "/";
+              }}
+            />
+          </div>
+          <div className="col-12">
             <Button
               label="Profile"
               icon="pi pi-user"
@@ -183,7 +197,7 @@ const UserNavbar = () => {
               }}
             />
           </div>
-          <div className="p-col-12">
+          <div className="col-12">
             <Button
               label="Settings"
               icon="pi pi-cog"
@@ -194,7 +208,7 @@ const UserNavbar = () => {
             />
           </div>
           {!membershipLoading && membership && membership.can_create_rooms && (
-            <div className="p-col-12">
+            <div className="col-12">
               <Button
                 label="Create Room"
                 icon="pi pi-plus"
