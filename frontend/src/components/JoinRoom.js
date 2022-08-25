@@ -23,12 +23,23 @@ const JoinRoom = () => {
     
     const joinRoom = async () => {
         try {
-            const response = await axios.post(`rooms/join`, {
-                room_token: roomToken,
-            });
-            setJoined(true);
-            setError(null);
-            return response;
+            const query = new URLSearchParams(window.location.search);
+            if (query.get("password")) {
+                const response = await axios.post(`rooms/join`, {
+                    room_token: roomToken,
+                    password: query.get("password"),
+                });
+                setJoined(true);
+                setError(null);
+                return response;  
+            } else {
+                const response = await axios.post(`rooms/join`, {
+                    room_token: roomToken,
+                });
+                setJoined(true);
+                setError(null);
+                return response;            
+            }
         } catch (error) {
             setError(error.response.data.error);
             return error;
