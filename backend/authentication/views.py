@@ -10,6 +10,9 @@ from .authentication import JWTAuthentication, create_access_token, create_refre
 from .models import ForgotPasswordToken, UserToken
 # need to import send_email from django
 from django.core.mail import send_mail
+from django.conf import settings
+
+base_url = settings.BASE_URL
 
 
 # Create your views here.
@@ -185,7 +188,7 @@ class ForgotPasswordAPIView(APIView):
                 token=token
             )
             
-            url = 'http://localhost:8000/forgot-password/' + token
+            url = base_url + '/reset-password/' + token
             
             send_mail(
                 subject="Reset Password",
