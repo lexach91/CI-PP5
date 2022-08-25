@@ -56,6 +56,21 @@ class JoinRoomAPIView(APIView):
         room.guests.add(user)
         return Response({'success': 'You have joined the room'}, status=status.HTTP_200_OK)
 
+
+class CheckRoomProtectedAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    def get(self, request):
+        user = request.user
+        room_token = request.query_params['room_token']
+        
+        if user is None:
+            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+        if room_token is None:
+            return Response({'error': 'No room token provided'}, status=status.HTTP_400_BAD_REQUEST)
+        if not VideoRoom.objects.filter(token=room_token).exists():
+            return Response({'error': 'Room does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        room = VideoRoom.objects.get(token=room_token)
+        return Response({'protected': room.protected}, status=status.HTTP_200_OK)
     
 class LeaveRoomAPIView(APIView):
     authentication_classes = [JWTAuthentication]
