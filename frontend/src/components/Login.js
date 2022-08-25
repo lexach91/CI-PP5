@@ -161,6 +161,9 @@ const Login = () => {
           <p className="text-muted mt-3">
             Don't have an account? <Link className="text-blue-500" to="/register">Register</Link>
           </p>
+          <p className="text-muted mt-3">
+            Forgot your password? <Link className="text-blue-500" to="/reset-password">Reset Password</Link>
+          </p>
         </div>
       </div>
     </div>
