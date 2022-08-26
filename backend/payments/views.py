@@ -182,7 +182,7 @@ class StripeWebhookListener(APIView):
             # payment_history.save()
             subject = 'Subscription created'
             name = f"{user.first_name} {user.last_name}"
-            html_message = render_to_string('payment/subscription_created_email.html', {'name': name, 'plan': plan.name})
+            html_message = render_to_string('payments/subscription_created_email.html', {'name': name, 'plan': plan.name})
             plain_message = strip_tags(html_message)
             
             send_mail(
@@ -222,7 +222,7 @@ class StripeWebhookListener(APIView):
             customer = stripe.Customer.retrieve(customer_id)
             user = User.objects.get(email=customer.email)
             payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
-            payment = Payment.objects.create(membership=membership, amount=plan.price)
+            payment = Payment.objects.create(membership=user.membership, amount=plan.price)
             payment_history.payments.add(payment)
             payment_history.save()
             subject = 'Your payment has been received'
