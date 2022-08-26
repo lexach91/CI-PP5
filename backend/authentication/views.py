@@ -28,7 +28,7 @@ class RegisterAPIView(APIView):
         serializer.save()
         
         send_mail(
-            from_email="example@example.com",
+            from_email="dr.meetings@hotmail.com",
             recipient_list=[data['email']],
             subject="Welcome to the API",
             message="You have successfully registered for the API",
@@ -193,7 +193,7 @@ class ForgotPasswordAPIView(APIView):
             send_mail(
                 subject="Reset Password",
                 message='Click the link to reset your password: ' + url,
-                from_email="from@example.com",
+                from_email="dr.meetings@hotmail.com",
                 recipient_list=[email],
             )
             
