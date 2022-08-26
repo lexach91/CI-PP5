@@ -6,8 +6,7 @@ import UserLayout from "../layouts/UserLayout";
 import { Button } from "primereact/button";
 
 const TermsHtml = () => {
-  return (
-    <div className="md:w-8 md:mx-auto p-1 md:p-4">
+  return (<>
       <h2>Website Terms of Use</h2>
 
       <p>Version 1.0</p>
@@ -18,6 +17,7 @@ const TermsHtml = () => {
           href="https://django-react-video-meetings.herokuapp.com/"
           target="_blank"
           rel="noopener noreferrer"
+          className="text-blue-500"
           aria-label="Dr.Meetings website">
           https://django-react-video-meetings.herokuapp.com/
         </a>{" "}
@@ -49,6 +49,7 @@ const TermsHtml = () => {
           href="https://www.termsofusegenerator.net"
           target="_blank"
           rel="noopener noreferrer"
+          className="text-blue-500"
           aria-label="Terms of Use Generator">
           Terms Of Use Generator
         </a>
@@ -625,7 +626,7 @@ const TermsHtml = () => {
 
       <p>Address: Worldwide</p>
       <p>Email: ronmctailor@protonmail.com</p>
-    </div>
+    </>
   );
 };
 
@@ -662,7 +663,11 @@ const TermsOfUse = () => {
                 setButtonVisible(false);
             }
           });
-    })
+        window.scrollTo({
+            top:0,
+            behavior: 'smooth'
+        });
+    }, []);
 
   return loading ? (
     <div
@@ -688,12 +693,16 @@ const TermsOfUse = () => {
     </div>
   ) : isAuthenticated ? (
     <UserLayout title="Terms of Use">
-      <TermsHtml />
+      <div className="md:w-8 md:mx-auto p-1 md:p-4">
+        <TermsHtml />
+      </div>
       {goToTopButton()}
     </UserLayout>
   ) : (
     <VisitorLayout title="Terms of Use">
-      <TermsHtml />
+      <div className="md:w-8 md:mx-auto p-1 md:p-4">
+        <TermsHtml />
+      </div>
       {goToTopButton()}
     </VisitorLayout>
   );
