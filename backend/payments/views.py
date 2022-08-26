@@ -222,7 +222,7 @@ class StripeWebhookListener(APIView):
             customer = stripe.Customer.retrieve(customer_id)
             user = User.objects.get(email=customer.email)
             payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
-            payment = Payment.objects.create(membership=user.membership, amount=plan.price)
+            payment = Payment.objects.create(membership=user.membership, amount=user.membership.type.price)
             payment_history.payments.add(payment)
             payment_history.save()
             subject = 'Your payment has been received'
