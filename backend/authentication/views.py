@@ -11,6 +11,8 @@ from .models import ForgotPasswordToken, UserToken
 # need to import send_email from django
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 base_url = settings.BASE_URL
 
@@ -189,13 +191,25 @@ class ForgotPasswordAPIView(APIView):
             )
             
             url = base_url + '/reset-password/' + token
+            subject = 'Reset Password'
+            name = f"{user.first_name} {user.last_name}"
+            html_message = render_to_string('authentication/reset_password_email.html', {'link': url, 'name': name})
+            plain_message = strip_tags(html_message)
             
             send_mail(
-                subject="Reset Password",
-                message='Click the link to reset your password: ' + url,
+                subject=subject,
+                message=plain_message,
                 from_email="dr.meetings@hotmail.com",
                 recipient_list=[email],
+                html_message=html_message,
             )
+            
+            # send_mail(
+            #     subject="Reset Password",
+            #     message='Click the link to reset your password: ' + url,
+            #     from_email="dr.meetings@hotmail.com",
+            #     recipient_list=[email],
+            # )
             
         return Response({
             'success': True,
