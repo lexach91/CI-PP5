@@ -136,6 +136,10 @@ const Subscription = () => {
         detail: "Subscription cancelled",
       });
       setSubscription({});
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+      
     }
     catch (err) {
       console.log(err);
