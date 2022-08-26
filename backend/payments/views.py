@@ -113,7 +113,7 @@ class StripeWebhookListener(APIView):
             payment = Payment.objects.create(membership=membership, amount=plan.price)
             payment_history.payments.add(payment)
             payment_history.save()
-        if event.type == 'customer.subscription.updated':
+        elif event.type == 'customer.subscription.updated':
             subscription = event.data.object
             customer_id = subscription.customer
             customer = stripe.Customer.retrieve(customer_id)
@@ -128,7 +128,7 @@ class StripeWebhookListener(APIView):
             payment = Payment.objects.create(membership=membership, amount=plan.price)
             payment_history.payments.add(payment)
             payment_history.save()
-        if event.type == 'customer.subscription.deleted':
+        elif event.type == 'customer.subscription.deleted':
             subscription = event.data.object
             customer_id = subscription.customer
             customer = stripe.Customer.retrieve(customer_id)
@@ -188,5 +188,8 @@ class CancelSubscriptionAPIView(APIView):
         if len(subscription.data) == 0:
             return Response({'error': 'You are not subscribed'}, status=status.HTTP_400_BAD_REQUEST)
         subscription = subscription.data[0]
-        stripe.Subscription.delete(subscription.id)
+        stripe.Subscription.delete(
+            subscription.id,
+            prorate=True,
+            )
         return Response({'message': 'Subscription cancelled'}, status=status.HTTP_200_OK)
