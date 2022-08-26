@@ -9,8 +9,8 @@ from profiles.models import User
 from .authentication import JWTAuthentication, create_access_token, create_refresh_token, decode_access_token, decode_refresh_token
 from .models import ForgotPasswordToken, UserToken
 # need to import send_email from django
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
@@ -29,12 +29,25 @@ class RegisterAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
+        subject = 'Welcome to Dr.Meetings'
+        name = f'{data["first_name"]} {data["last_name"]}'
+        html_message = render_to_string('authentication/registration_email.html', {'name': name})
+        plain_message = strip_tags(html_message)
+        
         send_mail(
+            subject=subject,
+            message=plain_message,
             from_email="dr.meetings@hotmail.com",
             recipient_list=[data['email']],
-            subject="Welcome to the API",
-            message="You have successfully registered for the API",
+            html_message=html_message,
         )
+        
+        # send_mail(
+        #     from_email="dr.meetings@hotmail.com",
+        #     recipient_list=[data['email']],
+        #     subject="Welcome to the API",
+        #     message="You have successfully registered for the API",
+        # )
         
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
