@@ -35,11 +35,11 @@ const footer = () => {
           <Divider className="md:hidden"/>
 
         <div className="footer-center text-center">
-          <Link to="/about" className="text-gray-500 no-underline block p-2 m-2">
-            About
-            </Link>
             <Link to="/contact" className="text-gray-500 no-underline block p-2 m-2">
             Contact
+            </Link>
+          <Link to="/terms-of-use" className="text-gray-500 no-underline block p-2 m-2">
+            Terms of use
             </Link>
             <Link to="/privacy" className="text-gray-500 no-underline block p-2 m-2">
             Privacy
