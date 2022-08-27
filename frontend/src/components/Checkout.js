@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 import RotateLoader from "react-spinners/RotateLoader";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -9,6 +10,7 @@ const Checkout = () => {
     const [success, setSuccess] = useState(false);
     const [cancelled, setCancelled] = useState(false);
     const [sessionId, setSessionId] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
@@ -18,14 +20,16 @@ const Checkout = () => {
             setSessionId(query.get('session_id'));
             setMessage("Thank you for your purchase! You will receive an email shortly with your receipt.");
             setTimeout(() => {
-                window.location.href = "/";
+                // window.location.href = "/";
+                navigate("/", { replace: true });
             }, 3000);
         }
         if (query.get('cancelled')) {
             setCancelled(true);
             setMessage("Your purchase was cancelled.");
             setTimeout(() => {
-                window.location.href = "/";
+                // window.location.href = "/";
+                navigate("/", { replace: true });
             }, 3000);
         }
     } , []);
