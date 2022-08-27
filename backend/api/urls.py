@@ -4,7 +4,7 @@ from authentication.views import LogoutAPIView, RegisterAPIView, LoginAPIView, U
 from profiles.views import EditProfileAPIView, EditDevicesSettingsAPIView
 from payments.views import CreateCheckoutSessionView, StripeWebhookListener, CheckoutSessionView, GetPaymentHistoryAPIView, CreateCustomerPortalSession, CancelSubscriptionAPIView
 from subscriptions.views import GetUsersSubscriptionPlanAPIView, GetMembershipInfoAPIView
-from contactus.views import ContactUsAPIView, NewsletterSubscriptionAPIView
+from contactus.views import ContactUsAPIView, NewsletterSubscriptionAPIView, UnsubscribeNewsletterAPIView
 
 urlpatterns = [
     path('countries', CountriesService.as_view(), name='countries'),
@@ -29,4 +29,5 @@ urlpatterns = [
     path('cancel-subscription', CancelSubscriptionAPIView.as_view(), name='cancel-subscription'),
     path('contact-us', ContactUsAPIView.as_view(), name='contact-us'),
     path('newsletter/subscribe', NewsletterSubscriptionAPIView.as_view(), name='newsletter-subscription'),
+    path('newsletter/unsubscribe', UnsubscribeNewsletterAPIView.as_view(), name='newsletter-unsubscribe'),
 ]
