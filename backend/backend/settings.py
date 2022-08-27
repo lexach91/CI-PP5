@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'videorooms',
     'payments',
     'subscriptions',
+    'contactus',
 ]
 
 
