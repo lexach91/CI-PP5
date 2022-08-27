@@ -12,6 +12,7 @@ import RotateLoader from "react-spinners/RotateLoader";
 import VisitorLayout from "../layouts/VisitorLayout";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const ResetPassword = () => {
@@ -21,6 +22,7 @@ const ResetPassword = () => {
     const [ resetPasswordToken, setResetPasswordToken ] = useState(null);
     const { token } = useParams();
     const [submitting, setSubmitting] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (token) {
@@ -69,9 +71,10 @@ const ResetPassword = () => {
         try {
             const response = await axios.post("forgot-password", payload);
             dispatch(setMessage("If an account exists, you will receive an email with instructions shortly."));
-            setTimeout(() => {
-                window.location.href = "/";
-            } , 3000);
+            // setTimeout(() => {
+            //     // window.location.href = "/";
+            // } , 3000);
+            navigate("/");
         }
         catch (error) {
             dispatch(setError("An error occurred. Please try again."));
@@ -90,9 +93,10 @@ const ResetPassword = () => {
         try {
             const response = await axios.post("reset-password", payload);
             dispatch(setMessage("Password successfully reset. You can now login."));
-            setTimeout(() => {
-                window.location.href = "/login";
-            }, 3000);
+            // setTimeout(() => {
+            //     window.location.href = "/login";
+            // }, 3000);
+            navigate("/login");
         }
         catch (error) {
             dispatch(setError("An error occurred. Please try again."));
