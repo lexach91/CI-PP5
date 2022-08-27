@@ -165,34 +165,34 @@ class StripeWebhookListener(APIView):
 
 
         # Handle the event        
-        if event.type == 'customer.subscription.created':
-            subscription = event.data.object
-            customer_id = subscription.customer
-            customer = stripe.Customer.retrieve(customer_id)
-            user = User.objects.get(email=customer.email)
-            plan = SubscriptionPlan.objects.get(stripe_plan_id=subscription["items"]["data"][0]["plan"]["id"])
-            membership = Membership.objects.get_or_create(user=user)[0]
-            membership.type = plan
-            membership.expires_at = datetime.fromtimestamp(subscription.current_period_end)
-            membership.stripe_id = subscription.id
-            membership.save()
-            # payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
-            # payment = Payment.objects.create(membership=membership, amount=plan.price)
-            # payment_history.payments.add(payment)
-            # payment_history.save()
-            subject = 'Subscription created'
-            name = f"{user.first_name} {user.last_name}"
-            html_message = render_to_string('payments/subscription_created_email.html', {'name': name, 'plan': plan.name})
-            plain_message = strip_tags(html_message)
+        # if event.type == 'customer.subscription.created':
+        #     subscription = event.data.object
+        #     customer_id = subscription.customer
+        #     customer = stripe.Customer.retrieve(customer_id)
+        #     user = User.objects.get(email=customer.email)
+        #     plan = SubscriptionPlan.objects.get(stripe_plan_id=subscription["items"]["data"][0]["plan"]["id"])
+        #     membership = Membership.objects.get_or_create(user=user)[0]
+        #     membership.type = plan
+        #     membership.expires_at = datetime.fromtimestamp(subscription.current_period_end)
+        #     membership.stripe_id = subscription.id
+        #     membership.save()
+        #     # payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
+        #     # payment = Payment.objects.create(membership=membership, amount=plan.price)
+        #     # payment_history.payments.add(payment)
+        #     # payment_history.save()
+        #     subject = 'Subscription created'
+        #     name = f"{user.first_name} {user.last_name}"
+        #     html_message = render_to_string('payments/subscription_created_email.html', {'name': name, 'plan': plan.name})
+        #     plain_message = strip_tags(html_message)
             
-            send_mail(
-                subject=subject,
-                message=plain_message,
-                from_email="dr.meetings@hotmail.com",
-                recipient_list=[user.email],
-                html_message=html_message,
-            )
-        elif event.type == 'customer.subscription.deleted':
+        #     send_mail(
+        #         subject=subject,
+        #         message=plain_message,
+        #         from_email="dr.meetings@hotmail.com",
+        #         recipient_list=[user.email],
+        #         html_message=html_message,
+        #     )
+        if event.type == 'customer.subscription.deleted':
             subscription = event.data.object
             customer_id = subscription.customer
             customer = stripe.Customer.retrieve(customer_id)
@@ -221,7 +221,7 @@ class StripeWebhookListener(APIView):
             customer_id = invoice.customer
             customer = stripe.Customer.retrieve(customer_id)
             user = User.objects.get(email=customer.email)
-            amount = invoice.amount_paid / 100
+            amount = int(invoice.amount_paid / 100)
             payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
             payment = Payment.objects.create(membership=user.membership, amount=amount)
             payment_history.payments.add(payment)
@@ -239,12 +239,39 @@ class StripeWebhookListener(APIView):
                 recipient_list=[user.email],
                 html_message=html_message,
             )
+            subscription = stripe.Subscription.retrieve(invoice.subscription)
+            membership = Membership.objects.filter(user=user)
+            if membership.exists():
+                membership = membership.first()
+                membership.type = SubscriptionPlan.objects.get(stripe_plan_id=subscription['items']['data'][0]['plan']['id'])
+                membership.expires_at = datetime.fromtimestamp(subscription['current_period_end'])
+                membership.stripe_id = subscription.id
+                membership.save()
+            else:
+                membership = Membership.objects.create(
+                    user=user,
+                    type=SubscriptionPlan.objects.get(stripe_plan_id=subscription['items']['data'][0]['plan']['id']),
+                    expires_at=datetime.fromtimestamp(subscription['current_period_end']),
+                    stripe_id=subscription.id,
+                )
+                subject = 'Your subscription has been created'
+                html_message = render_to_string('payments/subscription_created_email.html', {'name': name, 'plan': membership.type.name})
+                plain_message = strip_tags(html_message)
+                
+                send_mail(
+                    subject=subject,
+                    message=plain_message,
+                    from_email="dr.meetings@hotmail.com",
+                    recipient_list=[user.email],
+                    html_message=html_message,
+                )
+            
         elif event.type == 'invoice.payment_failed':
             invoice = event.data.object
             customer_id = invoice.customer
             customer = stripe.Customer.retrieve(customer_id)
             user = User.objects.get(email=customer.email)
-            amount = invoice.amount_due / 100
+            amount = int(invoice.amount_due / 100)
             subject = 'Your payment has failed'
             name = f"{user.first_name} {user.last_name}"
             customer_portal_url = stripe.billing_portal.Session.create(
@@ -268,7 +295,7 @@ class StripeWebhookListener(APIView):
             user = User.objects.get(email=customer.email)
             subject = 'Your payment has been refunded'
             name = f"{user.first_name} {user.last_name}"
-            amount = charge.amount_refunded
+            amount = int(charge.amount_refunded / 100)
             html_message = render_to_string('payments/payment_refunded_email.html', {'name': name, 'amount': amount})
             plain_message = strip_tags(html_message)
             
