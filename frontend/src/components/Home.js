@@ -13,6 +13,7 @@ import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Tooltip } from "primereact/tooltip";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   // const auth = useSelector(state => state.auth.isAuthenticated);
@@ -36,6 +37,7 @@ const Home = () => {
   const [roomProtected, setRoomProtected] = useState(false);
   const [roomPassword, setRoomPassword] = useState("");
   const [checkingRoom, setCheckingRoom] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (redirect) {
@@ -108,7 +110,8 @@ const Home = () => {
                 icon="pi pi-user"
                 className="p-button-success w-full"
                 onClick={() => {
-                  window.location.href = "/profile";
+                  // window.location.href = "/profile";
+                  navigate("/profile");
                 } }
               />
             </div>
@@ -139,7 +142,8 @@ const Home = () => {
                   icon="pi pi-dollar"
                   className="p-button-success w-full"
                   onClick={() => {
-                    window.location.href = "/subscription";
+                    // window.location.href = "/subscription";
+                    navigate("/subscription");
                   } }
                 />
               ) : (
@@ -148,7 +152,8 @@ const Home = () => {
                   icon="pi pi-dollar"
                   className="p-button-success w-full"
                   onClick={() => {
-                    window.location.href = "/pricing";
+                    // window.location.href = "/pricing";
+                    navigate("/pricing");
                   } }
                 />
               )}
@@ -186,7 +191,8 @@ const Home = () => {
                 icon="pi pi-cog"
                 className="p-button-success w-full"
                 onClick={() => {
-                  window.location.href = "/settings";
+                  // window.location.href = "/settings";
+                  navigate("/settings");
                 } }
               />
             </div>
@@ -222,7 +228,8 @@ const Home = () => {
                       className="p-button-success w-6"
                       disabled={!membership.can_create_rooms}
                       onClick={() => {
-                        window.location.href = "/create-room";
+                        // window.location.href = "/create-room";
+                        navigate("/create-room");
                       } }
                     />                    
                     <Button
@@ -266,9 +273,11 @@ const Home = () => {
             if(roomToken && roomToken.length === 32) {
               setDialogVisible(false);
               if(roomPassword) {
-                window.location.href = "/join-room/" + roomToken + `?password=${roomPassword}`;
+                // window.location.href = "/join-room/" + roomToken + `?password=${roomPassword}`;
+                navigate("/join-room/" + roomToken + `?password=${roomPassword}`);
               } else {
-                window.location.href = "/join-room/" + roomToken;
+                // window.location.href = "/join-room/" + roomToken;
+                navigate("/join-room/" + roomToken);
               }
             } else if (!roomToken) {
               setErrorMessage("Room token is required");
@@ -435,7 +444,8 @@ const Home = () => {
               type="button"
               className="p-button-outlined"
               onClick={() => {
-                window.location.href = "/register";
+                // window.location.href = "/register";
+                navigate("/register");
               }}
             />
           </section>
@@ -545,7 +555,8 @@ const Home = () => {
           icon="pi pi-arrow-right"
           className="font-bold px-5 py-3 p-button-raised p-button-rounded white-space-nowrap"
           onClick={() => {
-            window.location.href = "/pricing";
+            // window.location.href = "/pricing";
+            navigate("/pricing");
           }}
         />
       </div>
