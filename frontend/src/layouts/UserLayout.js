@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import UserNavbar from "../components/navigation/UserNavbar";
 import { Divider } from "primereact/divider";
 import { Link } from "react-router-dom";
+import NewsletterButton from "../components/NewsletterButton";
 
 const footer = () => {
   return (
@@ -44,6 +45,7 @@ const footer = () => {
             <Link to="/privacy" className="text-gray-500 no-underline block p-2 m-2">
             Privacy
             </Link>
+            <NewsletterButton />
         </div>
             <Divider layout="vertical" className="hidden md:block"/>
             <Divider className="md:hidden"/>
