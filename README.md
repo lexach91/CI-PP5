@@ -36,3 +36,22 @@ The website is created to be accessible to all users. The website is designed to
 - As a registered user, I want to be able to mute or unmute my microphone, so that other users can or cannot hear me.
 - As a registered user, I want to be able to turn of or turn on my camera, so that other users can or cannot see me.
 - As a registered user, I want to be able to control cameras and microphones of other users, so that I can control them in a meeting I created.
+
+---
+## Business model
+The Business Model is B2C, meaning that the company sells products (subscriptions) to customers only.
+It focuses on individual transactions only at the moment.
+### Target audience
+Dr.Meeting is aimed at the diverse population. The target audience is the people who want to meet virtually. It includes friends who simply want to meet when it is temporarily not allowed, colleges who are living in remote areas and have to discuss some urgent matters, and even students who are want to organize a study group.
+It excludes people who are younger than 13 years old.
+### Strategy Trade-Off
+The strategy trade-off is to make the application as user friendly as possible.
+- simple interface;
+- easy to use;
+- intuitive navigation;
+- consistent design;
+- accessible to all users;
+- free access to all users in the world to join the meeting.
+- Low cost of the subscription plan.
+- Security of the application.
+- Tech support.
