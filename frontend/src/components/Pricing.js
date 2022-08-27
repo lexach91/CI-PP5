@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect } from "../redux/authSlice";
+import { resetRedirect, setError } from "../redux/authSlice";
 import { RotateLoader } from "react-spinners";
 import { VisitorLayout } from "../layouts/VisitorLayout";
 import { UserLayout } from "../layouts/UserLayout";
@@ -9,6 +9,7 @@ import { Divider } from "primereact/divider";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { Toast } from "primereact/toast";
+import { useNavigate } from "react-router-dom";
 
 
 const Pricing = () => {
@@ -22,13 +23,14 @@ const Pricing = () => {
             dispatch(resetRedirect());
         }
     }, [redirect]);
+    const navigate = useNavigate();
 
     const LayoutComponent = isAuthenticated ? UserLayout : VisitorLayout;
 
 
     
-    const redirectToRegister = () => {
-        return <Navigate to="/register" />;
+    const redirectToLogin = () => {
+        navigate("/login");
     };
 
     
@@ -62,11 +64,12 @@ const Pricing = () => {
         if(isAuthenticated && user) {
             createCheckoutSession(planId);
         } else {
-            toastRef.current.show({
-                severity: "info",
-                detail: "You need to be logged in to subscribe",
-            });
-            
+            // toastRef.current.show({
+            //     severity: "info",
+            //     detail: "You need to be logged in to subscribe",
+            // });
+            dispatch(setError("You need to be logged in to subscribe"));
+            redirectToLogin();            
         }
     };
 
