@@ -221,14 +221,15 @@ class StripeWebhookListener(APIView):
             customer_id = invoice.customer
             customer = stripe.Customer.retrieve(customer_id)
             user = User.objects.get(email=customer.email)
+            amount = invoice.amount_paid / 100
             payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
-            payment = Payment.objects.create(membership=user.membership, amount=user.membership.type.price)
+            payment = Payment.objects.create(membership=user.membership, amount=amount)
             payment_history.payments.add(payment)
             payment_history.save()
             subject = 'Your payment has been received'
             name = f"{user.first_name} {user.last_name}"
             invoice_pdf_url = invoice.invoice_pdf
-            html_message = render_to_string('payments/payment_success_email.html', {'name': name, 'amount': plan.price, 'link': invoice_pdf_url})
+            html_message = render_to_string('payments/payment_success_email.html', {'name': name, 'amount': amount, 'link': invoice_pdf_url})
             plain_message = strip_tags(html_message)
             
             send_mail(
@@ -243,13 +244,14 @@ class StripeWebhookListener(APIView):
             customer_id = invoice.customer
             customer = stripe.Customer.retrieve(customer_id)
             user = User.objects.get(email=customer.email)
+            amount = invoice.amount_due / 100
             subject = 'Your payment has failed'
             name = f"{user.first_name} {user.last_name}"
             customer_portal_url = stripe.billing_portal.Session.create(
                 customer=customer.id,
                 return_url=base_url,
                 )
-            html_message = render_to_string('payments/payment_failed_email.html', {'name': name, 'amount': plan.price, 'link': customer_portal_url.url})
+            html_message = render_to_string('payments/payment_failed_email.html', {'name': name, 'amount': amount, 'link': customer_portal_url.url})
             plain_message = strip_tags(html_message)
             
             send_mail(
