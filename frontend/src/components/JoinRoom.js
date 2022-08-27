@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect } from "../redux/authSlice";
+import { resetRedirect, setError } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
 import { useParams } from "react-router-dom";
 import { Navigate } from "react-router-dom";
@@ -13,7 +13,7 @@ const JoinRoom = () => {
     const dispatch = useDispatch();
     const { roomToken } = useParams();
     const [joined, setJoined] = useState();
-    const [error, setError] = useState();
+    const [errorMessage, setErrorMessage] = useState();
 
     useEffect(() => {
         if (redirect) {
@@ -30,35 +30,40 @@ const JoinRoom = () => {
                     password: query.get("password"),
                 });
                 setJoined(true);
-                setError(null);
+                setErrorMessage(null);
                 return response;  
             } else {
                 const response = await axios.post(`rooms/join`, {
                     room_token: roomToken,
                 });
                 setJoined(true);
-                setError(null);
+                setErrorMessage(null);
                 return response;            
             }
         } catch (error) {
-            setError(error.response.data.error);
+            setErrorMessage(error.response.data.error);
             return error;
         }
     };
     
     
     if (joined) {
-        return <Navigate to={`/room/${roomToken}`} />;
+        return <Navigate to={`/room/${roomToken}`} replace={true} />;
     };
 
 
-    if (!joined && !error) {
+    if (!joined && !errorMessage) {
         joinRoom();
+    }
+
+    if (errorMessage) {
+        dispatch(setError(errorMessage));
+        return <Navigate to="/"/>;
     }
     
     
 
-    return loading || !isAuthenticated || (!joined && !error) ? (
+    return loading || !isAuthenticated || (!joined && !errorMessage) ? (
         <div
           className="loader-container"
           style={{
@@ -81,9 +86,9 @@ const JoinRoom = () => {
           />
         </div>
         ) : (
-            error && (
+            errorMessage && (
                 <div>
-                    <h1>{error}</h1>
+                    <h1>{errorMessage}</h1>
                 </div>
             ) 
         );
