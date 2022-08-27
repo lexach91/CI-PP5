@@ -964,6 +964,18 @@ const Room = () => {
     }
   };
 
+  const goFullScreen = () => {
+    document.getElementsByClassName("room")[0].requestFullscreen();
+    setIsFullScreen(true);
+  }
+
+  const exitFullScreen = () => {
+    document.exitFullscreen();
+    setIsFullScreen(false);
+  }
+    
+
+
   // return isLoading ? (
   //     <div className="loading">
   //       <video
@@ -1036,40 +1048,44 @@ const Room = () => {
       <Toast ref={toast} />
       <div className="grid grid-nogutter h-full">
         <div
-          className={`${(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? "col-fixed flex-column p-auto  gap-3" : "col-12 flex-row p-3  gap-1"}  room-controls flex justify-content-center align-items-center`}
+          className={`${(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? "col-fixed flex-column p-auto  gap-2" : "col-12 flex-row p-3 gap-2"}  room-controls flex justify-content-center align-items-center`}
           style={(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? { width: "100px" } : {height:"7%"}}>
           {isHost && (
             <Button
-              // icon="pi pi-copy"
-              label={<i className="pi pi-copy"></i>}
-              className="p-button-rounded p-button-secondary lg:mt-3 w-7"
+              icon="pi pi-copy"
+              // label={<i className="pi pi-copy"></i>}
+              className="p-button-rounded p-button-secondary p-button-lg"
               tooltip="Copy room token to clipboard to invite others"
               onClick={copyRoomTokenToClipboard}
+              style={{width:"2.5rem", height:"2.5rem"}}
             />
           )}
           {localCamOn ? (
             <Button
               tooltip="Turn off your camera"
-              className="p-button-rounded p-button-secondary w-7"
-              // icon="pi pi-video"
-              label={<i className="pi pi-video"></i>}
+              className="p-button-rounded p-button-secondary p-button-lg"
+              icon="pi pi-video"
+              // label={<i className="pi pi-video"></i>}
               onClick={turnOffYourCamera}
+              style={{width:"2.5rem", height:"2.5rem"}}
             />
           ) : (
             <Button
               tooltip="Turn on your camera"
-              className="p-button-rounded p-button-danger w-7"
-              // icon="pi pi-video"
-              label={<i className="pi pi-video"></i>}
+              className="p-button-rounded p-button-danger p-button-lg"
+              icon="pi pi-video"
+              // label={<i className="pi pi-video"></i>}
               onClick={turnOnYourCamera}
+              style={{width:"2.5rem", height:"2.5rem"}}
             />
           )}
           {!selfMutedRef.current ? (
             <Button
               tooltip="Turn off your mic"
-              className="p-button-rounded p-button-secondary w-7"
-              // icon="pi pi-volume-up"
-              label={<i className="pi pi-volume-up"></i>}
+              className="p-button-rounded p-button-secondary p-button-lg"
+              icon="pi pi-volume-up"
+              // label={<i className="pi pi-volume-up"></i>}
+              style={{width:"2.5rem", height:"2.5rem"}}
               onClick={() => {
                 turnOffYourMic();
                 // sendSignal("mute-peer", { peer: user.id });
@@ -1082,9 +1098,10 @@ const Room = () => {
           ) : (
             <Button
               tooltip="Turn on your mic"
-              className="p-button-rounded p-button-danger w-7"
-              // icon="pi pi-volume-off"
-              label={<i className="pi pi-volume-off"></i>}
+              className="p-button-rounded p-button-danger p-button-lg"
+              icon="pi pi-volume-off"
+              // label={<i className="pi pi-volume-off"></i>}
+              style={{width:"2.5rem", height:"2.5rem"}}
               onClick={() => {
                 turnOnYourMic();
                 // sendSignal("unmute-peer", { peer: user.id });
@@ -1099,48 +1116,71 @@ const Room = () => {
           {isHost &&
             (!roomMutedRef.current ? (
               <Button
-                label={
-                  <span>
-                    <i className="pi pi-volume-up"></i>
-                    <i className="pi pi-users"></i>
-                  </span>
-                }
+                // label={
+                //   <span>
+                //     <i className="pi pi-volume-up"></i>
+                //     <i className="pi pi-users"></i>
+                //   </span>
+                // }
                 tooltip="Turn off all mics"
-                // icon="pi pi-volume-off pi-users"
-                className="p-button-rounded p-button-secondary w-7"
+                icon="pi pi-user-minus"
+                className="p-button-rounded p-button-secondary p-button-lg"
                 onClick={muteAllGuestsHandler}
+                style={{width:"2.5rem", height:"2.5rem"}}
               />
             ) : (
               <Button
-                label={
-                  <span>
-                    <i className="pi pi-volume-off"></i>
-                    <i className="pi pi-users"></i>
-                  </span>
-                }
+                // label={
+                //   <span>
+                //     <i className="pi pi-volume-off"></i>
+                //     <i className="pi pi-users"></i>
+                //   </span>
+                // }
                 tooltip="Turn on all mics"
-                // icon="pi pi-volume-up pi-users"
-                className="p-button-rounded p-button-danger w-7"
+                icon="pi pi-user-plus"
+                className="p-button-rounded p-button-danger p-button-lg"
                 onClick={unmuteAllGuestsHandler}
+                style={{width:"2.5rem", height:"2.5rem"}}
               />
             ))}
           {isHost ? (
             <Button
               // label="Delete room"
               tooltip="Delete room"
-              className="p-button-rounded p-button-danger w-7"
-              // icon="pi pi-trash"
-              label={<i className="pi pi-trash"></i>}
+              className="p-button-rounded p-button-danger p-button-lg"
+              icon="pi pi-trash"
+              // label={<i className="pi pi-trash"></i>}
               onClick={deleteRoom}
+              style={{width:"2.5rem", height:"2.5rem"}}
             />
           ) : (
             <Button
               // label="Leave room"
               tooltip="Leave room"
-              className="p-button-rounded p-button-danger w-7"
-              // icon="pi pi-power-off"
-              label={<i className="pi pi-power-off"></i>}
+              className="p-button-rounded p-button-danger p-button-lg"
+              icon="pi pi-power-off"
+              // label={<i className="pi pi-power-off"></i>}
               onClick={leaveRoom}
+              style={{width:"2.5rem", height:"2.5rem"}}
+            />
+          )}
+          {isFullScreen ? (
+            <Button
+              tooltip="Exit full screen"
+              className="p-button-rounded p-button-secondary p-button-lg"
+              icon="pi pi-window-minimize"
+              // label={<i className="pi pi-window-minimize"></i>}
+              onClick={exitFullScreen}
+              style={{width:"2.5rem", height:"2.5rem"}}
+            />
+          ) : (
+            <Button
+              tooltip="Full screen"
+              className="p-button-rounded p-button-secondary p-button-lg"
+              icon="pi pi-window-maximize"
+              // label={<i className="pi pi-window-maximize"></i>}
+              onClick={goFullScreen}
+              style={{width:"2.5rem", height:"2.5rem"}}
             />
           )}
         </div>
