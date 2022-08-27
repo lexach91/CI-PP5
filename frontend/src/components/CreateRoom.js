@@ -11,6 +11,7 @@ import { Password } from "primereact/password";
 import { Messages } from "primereact/messages";
 import { Navigate } from "react-router-dom";
 import { RadioButton } from "primereact/radiobutton";
+import { useNavigate } from "react-router-dom";
 
 const CreateRoom = () => {
   const { loading, redirect, isAuthenticated, membership, membershipLoading } =
@@ -26,6 +27,7 @@ const CreateRoom = () => {
   const [error, setError] = useState("");
   const messageRef = useRef();
   const [maxGuests, setMaxGuests] = useState(3);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (redirect) {
@@ -52,7 +54,8 @@ const CreateRoom = () => {
         detail: "You do not have permission to create a room.",
       });
       setTimeout(() => {
-        window.location.href = "/";
+        // window.location.href = "/";
+        navigate("/");        
       }, 3000);
     }
   }, [membershipLoading, membership]);
