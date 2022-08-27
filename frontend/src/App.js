@@ -27,6 +27,7 @@ import Room from './components/Room';
 import JoinRoom from './components/JoinRoom';
 import TermsOfUse from './privacy/TermsOfUse';
 import Privacy from './privacy/Privacy';
+import ContactUs from './components/ContactUs';
 import axios from 'axios';
 // import { Navigate } from 'react-router-dom';
 import Pricing from './components/Pricing';
@@ -131,6 +132,7 @@ const App = () => {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/terms-of-use" element={<TermsOfUse />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/contact" element={<ContactUs />} />
             <Route path="*" element={<div>Page not found</div>} />
           </Routes>
         </Router>
