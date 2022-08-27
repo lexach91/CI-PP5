@@ -198,7 +198,7 @@ class StripeWebhookListener(APIView):
             customer = stripe.Customer.retrieve(customer_id)
             user = User.objects.get(email=customer.email)
             membership = Membership.objects.get(user=user)
-            cancelled_type = membership.type
+            cancelled_type = SubscriptionPlan.objects.get(stripe_plan_id=subscription["items"]["data"][0]["plan"]["id"])
             free_plan = SubscriptionPlan.objects.get(name='Free')
             membership.type = free_plan
             membership.expires_at = None
