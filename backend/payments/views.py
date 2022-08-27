@@ -173,7 +173,7 @@ class StripeWebhookListener(APIView):
             plan = SubscriptionPlan.objects.get(stripe_plan_id=subscription["items"]["data"][0]["plan"]["id"])
             membership = Membership.objects.get_or_create(user=user)[0]
             membership.type = plan
-            membership.expires_at = datetime.now() + timedelta(days=31 if datetime.now().month%2 == 0 else 30)
+            membership.expires_at = datetime.fromtimestamp(subscription.current_period_end)
             membership.stripe_id = subscription.id
             membership.save()
             # payment_history = PaymentHistory.objects.get_or_create(user=user)[0]
@@ -268,7 +268,7 @@ class StripeWebhookListener(APIView):
             user = User.objects.get(email=customer.email)
             subject = 'Your payment has been refunded'
             name = f"{user.first_name} {user.last_name}"
-            amount = charge.refunded_amount
+            amount = charge.amount_refunded
             html_message = render_to_string('payments/payment_refunded_email.html', {'name': name, 'amount': amount})
             plain_message = strip_tags(html_message)
             
