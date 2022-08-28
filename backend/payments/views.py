@@ -240,7 +240,7 @@ class StripeWebhookListener(APIView):
                 html_message=html_message,
             )
             subscription = stripe.Subscription.retrieve(invoice.subscription)
-            membership = Membership.objects.filter(user=user)
+            membership = Membership.objects.filter(stipe_id=subscription.id)
             if membership.exists():
                 membership = membership.first()
                 membership.type = SubscriptionPlan.objects.get(stripe_plan_id=subscription['items']['data'][0]['plan']['id'])
@@ -248,12 +248,17 @@ class StripeWebhookListener(APIView):
                 membership.stripe_id = subscription.id
                 membership.save()
             else:
-                membership = Membership.objects.create(
-                    user=user,
-                    type=SubscriptionPlan.objects.get(stripe_plan_id=subscription['items']['data'][0]['plan']['id']),
-                    expires_at=datetime.fromtimestamp(subscription['current_period_end']),
-                    stripe_id=subscription.id,
-                )
+                membership = Membership.objects.get_or_create(user=user)[0]
+                membership.type = SubscriptionPlan.objects.get(stripe_plan_id=subscription['items']['data'][0]['plan']['id'])
+                membership.expires_at = datetime.fromtimestamp(subscription['current_period_end'])
+                membership.stripe_id = subscription.id
+                membership.save()
+                # membership = Membership.objects.create(
+                #     user=user,
+                #     type=SubscriptionPlan.objects.get(stripe_plan_id=subscription['items']['data'][0]['plan']['id']),
+                #     expires_at=datetime.fromtimestamp(subscription['current_period_end']),
+                #     stripe_id=subscription.id,
+                # )
                 subject = 'Your subscription has been created'
                 html_message = render_to_string('payments/subscription_created_email.html', {'name': name, 'plan': membership.type.name})
                 plain_message = strip_tags(html_message)
