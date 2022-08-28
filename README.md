@@ -652,6 +652,119 @@ I used set the projects according to the application's functionality and set up 
 ![ERD](documentation/information_architecture.png)
 
 
+### Data Modeling
+
+
+
+#### UserToken Model
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| user_id       | user_id       | IntegerField  |           |
+| token         | token         | CharField     | max-length=255 |
+| created_at    | created_at    | DateTimeField |           |
+| expired_at    | expired_at    | DateTimeField |           |
+
+#### ForgotPasswordToken Model
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| Email         | email         | EmailField    |           |
+| token         | token         | CharField     | max-length=255 |
+
+
+#### User Model
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| avatar        | avatar        | CloudinaryField |   folder='cloud_meetings_avatars', null=True, blank=True,        |
+| email         | email         | EmailField    | unique=True, max_length=254 |
+| Username      | username      | None     |  |
+| first_name    | first_name    | CharField     | max_length=50 |
+| last_name     | last_name     | CharField     | max_length=50 |
+| birth_date    | birth_date    | DateField     |   |
+| country       | country       | CharField     | max_length=100 |
+| camera_id     | camera_id     | CharField     | max_length=100, null=True, blank=True |
+| microphone_id | microphone_id | CharField     | max_length=100, null=True, blank=True |
+
+
+
+#### SubscriptionPlan Model
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| name          | name          | CharField     | max_length=255 |
+| price         | price         | DecimalField  | max_digits=10, decimal_places=2 |
+| description   | description   | TextField     |           |
+| created_at    | created_at    | DateTimeField |           |
+| updated_at    | updated_at    | DateTimeField |           |
+| guest_limit   | guest_limit   | IntegerField  | defualt=0 |
+| can_create_rooms | can_create_rooms | BooleanField | default=False |
+| stripe_plan_id | stripe_plan_id | CharField     | max_length=255, blank=True, null=True |
+
+
+#### Membership Model
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| user          | user          | OneToOneField |   User, on_delete=models.CASCADE, related_name='membership'        |
+| is_active     | is_active     | BooleanField  | default=True |
+| type          | type          | ForeignKey    | SubscriptionPlan, on_delete=models.CASCADE, related_name='memberships'        |
+| default     | default     | SubscriptionPlan.objects.get(name='Free').id) |           |
+| opened_at     | opened_at     | DateTimeField |           |
+| renewed_at    | renewed_at    | DateTimeField |           |
+| expires_at    | expires_at    | DateTimeField |  null=True, blank=True         |
+| stripe_id     | stripe_id     | CharField     | max_length=255, blank=True, null=True |
+
+
+#### Payment Model
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| membership    | membership    | ForeignKey    | Membership, on_delete=models.CASCADE, related_name='payments'        |
+| created_at    | created_at    | DateTimeField |           |
+| amount        | amount        | DecimalField  | max_digits=10, decimal_places=2, blank=True, null=True |
+
+
+#### PaymentHistory Model
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| user          | user          | ForeignKey    | User, on_delete=models.CASCADE, related_name='payment_history'        |
+| payments      | payments      | ManyToManyField | Payment, related_name='payment_history'        |
+
+#### ContactUs Model
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| name          | name          | CharField     | max_length=100 |
+| email         | email         | EmailField    |  |
+| subject       | subject       | CharField     | max_length=100 |
+| message       | message       | TextField     |           |
+
+#### NewsletterSubscription Model
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| email         | email         | EmailField    |  |
+
+#### VideoRoom Model
+
+
+| Name          | Database Key  | Field Type    | Validation |
+| ------------- | ------------- | ------------- | ---------- |
+| token         | token         | CharField     | max_length=32, default=create_room_token |
+| host          | host          | OneToOneField |   User, on_delete=models.CASCADE, related_name='hosting_room'        |
+| max_guests    | max_guests    | IntegerField  | default=3 |
+| guests        | guests        | ManyToManyField | User, related_name='current_rooms', blank=True |
+| screen_sharing_enabled | screen_sharing_enabled | BooleanField | default=False |
+| presentation_enabled | presentation_enabled | BooleanField | default=False |
+| chat_enabled | chat_enabled | BooleanField | default=False |
+| protected | protected | BooleanField | default=False |
+| guests_input_control | guests_input_control | BooleanField | default=False |
+| password | password | CharField | max_length=32, default='', blank=True, null=True |
+| guests_muted | guests_muted | BooleanField | default=False |
+
+
+
 
 
 
