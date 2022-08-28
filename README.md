@@ -549,3 +549,11 @@ The typography was designed to be readable and easy to use.
 Font-family: Roboto, Helvetica Neue Light, sans-serif;
 
 This font-families are coming from Prime React.
+
+### Imagery
+
+The is only one image that was used in the application to make the landing page more eye-catching.
+
+![Home page Hero image](documentation/features/hero_section.png)
+
+This image was taken from [Unsplash](https://unsplash.com/).
