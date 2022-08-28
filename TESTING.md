@@ -105,3 +105,19 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | As a first time visitor, I want to be able to easily navigate through the application, so that I can find what I am looking for. | Y   | ![Navbar](documentation/features/navbar.png) ![Footer](documentation/features/home_footer.png) |
 | As a first time visitor, I want to be able to register, so that I can have an account. | Y   | ![Register page](documentation/features/register_page.png) |
 | As a first time visitor, I want to be able to login, so that I can access my account. | Y   | ![Login page](documentation/features/login_page.png) |
+
+| Registered user Goals | Requirement met | Image |
+| --------------------- | --------------- | ----- |
+| As a registered user, I want to be able to see my account information, so that I can update my information. | Y   | ![Profile page](documentation/features/edit_profile_page.png) ![Settings page](documentation/features/settings_page.png)  |
+| As a registered user, I want to be able to see my payment history, so that I can see what I have paid for. | Y   | ![History page](documentation/features/subscription_page_history.png) |
+| As a registered user, I want to be able to see what type of plan I have, so that I can find out what features are available. | Y   | ![See subscriptions page](documentation/features/subscription_page.png) |
+| As a registered user, I want to be able to see when my plan will expire, so that I can know when I need to renew. | Y   | ![See subscriptions page](documentation/features/subscription_page.png) |
+| As a registered user, I want to be able to create meetings, so that I can invite other users to join me. As a registered user, I want to be able to set up a password for a meeting, so only people I invite can join.| Y   | ![Create meeting page](documentation/features/create_meeting_page.png) |
+| As a registered user, I want to be able to join a meeting I have been invited to, so that I can join the meeting. | Y   | ![Join meeting page](documentation/features/join_meeting_with_token.png) |
+| As a registered user, I want to be able to leave a meeting, so that I can leave the meeting. | Y   | ![Leave meeting page](documentation/features/meeting_leave_room.png) |
+| As a registered user, I want to be able to change settings, so that I can change camera and microphone settings. | Y   | ![Settings page](documentation/features/settings_page.png) |
+| As a registered user, I want to be able to change my password, so that I can protect my account. | Y   | ![Change password page](documentation/features/edit_profile_page.png) |
+| As a registered user, I want to be able to logout, so that I can logout of my account. | Y   | ![Logout page](documentation/features/navbar.png) |
+| As a registered user, I want to be able to mute or unmute my microphone, so that other users can or cannot hear me. | Y   | ![Mute guests page](documentation/features/meeting_microphone_control1.png) |
+| As a registered user, I want to be able to turn off or turn on my camera, so that other users can or cannot see me. | Y   | ![Camera control page](documentation/features/meeting_camera_control1.png) ![Camera control page](documentation/features/meeting_camera_control2.png) |
+| As a registered user, I want to be able to control microphones of other users, so that I can control them in a meeting I created. | Y   | ![Mute guests page](documentation/features/meeting_mute_all_guests1.png)  ![Mute guests page](documentation/features/meeting_mute_all_guests2.png) |
