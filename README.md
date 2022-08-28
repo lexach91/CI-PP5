@@ -563,3 +563,19 @@ This image was taken from [Unsplash](https://unsplash.com/).
 [Dr meetings Wireframes](documentation/design/drmeeting_wireframes.pdf)
 
 ---
+
+## Agile Methodology
+
+### GitHub Project Management
+
+  ![GitHub Project Management](documentation/agile/github_project_management.png)
+
+GitHub Project Management was used as the main method to manage the project. It was used to control the project's workflow and to track the project's progress. The project was created using [GitHub](www.github.com).
+
+I used set the projects according to the application's functionality and set up issues for each feature to keep control of the development.
+
+![GitHub Project Management](documentation/agile/kanban.png)
+
+![Tasks](documentation/agile/tasks.png)
+
+---
