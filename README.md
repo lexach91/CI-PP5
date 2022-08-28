@@ -540,3 +540,12 @@ Material design Indigo Dark palette is the theme color for the application.
     This color was used for the text throughout the application to make it more visible.
 
 ![Color palette](documentation/design/main_colors.png)
+
+
+### Typography
+
+The typography was designed to be readable and easy to use.
+
+Font-family: Roboto, Helvetica Neue Light, sans-serif;
+
+This font-families are coming from Prime React.
