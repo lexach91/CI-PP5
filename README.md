@@ -299,3 +299,54 @@ User can also download the invoice for the payment.
 If the payment is not successful, the user will receive an email with the error message and the link to the stripe customer portal.
 
 ![Failed payment page](documentation/features/email_failed_payment.png)
+
+### User dashboard
+
+![User dashboard](documentation/features/user_dashboard.png)
+
+It has 4 cards:
+
+1. Profile card:
+
+![Profile card](documentation/features/user_dashboard_profile_card.png)
+
+This card has a User name, User email, and a button "Profile page". If the user clicks this button, the user will be redirected to the profile page.
+
+2. Pricing card:
+
+![Pricing card](documentation/features/user_dashboard_pricing_card.png)
+
+It has subscription plan and the description of functionality according to the plan.
+
+It also has a button "See pricing" that takes the user to the pricing page.
+
+If user has purchased a subscription plan, this card will look different.
+
+![Pricing card](documentation/features/user_dashboard_pricing_card_enterprise.png)
+
+If user clicks "See subscription" button, the user will be redirected to the subscription page.
+
+3. Settings card:
+
+![Settings card](documentation/features/user_dashboard_settings_card.png)
+
+It has a data on the current camera and microphone settings. There is a button "Settings" that takes the user to the settings page.
+
+4. Meetings card:
+
+![Meetings card](documentation/features/user_dashboard_meetings_card.png)
+
+It has short description of the meeting's card and 2 buttons:
+
+  - "Create meeting" button: takes the user to the create meeting page. *This button is disabled if the user is using free plan.*
+  - "Join meeting" button: takes the user to the join meeting page. When the user clicks this button, the user will see a modal window with an input field to enter the meeting's token:
+
+    ![Join meeting modal](documentation/features/join_meeting_with_token.png)
+
+    If the user enters a valid token, the user will be redirected to the meeting page.
+
+If the user has purchased a subscription plan, this card will look differently:
+
+![Meetings card](documentation/features/user_dashboard_meetings_card_create_meeting.png)
+
+  When the user clicks "Create Meeting" button, user will be redirected to Create meeting page.
