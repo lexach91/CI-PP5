@@ -63,3 +63,21 @@ Having a page on facebook is a great way to get people to join the meeting on Dr
 [Facebook mockup](documentation/design/drmeeting_fb.pdf)
 2. Newsletter
 The newsletter subscription is a great way to deliver the latest news and updates to the users and subscribers.
+
+---
+
+## Future Development
+​
+1. Add chat functionality;
+​
+Chat functionality is essential for the future development of the application as it will help users to communicate with each other if there are any issues with the Internet connection or if there is a language barrier between the users.
+​
+2. Remove person from the meeting;
+​
+This feature will be added in the future development of the application as the meeting creator will definitely want to control the people who are in the meeting.
+​
+3. Organization functionality;
+​
+It would be nice to widen the scope of the application to include functionality for organizations to register and arrange their own private meetings.
+​
+---
