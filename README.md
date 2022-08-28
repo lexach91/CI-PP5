@@ -494,6 +494,14 @@ To notify user about the result of the action, the system will display an alert 
 
 ![Meeting page](documentation/features/meeting_page_2_out_of_4.gif)
 
+![Meeting page](documentation/features/meeting_page_4_out_of_4.png)
+
+![Meeting page](documentation/features/meeting_page_grid_9.png)
+
+![Meeting page](documentation/features/meeting_page_grid_12.png)
+
+![Meeting page](documentation/features/meeting_page_mobile.jpg)
+
 - If the user is the host, the navigation bar will look like this:
 
 ![Meeting page](documentation/features/meeting_buttons_host.png)
@@ -630,6 +638,18 @@ I used set the projects according to the application's functionality and set up 
 ![Tasks](documentation/agile/tasks.png)
 
 ---
+
+## Information Architecture
+
+### Database
+
+* During the earliest stages of the project, the database was created using SQLite.
+* The database was then migrated to PostgreSQL.
+
+### Entity-Relationship Diagram
+
+
+![ERD](documentation/information_architecture.png)
 
 
 
