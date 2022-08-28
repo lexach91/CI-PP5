@@ -95,3 +95,13 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 5 | Click on delete room button in the meeting page | Room will be deleted and all participants will be kicked | Y   |  Available only if the user has created this room |
 | 6 | Click on leave room button in the meeting page | User will be redirected to dashboard | Y   |  Available only if the user is a guest of this room |
 | 7 | Click on fullscreen button in the meeting page | Meeting is fullscreened | Y   |  Performance can depend on the browser |
+
+## Testing User Stories
+
+| First Time Visitor Goals | Requirement met | Image |
+| ------------------------- | --------------- | ----- |
+| As a first time visitor, I want to be able to see an informative page about the application, so that I can understand what it is about. | Y   | ![Home page](documentation/features/home_page.png) |
+| As a first time visitor, I want to be able to see a list of all pricing plans, so that I can choose one. | Y   | ![Pricing page](documentation/features/pricing_page.png) |
+| As a first time visitor, I want to be able to easily navigate through the application, so that I can find what I am looking for. | Y   | ![Navbar](documentation/features/navbar.png) ![Footer](documentation/features/home_footer.png) |
+| As a first time visitor, I want to be able to register, so that I can have an account. | Y   | ![Register page](documentation/features/register_page.png) |
+| As a first time visitor, I want to be able to login, so that I can access my account. | Y   | ![Login page](documentation/features/login_page.png) |
