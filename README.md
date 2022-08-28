@@ -364,3 +364,9 @@ If user bought basic plan, this page will have only 1 option for Max guests ( 8 
 ![Create meeting page](documentation/features/create_room_disabled.png)
 
 If the user without a subscription plan comes to this page by directly typing the URL, the page will be redirected to the home page and an alert message will be shown.
+
+### Edit Profile page
+
+![Edit Profile page](documentation/features/edit_profile_page.png)
+
+This page has a form to edit the user's profile. The user can edit his first name, last name, birthday, country, password, and avatar. After clicking "Save" button, the user will be redirected to the user dashboard.
