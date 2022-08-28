@@ -490,6 +490,60 @@ To notify user about the result of the action, the system will display an alert 
 
 --- 
 
+### Meeting page
+
+![Meeting page](documentation/features/meeting_page.png)
+
+- If the user is the host, the navigation bar will look like this:
+
+![Meeting page](documentation/features/meeting_buttons_host.png)
+
+It will have the following buttons:
+
+1. Copy room token button: copies the room token to the clipboard.
+
+![Copy room token button](documentation/features/meeting_copy_room_token.png)
+
+2. Camera button: toggles the camera on/ off.
+
+![Camera button](documentation/features/meeting_camera_control1.png)
+
+![Camera button](documentation/features/meeting_camera_control2.png)
+
+3. Microphone button: toggles the microphone on/ off.
+
+![Microphone button](documentation/features/meeting_microphone_control1.png)
+
+4. Mute all controls button: toggles the mute all controls on/ off.
+
+![Mute all controls button](documentation/features/meeting_mute_all_guests1.png)
+
+![Mute all controls button](documentation/features/meeting_mute_all_guests2.png)
+
+5. End meeting button: ends the meeting.
+
+![End meeting button](documentation/features/meeting_delete_room.png)
+
+6. Fullscreen button: toggles the full screen on/ off.
+
+![Fullscreen button](documentation/features/meeting_full_screen.png)
+
+- If the user is not the host, the navigation bar will look like this:
+
+![Meeting page](documentation/features/meeting_buttons_guest.png)
+
+It will have the following buttons:
+
+1. Camera button: toggles the camera on/ off.
+2. Microphone button: toggles the microphone on/ off.
+3. Leave meeting button: leaves the meeting.
+
+![Leave meeting button](documentation/features/meeting_leave_room.png)
+
+4. Fullscreen button: toggles the full screen on/off.
+
+--- 
+
 ## Design
 
 The idea of the design was taken from [Prime React](https://www.primefaces.org/primereact/). It helped to create clean and attractive design. The simplicity of the design was also taken into consideration as it was a main goal to keep users' attention on the functionality of the application.
