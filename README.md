@@ -164,3 +164,30 @@ There are 2 types of the navbar:
     ![Home button](documentation/features/navbar_user_home.png)
 ​
   - "Logout" button: logs the user out.
+
+### Footer:
+​
+![Footer](documentation/features/home_footer.png)
+​
+It has a logo, email, phone number. It also has the following links:
+​
+- "Contact" button: takes the user to the contact form page;
+- "Terms of use" button: takes the user to the terms of use page;
+- "Privacy policy" button: takes the user to the privacy policy page;
+- "Newsletter" button: opens modal form with the newsletter form;
+​
+  ![Newsletter](documentation/features/newsletter_form.png)
+​
+  - If the user has already subscribed to the newsletter, the "Newsletter" form will show an error message.
+​
+    ![Newsletter](documentation/features/newsletter_form_error.png)
+​
+  - When the user subscribes to the newsletter, the user will receive an email with a confirmation message.
+​
+  ![Newsletter](documentation/features/newsletter_form_success.png)
+​
+  - If user clicks " unsubscribe" link in thee email, the user will be unsubscribed from the newsletter
+​
+  ![Newsletter](documentation/features/newsletter_form_unsubscribe.png) 
+​
+- Social media icons (Facebook, Twitter, Instagram, LinkedIn): takes the user to the social media pages.
