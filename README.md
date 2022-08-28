@@ -422,3 +422,26 @@ It has 3 buttons:
 When the order is cancelled, the user will receive an email with a confirmation message and the money will be refunded.
 
 ![Cancel email](documentation/features/email_cancelled_subscription.png)
+
+
+### Register page
+
+![Register Page](documentation/features/register_page.png)
+
+This page has the following fields:
+
+- first name;
+- last name;
+- Email;
+- Password;
+- Confirm password;
+- Birthday;
+- Country;
+
+It has a checkbox in order to confirm that the user agreed to the terms and a register button;
+
+If user has already created account before, he/ she can use "Already have an account? Login" link to redirect to Login page.
+
+When the user registers, the user will receive an email with a confirmation message.
+
+![Register modal](documentation/features/account_email_created.png)
