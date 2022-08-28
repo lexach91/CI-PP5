@@ -83,7 +83,7 @@ const Subscription = () => {
       <DataTable
         value={payments}
         loading={paymentsLoading}
-        paginator={true}
+        paginator={payments.length > 10}
         rows={10}
         responsive={true}
         emptyMessage="No payments found"
