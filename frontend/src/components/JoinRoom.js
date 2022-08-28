@@ -5,6 +5,7 @@ import { resetRedirect, setError } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
 import { useParams } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 
 
@@ -63,7 +64,7 @@ const JoinRoom = () => {
     
     
 
-    return loading || !isAuthenticated || (!joined && !errorMessage) ? (
+    return  (
         <div
           className="loader-container"
           style={{
@@ -78,20 +79,17 @@ const JoinRoom = () => {
             left: 0,
             zIndex: "9999",
           }}>
+            <Helmet>
+                <title>Join Room</title>
+            </Helmet>
           <RotateLoader
             sizeUnit={"px"}
             size={150}
             color={"#123abc"}
-            loading={loading}
+            loading={true}
           />
         </div>
-        ) : (
-            errorMessage && (
-                <div>
-                    <h1>{errorMessage}</h1>
-                </div>
-            ) 
-        );
+        ) 
 }
 
 
