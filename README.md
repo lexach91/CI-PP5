@@ -492,7 +492,7 @@ To notify user about the result of the action, the system will display an alert 
 
 ### Meeting page
 
-![Meeting page](documentation/features/meeting_page.png)
+![Meeting page](documentation/features/meeting_page_2_out_of_4.gif)
 
 - If the user is the host, the navigation bar will look like this:
 
