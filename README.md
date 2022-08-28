@@ -492,3 +492,7 @@ To notify user about the result of the action, the system will display an alert 
 ![Error alert](documentation/features/error_msg.png)
 
 --- 
+
+## Design
+
+The idea of the design was taken from [Prime React](https://www.primefaces.org/primereact/). It helped to create clean and attractive design. The simplicity of the design was also taken into consideration as it was a main goal to keep users' attention on the functionality of the application.
