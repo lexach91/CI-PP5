@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // import { Navigate } from "react-router-dom";
 import RotateLoader from "react-spinners/RotateLoader";
 import { useNavigate } from "react-router-dom";
-
+import { Helmet } from "react-helmet";
 
 
 const Checkout = () => {
@@ -35,33 +35,29 @@ const Checkout = () => {
     } , []);
 
     return (
-        <div className="flex flex-column justify-content-center align-items-center" style={{height:"100%", paddingTop:"20rem"}}>
-            <div className="card text-center" style={{width:"50%", height:"50%"}}>
-                <div className="checkout-header">
-                    <h1>Checkout</h1>
-                </div>
-                <div className="checkout-body">
-                    {success ? (
-                        <div className="checkout-success">
-                            <h2>Successful!</h2>
-                            <p>{message}</p>
-                            <p>Session ID: {sessionId}</p>
-                            <p>You will be redirected to the home page in 3 seconds.</p>
-                        </div>
-                    ) : cancelled ? (
-                        <div className="checkout-cancelled">
-                            <h2>Unsuccessful!</h2>
-                            <p>{message}</p>
-                            <p>You will be redirected to the home page in 3 seconds.</p>
-                        </div>
-                    ) : (
-                        <div className="checkout-loading">
-                            <h2>Loading...</h2>
-                            <RotateLoader color={"#123abc"} loading={true} />
-                        </div>
-                    )}
-                </div>
-            </div>
+        <div
+            className="loader-container"
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+                width: "100vw",
+                backgroundColor: "#f5f5f5",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                zIndex: "9999",
+            }}>
+            <Helmet>
+                <title>Checkout</title>
+            </Helmet>
+            <RotateLoader
+                sizeUnit={"px"}
+                size={150}
+                color={"#123abc"}
+                loading={true}
+            />
         </div>
     )
 }
