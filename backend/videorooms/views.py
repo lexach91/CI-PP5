@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import VideoRoomSerializer, VideoRoomMessageSerializer
+from .serializers import VideoRoomSerializer
 from authentication.authentication import JWTAuthentication
-from .models import VideoRoom, VideoRoomMessage
+from .models import VideoRoom
 
 
 class CreateRoomAPIView(APIView):
