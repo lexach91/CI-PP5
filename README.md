@@ -81,3 +81,26 @@ This feature will be added in the future development of the application as the m
 It would be nice to widen the scope of the application to include functionality for organizations to register and arrange their own private meetings.
 ​
 ---
+
+## Technologies used
+- ### Languages:
+    
+    + [Python 3.10.4](https://www.python.org/downloads/release/python-385/): the primary language used to develop the server-side of the website.
+    + [JS](https://www.javascript.com/): the primary language used to develop interactive components of the website.
+    + [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML): the markup language used to create the website.
+    + [CSS](https://developer.mozilla.org/en-US/docs/Web/css): the styling language used to style the website.
+​
+- ### Frameworks and libraries:
+​
+    + [Django](https://www.djangoproject.com/): python framework used to create all the logic.
+    + [Django-rest-framework](https://www.django-rest-framework.org/): python framework used to create the API.
+    + [React](https://reactjs.org/): javascript framework used to create the front-end of the website.
+    + [PrimeReact](https://www.primefaces.org/primereact/): a set of components used to create the front-end of the website.
+    + [Primeflex](https://www.primefaces.org/primeflex/): css framework used to style the front-end of the website.
+
+- ### Databases:
+​
+    + [SQLite](https://www.sqlite.org/): was used as a development database.
+    + [PostgreSQL](https://www.postgresql.org/): the database used to store all the data.
+​
+- ### Other tools:
