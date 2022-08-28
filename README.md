@@ -787,3 +787,10 @@ I used set the projects according to the application's functionality and set up 
 - [Favicon.io](https://favicon.io/): for providing a free platform to generate favicons.
 - [Coolors](https://coolors.co/): for providing a free platform to generate your own palette.
 - [Unsplash](https://unsplash.com/): for providing free images.
+
+
+
+## Acknowledgments
+
+- [Tim Nelson](https://github.com/TravelTimN), my mentor, for the great support, testing, and guidance throughout the project development.
+- [Iuliia Konovalova](https://github.com/IuliiaKonovalova), my wife and my coding partner, who controlled my progress during the development and helped me immensely with app's testing.
