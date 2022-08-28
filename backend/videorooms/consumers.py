@@ -1,8 +1,8 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import VideoRoom, VideoRoomMessage
-from .serializers import VideoRoomSerializer, VideoRoomMessageSerializer
+from .models import VideoRoom
+from .serializers import VideoRoomSerializer
 from authentication.authentication import JWTAuthentication
 from profiles.models import User
 from authentication.serializers import UserSerializer
