@@ -14,6 +14,7 @@ import { Navigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 import { Carousel } from "primereact/carousel";
 import { Galleria } from "primereact/galleria";
+import { Helmet } from "react-helmet";
 
 // const servers = {
 //   iceServers: [
@@ -1045,6 +1046,9 @@ const Room = () => {
         width: "100%",
         height: "100%",
       }}>
+      <Helmet>
+        <title>VideoRoom</title>
+      </Helmet>
       <Toast ref={toast} />
       <div className="grid grid-nogutter h-full">
         <div
