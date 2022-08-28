@@ -7,7 +7,7 @@ from rest_framework import status
 from .serializers import UserSerializer
 from profiles.models import User
 from .authentication import JWTAuthentication, create_access_token, create_refresh_token, decode_access_token, decode_refresh_token
-from .models import ForgotPasswordToken, UserToken
+from .models import ForgotPasswordToken
 # need to import send_email from django
 from django.conf import settings
 from django.core.mail import send_mail
@@ -72,13 +72,8 @@ class LoginAPIView(APIView):
             return Response({'error': 'You are already logged in'}, status=status.HTTP_400_BAD_REQUEST)
         
         access_token = create_access_token(user.id)
-        refresh_token = create_refresh_token(user.id)
+        refresh_token = create_refresh_token(user.id)        
         
-        # UserToken.objects.create(
-        #     user_id=user.id,
-        #     token=refresh_token,
-        #     expired_at=datetime.datetime.utcnow() + datetime.timedelta(days=7)
-        # )
         
         response = Response()
         
@@ -137,12 +132,9 @@ class RefreshTokenAPIView(APIView):
         
         if not id:
             return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
-        # if not UserToken.objects.filter(
-        #     user_id=id,
-        #     token=refresh_token,
-        #     expired_at__gt=datetime.datetime.now(tz=datetime.timezone.utc)
-        # ).exists():
-        #     raise exceptions.AuthenticationFailed('Unauthenticated')
+        
+        if not User.objects.filter(id=id).exists():
+            return Response({'error': 'Invalid refresh token'}, status=status.HTTP_401_UNAUTHORIZED)
         
         access_token = create_access_token(id)
         
