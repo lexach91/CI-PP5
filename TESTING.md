@@ -34,3 +34,14 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 2 | Click profile in sidebar | Redirect to user's profile page | Y   |             |
 | 3 | click settings in sidebar | Redirect to user's settings page | Y   |             |
 | 4 | Click Create room in sidebar | Redirect to create room page | Y   | This button is visible only to users who have purchased a subscription |
+| Footer |                        |                  |      |             |
+| 1 | Click email in footer | Opens an email client | Y   |             |
+| 2 | Click phone in footer | Opens a phone client | Y   |             |
+| 3 | Click contact in footer | Opens a contact form | Y   |             |
+| 4 | Click Terms of Use in footer | Opens a Terms of Use page | Y   |             |
+| 5 | Click Privacy Policy in footer | Opens a Privacy Policy page | Y   |             |
+| 6 | Click on Facebook icon in footer | Opens a Facebook page | Y   |             |
+| 7 | Click on Twitter icon in footer | Opens a Twitter page | Y   |             |
+| 8 | Click on Instagram icon in footer | Opens a Instagram page | Y   |             |
+| 9 | Click on LinkedIn icon in footer | Opens a LinkedIn page | Y   |             |
+| 10 | Click on Newsletter in footer | Opens a Newsletter form | Y   | If user logged in, user's email is pre-filled. If user has already subscribed, user is alerted that they have already subscribed. If user subscribes, He/she will receive an email confirmation. |
