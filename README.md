@@ -445,3 +445,20 @@ If user has already created account before, he/ she can use "Already have an acc
 When the user registers, the user will receive an email with a confirmation message.
 
 ![Register modal](documentation/features/account_email_created.png)
+
+
+### Login page
+
+![Login Page](documentation/features/login_page.png)
+
+
+This form has 2 fields:
+
+- User email;
+- Password;
+
+Login button and a link to register page and forgot password page. When user clicks "Register" link, he or she will be redirected to Register page. If user clicks "Forgot Password", he or she will be redirected to forgot password page.
+
+When the user attempts to change the password, the user will receive an alert email to warn him/ her about the security:
+
+![Forgot password email](documentation/features/email_password_reset.png)
