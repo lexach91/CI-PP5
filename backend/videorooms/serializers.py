@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import VideoRoom, VideoRoomMessage
+from .models import VideoRoom
 
 
 class VideoRoomSerializer(ModelSerializer):
@@ -22,13 +22,3 @@ class VideoRoomSerializer(ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
         }
-
-class VideoRoomMessageSerializer(ModelSerializer):
-    class Meta:
-        model = VideoRoomMessage
-        fields = [
-            'id',
-            'author',
-            'room',
-            'content',
-        ]
