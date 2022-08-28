@@ -70,3 +70,8 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 7 | Click on the edit button near country | The existing country will be replaced with the input which has a placeholder text with the existing country | Y   |             |
 | 8 | Click on the edit button near password | The existing password will be replaced with the input which has a placeholder text with the existing password | Y   |             |
 | 9 | Click on the save button | User's profile is updated | Y   |             |
+| Settings |                        |                  |      |             |
+| 1 | click on choose camera select | All existing cameras are displayed in select | Y   |             |
+| 2 | click on camera in select options | The user will be able to see the preview of the camera | Y   | If user goes to the select camera again, the chosen camera will be emphasized  with light purple color |
+| 3 | click on choose microphone select | All existing microphones are displayed in select | Y   |             |
+| 4 | click on microphone in select options | The user will be able to see the knob of the microphone | Y   | If user goes to the select microphone again, the chosen microphone will be emphasized  with light purple color |
