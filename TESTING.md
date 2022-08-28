@@ -60,3 +60,13 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 3 | Click on see subscriptions page in the dashboard | Redirect to user's subscriptions page | Y   | where user can see subscriptions             |
 | 4 | Click on create meeting page in the dashboard | Redirect to create meeting page | Y   | This button is unable only if the user bought a subscription             |
 | 5 | Click on the Join meeting in the dashboard | Modal window appears where the user can input the token to be allowed to join the meeting | Y   |             |
+| Profile |                        |                  |      |             |
+| 1 | Click on the edit button near avatar | "Choose" button will replace avatar | Y   |             |
+| 2 | Click on the "Choose" avatar button | Opens a file explorer to select an avatar | Y   |             |
+| 3 | Select an avatar from the file explorer | Avatar is replaced | Y   |             |
+| 4 | Click on the edit button near First name | The existing First name will be replaced with the input which has a placeholder text with the existing First name | Y   |             |
+| 5 | Click on the edit button near Last name | The existing Last name will be replaced with the input which has a placeholder text with the existing Last name | Y   |             |
+| 6 | Click on the edit button near Birthday | The existing Birthday will be replaced with the input which has a placeholder text with the existing Birthday | Y   |             |
+| 7 | Click on the edit button near country | The existing country will be replaced with the input which has a placeholder text with the existing country | Y   |             |
+| 8 | Click on the edit button near password | The existing password will be replaced with the input which has a placeholder text with the existing password | Y   |             |
+| 9 | Click on the save button | User's profile is updated | Y   |             |
