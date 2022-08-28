@@ -579,3 +579,27 @@ I used set the projects according to the application's functionality and set up 
 ![Tasks](documentation/agile/tasks.png)
 
 ---
+
+
+
+
+
+
+---
+
+## Credits
+
+
+- [GitHub](https://github.com/) for giving the idea of the project's design.
+- [Django](https://www.djangoproject.com/) for the framework.
+- [Django Rest Framework](https://www.django-rest-framework.org/) for the API functionality.
+- [Heroku](https://www.heroku.com/): for the free hosting of the website.
+- [Postgresql](https://www.postgresql.org/): for providing a free database.
+- [Stripe](https://stripe.com/): for providing a free payment gateway.
+- [Prime React](https://www.primefaces.org/primereact/): for the free React components.
+- [Primeflex](https://www.primefaces.org/primeflex/): for the free UI framework.
+- [Responsive Viewer](https://chrome.google.com/webstore/detail/responsive-viewer/inmopeiepgfljkpkidclfgbgbmfcennb/related?hl=en): for providing a free platform to test website responsiveness
+- [GoFullPage](https://gofullpage.com/): for allowing to create free full web page screenshots;
+- [Favicon.io](https://favicon.io/): for providing a free platform to generate favicons.
+- [Coolors](https://coolors.co/): for providing a free platform to generate your own palette.
+- [Unsplash](https://unsplash.com/): for providing free images.
