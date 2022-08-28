@@ -122,3 +122,21 @@ It would be nice to widen the scope of the application to include functionality 
     + [Sitemap Generator](https://www.xml-sitemaps.com/) was used to create the sitemap.xml file.
     + [Privacy Policy Generator](https://www.privacypolicygenerator.info/) was used to create the privacy policy.
     + [Terms of Use Generator](https://www.termsofusegenerator.net/) was used to create the terms of use.
+
+---
+​
+## Features
+​
+### Navbar:
+​
+There are 2 types of the navbar:
+​
+1. Navbar for logged out users:
+​
+![Navbar](documentation/features/navbar.png)
+​
+  - "Home" button: takes the user to the home page.
+  - "Pricing" button: takes the user to the pricing page.
+  - "Contact" button: takes the user to the contact form page.
+  - "Login" button: takes the user to the login page.
+  - "Register" button: takes the user to the register page.
