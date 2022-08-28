@@ -1,4 +1,4 @@
-# Dr.Meeting
+# Dr.Meetings
 ## About
 This is a meeting app for the people who want to meet virtually. It has a simple interface and easy to use. It allows users to create a meeting and invite other users to join the meeting. The application is accessible from various platforms like web, mobile and desktop.
 To use the application, you need to register an account. Users are encouraged to pay for subscription plan to be able to create a meeting by themselves. The subscription plan's price depends on how many users are going to join the meeting.
@@ -42,7 +42,7 @@ The website is created to be accessible to all users. The website is designed to
 The Business Model is B2C, meaning that the company sells products (subscriptions) to customers only.
 It focuses on individual transactions only at the moment.
 ### Target audience
-Dr.Meeting is aimed at the diverse population. The target audience is the people who want to meet virtually. It includes friends who simply want to meet when it is temporarily not allowed, colleges who are living in remote areas and have to discuss some urgent matters, and even students who are want to organize a study group.
+Dr.Meetings is aimed at the diverse population. The target audience is the people who want to meet virtually. It includes friends who simply want to meet when it is temporarily not allowed, colleges who are living in remote areas and have to discuss some urgent matters, and even students who are want to organize a study group.
 It excludes people who are younger than 13 years old.
 ### Strategy Trade-Off
 The strategy trade-off is to make the application as user friendly as possible.
@@ -55,3 +55,11 @@ The strategy trade-off is to make the application as user friendly as possible.
 - Low cost of the subscription plan.
 - Security of the application.
 - Tech support.
+
+---
+## Web Marketing
+1. facebook
+Having a page on facebook is a great way to get people to join the meeting on Dr.Meetings. Facebook has millions of users and is a great way to get people to become members of the Dr.Meetings community, it may easily lure new customers and increase the number of members who are purchasing the subscription plans.
+[Facebook mockup](documentation/design/drmeeting_fb.pdf)
+2. Newsletter
+The newsletter subscription is a great way to deliver the latest news and updates to the users and subscribers.
