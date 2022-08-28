@@ -87,3 +87,11 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 3 | Click on view password button | Asterisks are replaced with the actual password | Y   |             |
 | 4 | Select maximum number of participants in radio buttons | Maximum number of participants is saved | Y   |   The number of active radio buttons depends on the type of subscription the user has |
 | 5 | Click on create button | Meeting is created, and user redirected to meeting page | Y   |             |
+| Meeting |                        |                  |      |             |
+| 1 | Click on the room token in the meeting page | token will be copied and the user sees a message that token is copied | Y   |             |
+| 2 | Click camera control in the meeting page | If camera was turned on, the camera will be turned off. If camera was turned off, the camera will be turned on | Y   |             |
+| 3 | Click microphone control in the meeting page | If microphone was turned on, the microphone will be turned off. If microphone was turned off, the microphone will be turned on | Y   |             |
+| 4 | Click on mute guests control button in the meeting page | If guests were muted, the guests will be unmuted. If guests were unmuted, the guests will be muted | Y   |  Available only if the user has created this room |
+| 5 | Click on delete room button in the meeting page | Room will be deleted and all participants will be kicked | Y   |  Available only if the user has created this room |
+| 6 | Click on leave room button in the meeting page | User will be redirected to dashboard | Y   |  Available only if the user is a guest of this room |
+| 7 | Click on fullscreen button in the meeting page | Meeting is fullscreened | Y   |  Performance can depend on the browser |
