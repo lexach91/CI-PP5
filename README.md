@@ -763,11 +763,18 @@ I used set the projects according to the application's functionality and set up 
 | password | password | CharField | max_length=32, default='', blank=True, null=True |
 | guests_muted | guests_muted | BooleanField | default=False |
 
+---
 
+## Testing
+Please refer to the [TESTING.md](TESTING.md) file for all test-related documentation.
 
+---
 
+## Deployment
 
+### Local Development
 
+### Heroku Deployment
 
 ---
 
