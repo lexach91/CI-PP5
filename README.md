@@ -557,3 +557,9 @@ The is only one image that was used in the application to make the landing page 
 ![Home page Hero image](documentation/features/hero_section.png)
 
 This image was taken from [Unsplash](https://unsplash.com/).
+
+### Wireframes
+
+[Dr meetings Wireframes](documentation/design/drmeeting_wireframes.pdf)
+
+---
