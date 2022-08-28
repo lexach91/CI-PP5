@@ -300,12 +300,12 @@ const Privacy = () => {
       />
     </div>
   ) : isAuthenticated ? (
-    <UserLayout title="Terms of Use">
+    <UserLayout title="Privacy Policy">
       <PrivacyHtml />
       {goToTopButton()}
     </UserLayout>
   ) : (
-    <VisitorLayout title="Terms of Use">
+    <VisitorLayout title="Privacy Policy">
       <PrivacyHtml />
       {goToTopButton()}
     </VisitorLayout>
