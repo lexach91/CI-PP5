@@ -18,6 +18,7 @@ const Pricing = () => {
     );
     const dispatch = useDispatch();
     const toastRef = useRef();
+    const [redirecting, setRedirecting] = useState(false);
     useEffect(() => {
         if (redirect) {
             dispatch(resetRedirect());
@@ -27,6 +28,12 @@ const Pricing = () => {
 
     const LayoutComponent = isAuthenticated ? UserLayout : VisitorLayout;
 
+    useEffect(() => {
+        window.scrollTo({
+            top:0,
+            behavior: 'smooth'
+        });
+    } , []);
 
     
     const redirectToLogin = () => {
@@ -62,6 +69,7 @@ const Pricing = () => {
 
     const handleOnClick = (planId) => {
         if(isAuthenticated && user) {
+            setRedirecting(true);
             createCheckoutSession(planId);
         } else {
             // toastRef.current.show({
@@ -135,7 +143,7 @@ const Pricing = () => {
                                     </li>                                    
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300 mt-auto" />
-                                <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={() => handleOnClick(2)} />
+                                <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={() => handleOnClick(2)} disabled={redirecting} loading={redirecting} />
                             </div>
                         </div>
                     </div>
@@ -172,7 +180,7 @@ const Pricing = () => {
                                     </li>                                    
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(3)} />
+                                <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(3)} disabled={redirecting} loading={redirecting} />
                             </div>
                         </div>
                     </div>
@@ -215,7 +223,7 @@ const Pricing = () => {
                                     </li>
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
-                                <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(4)} />
+                                <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(4)} disabled={redirecting} loading={redirecting} />
                             </div>
                         </div>
                     </div>
@@ -234,7 +242,8 @@ const Pricing = () => {
                     icon="pi pi-user-plus"
                     className="font-bold px-5 py-3 p-button-raised p-button-rounded white-space-nowrap"
                     onClick={() => {
-                        window.location.href = "/register";
+                        // window.location.href = "/register";
+                        navigate("/register");
                     }}
                     />
                 </div>
