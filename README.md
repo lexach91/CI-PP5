@@ -496,3 +496,47 @@ To notify user about the result of the action, the system will display an alert 
 ## Design
 
 The idea of the design was taken from [Prime React](https://www.primefaces.org/primereact/). It helped to create clean and attractive design. The simplicity of the design was also taken into consideration as it was a main goal to keep users' attention on the functionality of the application.
+
+### Color palette
+
+Material design Indigo Dark palette is the theme color for the application.
+
+![Color palette](documentation/design/indigo_dark_colors.png)
+
+- #1e1e1e:
+
+    This color was used for navbar to make it more visible.
+
+- #121212:
+
+    This color was used for the background of the page to make the content more visible.
+
+- #2a2a2a:
+
+    This color was used for the footer background to slightly make the footer's content more visible.
+
+- #9FA8DA:
+
+    This color was used for the confirmation button, home page's titles to make them more visible. 
+
+- #F48FB1:
+
+    This color was used for the side menu and meeting control buttons to attract the user's attention;
+
+- #C5E1A5:
+
+    This color is used for the success messages and the user's dashboard buttons to make them more visible.
+
+- #EF9A9A:
+
+    This color is used for the error messages;
+
+- #689f38:
+
+    This color was used for the titles of the user's dashboard to emphasize the importance of the information;
+
+- #a0a0a0, #fff:
+
+    This color was used for the text throughout the application to make it more visible.
+
+![Color palette](documentation/design/main_colors.png)
