@@ -370,3 +370,33 @@ If the user without a subscription plan comes to this page by directly typing th
 ![Edit Profile page](documentation/features/edit_profile_page.png)
 
 This page has a form to edit the user's profile. The user can edit his first name, last name, birthday, country, password, and avatar. After clicking "Save" button, the user will be redirected to the user dashboard.
+
+### Settings page
+
+![Settings page](documentation/features/settings_page.png)
+
+This page allows user to set the camera and microphone settings.
+
+When user click select camera, the user will see a select options:
+
+![Settings page](documentation/features/camera_select.png)
+
+When the camera is selected, the user will see a preview of the camera.
+
+![Settings page](documentation/features/chosen_camera1.png)
+
+![Settings page](documentation/features/chosen_camera2.png)
+
+When user click select microphone, the user will see a select options:
+
+![Settings page](documentation/features/micophone_select_options.png)
+
+When the microphone is selected, the user will see a knob that shows the volume of the microphone.
+
+![Settings page](documentation/features/microphone_selected.png)
+
+When user click "Save" button, the settings will be saved.
+
+As it is shown in the screenshots, the user will be able to see chosen camera and microphone in different color:
+
+![Settings page](documentation/features/micophone_select_options.png)
