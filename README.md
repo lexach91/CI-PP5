@@ -233,3 +233,39 @@ This section describes the benefits of choosing this platform over other platfor
 This section has a call to action to get people to join the Dr.Meeting community and a buttons:
 
   - "See pricing" button: takes the user to the pricing page;
+
+
+### Pricing page
+
+**When the user is logged out.**
+
+![Pricing page](documentation/features/pricing_page.png)
+
+It has the same navbar and footer as a Home page.
+
+It has a title and 3 pricing plans' cards, which include full information about the plans and a "Buy Now" button.
+
+1. Basic plan:
+
+![Basic plan](documentation/features/basic_plan.png)
+
+2. Premium plan:
+
+![Premium plan](documentation/features/premium_plan.png)
+
+3. Enterprise plan:
+
+![Enterprise plan](documentation/features/enterprise_plan.png)
+
+If the user is not logged in, the user will see a alert message to register/login first.
+
+Under the pricing cards there is a call to action to get people to join the Dr.Meeting community and a buttons:
+
+![Get started section](documentation/features/pricing_page_register_button.png)
+
+**When the user is logged in:**
+
+![Pricing page](documentation/features/pricing_page_user_logged_in.png)
+
+
+When the user clicks "Buy Now" button, the user is taken to the payment page
