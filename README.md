@@ -191,3 +191,45 @@ It has a logo, email, phone number. It also has the following links:
   ![Newsletter](documentation/features/newsletter_form_unsubscribe.png) 
 ​
 - Social media icons (Facebook, Twitter, Instagram, LinkedIn): takes the user to the social media pages.
+
+### Home page
+
+![Home page](documentation/features/home_page.png)
+
+This is the home page of the website. It has the description of the website and calls to action to get people to join the Dr.Meeting community.
+
+It includes the following features:
+
+
+
+2. Hero section:
+
+![Hero section](documentation/features/hero_section.png)
+
+It has a content on the left side and a background image on the right side.
+
+It includes the call to action: "Absolutely new level of cloud meetings. Our platform is the best way to manage your meetings and video calls.". It also has 2 buttons:
+
+- "Learn More" button: takes the user to the benefits section of the home page;
+- "Get Started" button: takes the user to the register page.
+
+3. Benefits section:
+
+![Benefits section](documentation/features/benefits_section.png)
+
+This section describes the benefits of choosing this platform over other platforms.
+
+  - Built for Everyone;
+  - End-to-End Encryption;
+  - Easy to use;
+  - Fast & Global support;
+  - Open source;
+  - Trusted security;
+
+4. Get started section:
+
+![Get started section](documentation/features/get_started_section.png)
+
+This section has a call to action to get people to join the Dr.Meeting community and a buttons:
+
+  - "See pricing" button: takes the user to the pricing page;
