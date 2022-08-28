@@ -81,3 +81,9 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 3 | click on the cancel button in the subscriptions page | Modal window appears where the user can cancel the subscription | Y   |             |
 | 4 | click on no button in the subscription cancel modal | Modal window is closed | Y   |             |
 | 5 | click on yes button in the subscription cancel modal | Subscription is canceled, the user gets refunded, and email confirmation | Y   |             |
+| Create meeting |                        |                  |      |             |
+| 1 | Click on protect with a password switch | Password input field appears | Y   |             |
+| 2 | Type in password in the password input field | Password input is filled with password asterisks | Y   |             |
+| 3 | Click on view password button | Asterisks are replaced with the actual password | Y   |             |
+| 4 | Select maximum number of participants in radio buttons | Maximum number of participants is saved | Y   |   The number of active radio buttons depends on the type of subscription the user has |
+| 5 | Click on create button | Meeting is created, and user redirected to meeting page | Y   |             |
