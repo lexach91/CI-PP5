@@ -400,3 +400,25 @@ When user click "Save" button, the settings will be saved.
 As it is shown in the screenshots, the user will be able to see chosen camera and microphone in different color:
 
 ![Settings page](documentation/features/micophone_select_options.png)
+
+### Subscription page
+
+![Subscription page](documentation/features/subscription_page.png)
+
+This page has a data on the current subscription plan and provides data on the future payments.
+
+It has 3 buttons:
+
+- History button: opens a modal window with the history of the payments.
+
+![History modal](documentation/features/subscription_page_history.png)
+
+- Portal button: stripe customer portal for the user to manage his payments.
+
+- Cancel button: to cancel subscription.
+
+![Cancel modal](documentation/features/cancel_subscription.png)
+
+When the order is cancelled, the user will receive an email with a confirmation message and the money will be refunded.
+
+![Cancel email](documentation/features/email_cancelled_subscription.png)
