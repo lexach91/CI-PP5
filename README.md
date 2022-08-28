@@ -140,3 +140,27 @@ There are 2 types of the navbar:
   - "Contact" button: takes the user to the contact form page.
   - "Login" button: takes the user to the login page.
   - "Register" button: takes the user to the register page.
+
+2. Navbar for logged in users:
+​
+![Navbar](documentation/features/navbar_loged_in.png)
+​
+  - It has a profile button. If user clicks this button, the user will see a sidebar with the user's profile information:
+​
+    ![Sidebar](documentation/features/navbar_sidebar.png)
+​
+    It also has 3 buttons:
+​
+    - "Home" button: takes the user to the home page.
+    - "Profile" button: takes the user to the profile page.
+    - "Settings" button: takes the user to the settings page.
+​
+  **Note:** If user bought a subscription, there will be an additional button "Create Meeting" in the sidebar.
+​
+  ![Sidebar](documentation/features/sidebar_create_meeting.png)
+​
+  - "Home" button: takes the user to the User's home page. If user is already on the his/her home page, the button will not be displayed.
+​
+    ![Home button](documentation/features/navbar_user_home.png)
+​
+  - "Logout" button: logs the user out.
