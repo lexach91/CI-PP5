@@ -73,7 +73,7 @@ const footer = () => {
 export const VisitorLayout = ({ title, children }) => (
   <React.Fragment>
     <Helmet>
-      <title>{title}</title>
+      <title>Dr.Meetings | {title}</title>
     </Helmet>
     <VisitorNavbar />
     <main>{children}</main>
