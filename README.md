@@ -104,3 +104,21 @@ It would be nice to widen the scope of the application to include functionality 
     + [PostgreSQL](https://www.postgresql.org/): the database used to store all the data.
 ​
 - ### Other tools:
+
+    + [Git](https://git-scm.com/): the version control system used to manage the code.
+    + [Pip3](https://pypi.org/project/pip/): the package manager used to install the dependencies.
+    + [Psycopg2](https://www.python.org/dev/peps/pep-0249/): the database driver used to connect to the database.
+    + [Heroku](https://dashboard.heroku.com/): the hosting service used to host the website.
+    + [GitHub](https://github.com/): used to host the website's source code.
+    + [VSCode](https://code.visualstudio.com/): the IDE used to develop the website.
+    + [Chrome DevTools](https://developer.chrome.com/docs/devtools/open/): was used to debug the website.
+    + [React DevTools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi): was used to debug the website.
+    + [W3C Validator](https://validator.w3.org/): was used to validate HTML5 code for the website.
+    + [W3C CSS validator](https://jigsaw.w3.org/css-validator/): was used to validate CSS code for the website.
+    + [JShint](https://jshint.com/): was used to validate JS code for the website.
+    + [PEP8](https://pep8.org/): was used to validate Python code for the website.
+    + [Django-Countries](https://django-countries.readthedocs.io/en/latest/): was used to create the country list.
+    + [stripe](https://stripe.com/): was used to create the payment system.
+    + [Sitemap Generator](https://www.xml-sitemaps.com/) was used to create the sitemap.xml file.
+    + [Privacy Policy Generator](https://www.privacypolicygenerator.info/) was used to create the privacy policy.
+    + [Terms of Use Generator](https://www.termsofusegenerator.net/) was used to create the terms of use.
