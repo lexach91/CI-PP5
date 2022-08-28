@@ -54,3 +54,9 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 2 | Click Buy now in Premium plan card | Redirect to stripe checkout page | Y   |             |
 | 3 | Click Buy now in Enterprise plan card | Redirect to stripe checkout page | Y   |             |
 | 4 | Click Register button in the pricing page | Redirect to register page | Y   | If user logged in, this buttons does not appear |
+| User Dashboard |                        |                  |      |             |
+| 1 | Click on profile page in the dashboard | Redirect to user's profile page | Y   | where user can edit profile             |
+| 2 | Click on settings page in the dashboard | Redirect to user's settings page | Y   | where user can edit settings             |
+| 3 | Click on see subscriptions page in the dashboard | Redirect to user's subscriptions page | Y   | where user can see subscriptions             |
+| 4 | Click on create meeting page in the dashboard | Redirect to create meeting page | Y   | This button is unable only if the user bought a subscription             |
+| 5 | Click on the Join meeting in the dashboard | Modal window appears where the user can input the token to be allowed to join the meeting | Y   |             |
