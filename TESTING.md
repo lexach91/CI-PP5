@@ -45,3 +45,12 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 8 | Click on Instagram icon in footer | Opens a Instagram page | Y   |             |
 | 9 | Click on LinkedIn icon in footer | Opens a LinkedIn page | Y   |             |
 | 10 | Click on Newsletter in footer | Opens a Newsletter form | Y   | If user logged in, user's email is pre-filled. If user has already subscribed, user is alerted that they have already subscribed. If user subscribes, He/she will receive an email confirmation. |
+| Home       |                        |                  |      |             |
+| 1 | Click Learn more in the hero section | Scroll to the benefits section | Y   |             |
+| 2 | Click Get Started button in the hero section | Redirect to get started page | Y   |             |
+| 4 | Click See Pricing button in the hero section | Redirect to pricing page | Y   |             |
+| Pricing |                        |                  |      |             |
+| 1 | Click Buy now in Basic plan card | Redirect to stripe checkout page | Y   |             |
+| 2 | Click Buy now in Premium plan card | Redirect to stripe checkout page | Y   |             |
+| 3 | Click Buy now in Enterprise plan card | Redirect to stripe checkout page | Y   |             |
+| 4 | Click Register button in the pricing page | Redirect to register page | Y   | If user logged in, this buttons does not appear |
