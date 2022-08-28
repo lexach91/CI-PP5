@@ -75,3 +75,9 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 | 2 | click on camera in select options | The user will be able to see the preview of the camera | Y   | If user goes to the select camera again, the chosen camera will be emphasized  with light purple color |
 | 3 | click on choose microphone select | All existing microphones are displayed in select | Y   |             |
 | 4 | click on microphone in select options | The user will be able to see the knob of the microphone | Y   | If user goes to the select microphone again, the chosen microphone will be emphasized  with light purple color |
+| See subscriptions |                        |                  |      |             |
+| 1 | Click History button in the subscriptions page | dropdown with history data is displayed | Y   |             |
+| 2 | click Portal button in the subscriptions page | Redirect to stripe customer portal page to view full data | Y   |             |
+| 3 | click on the cancel button in the subscriptions page | Modal window appears where the user can cancel the subscription | Y   |             |
+| 4 | click on no button in the subscription cancel modal | Modal window is closed | Y   |             |
+| 5 | click on yes button in the subscription cancel modal | Subscription is canceled, the user gets refunded, and email confirmation | Y   |             |
