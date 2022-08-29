@@ -12,6 +12,7 @@ import { Card } from "primereact/card";
 import { Avatar } from "primereact/avatar";
 import { Divider } from "primereact/divider";
 import { Toolbar } from "primereact/toolbar";
+import { useNavigate } from "react-router-dom";
 
 const UserNavbar = () => {
   const {
@@ -25,6 +26,7 @@ const UserNavbar = () => {
     membership,
   } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [sidebarVisible, setSidebarVisible] = useState(false);
   // const toast = useRef(null);
 
@@ -76,9 +78,10 @@ const UserNavbar = () => {
           className="p-button-danger"
           onClick={async () => {
             await dispatch(logout());
-            if (window.location.pathname !== "/") {
-              window.location.href = "/";
-            }
+            navigate("/");
+            // if (window.location.pathname !== "/") {
+            //   window.location.href = "/";
+            // }
           }}
         />
       </div>
@@ -122,7 +125,8 @@ const UserNavbar = () => {
           tooltip="Home page"
           className="p-button-secondary ml-3 p-button-rounded"
           onClick={() => {
-            window.location.href = "/";
+            // window.location.href = "/";
+            navigate("/");
           }}
         />
       </div>
@@ -183,7 +187,8 @@ const UserNavbar = () => {
               icon="pi pi-home"
               className="p-button-secondary mb-2 w-full"
               onClick={() => {
-                window.location.href = "/";
+                // window.location.href = "/";
+                navigate("/");
               }}
             />
           </div>
@@ -193,7 +198,8 @@ const UserNavbar = () => {
               icon="pi pi-user"
               className="p-button-secondary mb-2 w-full"
               onClick={() => {
-                window.location.href = "/profile";
+                // window.location.href = "/profile";
+                navigate("/profile");
               }}
             />
           </div>
@@ -203,7 +209,8 @@ const UserNavbar = () => {
               icon="pi pi-cog"
               className="p-button-secondary mb-2 w-full"
               onClick={() => {
-                window.location.href = "/settings";
+                // window.location.href = "/settings";
+                navigate("/settings");
               }}
             />
           </div>
@@ -214,7 +221,8 @@ const UserNavbar = () => {
                 icon="pi pi-plus"
                 className="p-button-secondary mb-2 w-full"
                 onClick={() => {
-                  window.location.href = "/create-room";
+                  // window.location.href = "/create-room";
+                  navigate("/create-room");
                 }}
               />
             </div>
