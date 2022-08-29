@@ -138,9 +138,16 @@ const Pricing = () => {
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
                                         <span>
-                                            30-minute meeting duration
+                                            Unlimited meeting duration
                                         </span>
-                                    </li>                                    
+                                    </li>
+                                    <li className="flex align-items-center mb-3">
+                                        <i className="pi pi-check-circle text-green-500 mr-2"></i>
+                                        <span>
+                                            Room password protection
+                                        </span>
+                                    </li>
+
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300 mt-auto" />
                                 <Button label="Buy Now" className="p-3 w-full mt-auto" onClick={() => handleOnClick(2)} disabled={redirecting} loading={redirecting} />
@@ -169,15 +176,15 @@ const Pricing = () => {
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
                                         <span>
-                                            60-minute meeting duration
+                                            Unlimited meeting duration
                                         </span>
                                     </li>
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
                                         <span>
-                                            Screen sharing allowed
+                                            Room password protection
                                         </span>
-                                    </li>                                    
+                                    </li>                                                            
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
                                 <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(3)} disabled={redirecting} loading={redirecting} />
@@ -212,15 +219,10 @@ const Pricing = () => {
                                     <li className="flex align-items-center mb-3">
                                         <i className="pi pi-check-circle text-green-500 mr-2"></i>
                                         <span>
-                                            Screen sharing allowed
+                                            Room password protection
                                         </span>
                                     </li>
-                                    <li className="flex align-items-center mb-3">
-                                        <i className="pi pi-check-circle text-green-500 mr-2"></i>
-                                        <span>
-                                            Presentation sharing allowed
-                                        </span>
-                                    </li>
+                                    
                                 </ul>
                                 <hr className="mb-3 mx-0 border-top-1 border-bottom-none border-300" />
                                 <Button label="Buy Now" className="p-3 w-full" onClick={() => handleOnClick(4)} disabled={redirecting} loading={redirecting} />
