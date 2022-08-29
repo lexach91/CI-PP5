@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 const VisitorNavbar = () => {
     const navigate = useNavigate();
     const navList = [
-        { label: 'Home', icon: 'pi pi-home', url: '/' },
-        { label: 'Pricing', icon: 'pi pi-dollar', url: '/pricing' },
-        { label: 'Contact', icon: 'pi pi-phone', url: '/contact' },
+        { label: 'Home', icon: 'pi pi-home', command: () => navigate('/') },
+        { label: 'Pricing', icon: 'pi pi-dollar', command: () => navigate('/pricing') },
+        { label: 'Contact', icon: 'pi pi-phone', command: () => navigate('/contact') },
     ];
 
 
