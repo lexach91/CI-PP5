@@ -5,8 +5,6 @@ import { RotateLoader } from "react-spinners";
 import { VisitorLayout } from "../layouts/VisitorLayout";
 import { UserLayout } from "../layouts/UserLayout";
 import { Button } from "primereact/button";
-import { Divider } from "primereact/divider";
-import { Navigate } from "react-router-dom";
 import axios from "axios";
 import { Toast } from "primereact/toast";
 import { useNavigate } from "react-router-dom";
@@ -71,11 +69,7 @@ const Pricing = () => {
         if(isAuthenticated && user) {
             setRedirecting(true);
             createCheckoutSession(planId);
-        } else {
-            // toastRef.current.show({
-            //     severity: "info",
-            //     detail: "You need to be logged in to subscribe",
-            // });
+        } else {            
             dispatch(setError("You need to be logged in to subscribe"));
             redirectToLogin();            
         }
@@ -244,7 +238,6 @@ const Pricing = () => {
                     icon="pi pi-user-plus"
                     className="font-bold px-5 py-3 p-button-raised p-button-rounded white-space-nowrap"
                     onClick={() => {
-                        // window.location.href = "/register";
                         navigate("/register");
                     }}
                     />
