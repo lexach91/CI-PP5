@@ -31,8 +31,8 @@ const UserNavbar = () => {
           icon="pi pi-power-off"
           className="p-button-danger"
           onClick={async () => {
-            await dispatch(logout());
             navigate("/");
+            await dispatch(logout());
           }}
         />
       </div>
