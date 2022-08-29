@@ -11,7 +11,6 @@ const UnsubscribeNewsletter = () => {
     const { email } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    // const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = async () => {
