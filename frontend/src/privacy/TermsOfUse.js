@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import RotateLoader from "react-spinners/RotateLoader";
 import VisitorLayout from "../layouts/VisitorLayout";
 import UserLayout from "../layouts/UserLayout";
@@ -631,7 +631,6 @@ const TermsHtml = () => {
 };
 
 const TermsOfUse = () => {
-  const dispatch = useDispatch();
   const { loading, isAuthenticated } = useSelector((state) => state.auth);
   const [buttonVisible, setButtonVisible] = useState(false);
   const goToTopButton = () => {
