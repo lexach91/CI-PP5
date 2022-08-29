@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../layouts/UserLayout";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect } from "../redux/authSlice";
+import { resetRedirect, setMessage, setError } from "../redux/authSlice";
 import { Navigate } from "react-router-dom";
 import { RotateLoader } from "react-spinners";
 import { Dropdown } from "primereact/dropdown";
@@ -22,6 +22,7 @@ const Settings = () => {
     const [volumeLvl, setVolumeLvl] = useState(0);
     const [currentCamera, setCurrentCamera] = useState(null);
     const [currentMicrophone, setCurrentMicrophone] = useState(null);
+    const [saving, setSaving] = useState(false);
     
 
     let volumeBarDraw;
@@ -174,12 +175,19 @@ const Settings = () => {
     };
 
     const saveSettings = async () => {
+        setSaving(true);
         const settings = {
             camera_id: currentCamera,
             microphone_id: currentMicrophone,
         };
-        const response = await axios.post("devices-settings", settings);
-        console.log(response);
+        try{
+            await axios.post("devices-settings", settings);
+            dispatch(setMessage("Settings saved successfully"));
+        }
+        catch(error) {
+            dispatch(setError("Error saving settings"));
+        }
+        setSaving(false);
     };
 
 
@@ -326,7 +334,7 @@ const Settings = () => {
                 {/* <div className="volume-bar" style={{width: "300px", height: "10px", backgroundColor: "white"}}>
                     <div className="volume-bar-inner" style={{ width: `${volumeLvl}%` , height: "100%", backgroundColor: "red"}}></div>
                 </div> */}
-                <Button style={{margin:"0 auto"}} onClick={saveSettings} className="mt-2">Save settings</Button>
+                <Button style={{margin:"0 auto"}} onClick={saveSettings} className="mt-2" loading={saving} disabled={saving}>Save settings</Button>
             </div>
 
             </UserLayout>
