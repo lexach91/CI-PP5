@@ -1,31 +1,38 @@
 import React, { useEffect, useState } from "react";
-// import { Navigate } from "react-router-dom";
 import RotateLoader from "react-spinners/RotateLoader";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setMessage, setError } from "../redux/authSlice";
 
 
 const Checkout = () => {
-    // const [message, setMessage] = useState("");
-    // const [success, setSuccess] = useState(false);
-    // const [cancelled, setCancelled] = useState(false);
-    // const [sessionId, setSessionId] = useState("");
+    const { loading, isAuthenticated } = useSelector((state) => state.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [ restricted, setRestricted ] = useState(false);
+
+    useEffect(() => {
+        if(isAuthenticated === false && loading === false) {
+            dispatch(setError("You must be logged in to access this page."));
+            setRestricted(true);
+          }
+    }, [isAuthenticated, loading]);
+
+    if(restricted) {
+        dispatch(setError("You must be logged in to access this page."));
+        navigate("/");
+    }
+
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         
         if (query.get('success')) {
-            // setSuccess(true);
-            // setSessionId(query.get('session_id'));
             dispatch(setMessage("Thank you for your purchase! You will receive an email shortly with your receipt."));            
             navigate("/", { replace: true });            
         }
         if (query.get('cancelled')) {
-            // setCancelled(true);
             dispatch(setError("Your purchase was cancelled."));            
             navigate("/", { replace: true });           
         }
