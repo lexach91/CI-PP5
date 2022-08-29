@@ -21,7 +21,6 @@ const VideoElement = (props) => {
         ref={videoRef}
         autoPlay
         playsInline
-        // muted
         className="video-element"
       />        
   );
