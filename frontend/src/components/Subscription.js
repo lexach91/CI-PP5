@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../layouts/UserLayout";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect, setError } from "../redux/authSlice";
+import { resetRedirect, setError, setMessage } from "../redux/authSlice";
 import { RotateLoader } from "react-spinners";
 import { Button } from "primereact/button";
 import axios from "axios";
@@ -13,12 +13,14 @@ import { Column } from "primereact/column";
 import { confirmPopup } from 'primereact/confirmpopup';
 import { ConfirmPopup } from 'primereact/confirmpopup';
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Subscription = () => {
   const { isAuthenticated, user, redirect, loading, membership, membershipLoading } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [subscription, setSubscription] = useState({});
   const [loadingSubscription, setLoadingSubscription] = useState(false);
   const toast = useRef(null);
@@ -131,14 +133,16 @@ const Subscription = () => {
     setDeleteLoading(true);
     try {
       const res = await axios.post("cancel-subscription");
-      toast.current.show({
-        severity: "success",
-        detail: "Subscription cancelled",
-      });
-      setSubscription({});
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 2000);
+      // toast.current.show({
+      //   severity: "success",
+      //   detail: "Subscription cancelled",
+      // });
+      dispatch(setMessage("Subscription cancelled. You will receive a confirmation email shortly."));
+      navigate("/");
+      // setSubscription({});
+      // setTimeout(() => {
+      //   window.location.href = "/";
+      // }, 2000);
       
     }
     catch (err) {
