@@ -276,7 +276,7 @@ class StripeWebhookListener(APIView):
                 html_message=html_message,
             )
             subscription = stripe.Subscription.retrieve(invoice.subscription)
-            membership = Membership.objects.filter(stipe_id=subscription.id)
+            membership = Membership.objects.filter(stripe_id=subscription.id)
             if membership.exists():
                 membership = membership.first()
                 membership.type = SubscriptionPlan.objects.get(
