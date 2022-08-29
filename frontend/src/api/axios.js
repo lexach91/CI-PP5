@@ -33,48 +33,6 @@ axios.interceptors.response.use(
     }
 );
 
-export const getRoom = () => async (data) => {
-    const response = await axios.get("rooms/get");
-    console.log(response);
-    return response.data;
-}
-
-
-
-export const checkInRoom = () => async () => {
-    const response = await axios.get("rooms/check-user-in-room");
-    return response.data;
-};
-
-export const createRoom = (data) => async () => {
-    const response = await axios.post("rooms/create", data);
-    return response.data;
-};
-
-export const joinRoom = (data) => async () => {
-    const response = await axios.post("rooms/join", data);
-    return response.data;
-};
-
-export const leaveRoom = (data) => async () => {
-    const response = await axios.post("rooms/leave", data);
-    return response.data;
-};
-
-export const deleteRoom = (data) => async () => {
-    const response = await axios.post("rooms/delete", data);
-    return response.data;
-};
-
-export const isRoomProtected = (data) => async () => {
-    const response = await axios.post("rooms/is-protected", data);
-    return response.data;
-};
-
-// export const getRoom = (data) => async () => {
-//     const response = await axios.post("rooms/get", data);
-//     return response.data;
-// };
 
 
 export default baseUrl;
