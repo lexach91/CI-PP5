@@ -173,21 +173,21 @@ const Subscription = () => {
           <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
             <div className="text-500 w-4 font-medium">Name</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
-              <Chip label={membership.name} className="bg-blue-500" />
+              <Chip label={membership.name} className="bg-blue-900" />
               <i className="pi pi-money-bill text-white text-2xl"></i>
             </div>
           </li>
           <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
             <div className="text-500 w-4 font-medium">Can create rooms</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
-              {membership.can_create_rooms ? (<Chip label="Yes" className="bg-blue-500" />) : (<Chip label="No" className="bg-red-500" />)}
+              {membership.can_create_rooms ? (<Chip label="Yes" className="bg-blue-900" />) : (<Chip label="No" className="bg-red-800" />)}
               <i className="pi pi-video text-white text-2xl"></i>
             </div>
           </li>
           <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
             <div className="text-500 w-4 font-medium">Guest limit</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
-              <Chip label={membership.guest_limit} className="bg-blue-500" />
+              <Chip label={membership.guest_limit} className="bg-blue-900" />
               <i className="pi pi-users text-white text-2xl"></i>
             </div>
           </li>
@@ -196,7 +196,7 @@ const Subscription = () => {
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
               
               {subscription?.start_date && (
-                <Chip label={new Date(subscription.start_date * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+                <Chip label={new Date(subscription.start_date * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-900" />
 
               )}
               <i className="pi pi-calendar text-white text-2xl"></i>
@@ -207,7 +207,7 @@ const Subscription = () => {
             <div className="text-500 w-4 font-medium">Previous payment</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
               {subscription?.current_period_start && (
-                <Chip label={new Date(subscription.current_period_start * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+                <Chip label={new Date(subscription.current_period_start * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-900" />
 
               )}
               <i className="pi pi-calendar text-white text-2xl"></i>
@@ -217,7 +217,7 @@ const Subscription = () => {
             <div className="text-500 w-4 font-medium">Next payment</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
               {subscription?.current_period_end && (
-                <Chip label={new Date(subscription.current_period_end * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-500" />
+                <Chip label={new Date(subscription.current_period_end * 1000).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})} className="bg-blue-900" />
 
               )}
               <i className="pi pi-calendar text-white text-2xl"></i>
@@ -227,7 +227,7 @@ const Subscription = () => {
             <div className="text-500 w-4 font-medium">Payment amount</div>
             <div className="text-900 w-8 flex flex-row justify-content-between align-items-center">
               {subscription?.items && (
-                <Chip label={subscription.items.data[0].price.unit_amount / 100 + " " + subscription.items.data[0].price.currency} className="bg-blue-500" />
+                <Chip label={subscription.items.data[0].price.unit_amount / 100 + " " + subscription.items.data[0].price.currency} className="bg-blue-900" />
 
               )}
               <i className="pi pi-dollar text-white text-2xl"></i>
