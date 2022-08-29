@@ -6,7 +6,7 @@ class SubscriptionPlanSerializer(ModelSerializer):
     class Meta:
         model = SubscriptionPlan
         fields = [
-            'name',
-            'guest_limit',
-            'can_create_rooms',
+            "name",
+            "guest_limit",
+            "can_create_rooms",
         ]

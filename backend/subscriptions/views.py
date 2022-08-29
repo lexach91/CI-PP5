@@ -12,13 +12,16 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 base_url = settings.BASE_URL
 
 
-
 class GetUsersSubscriptionPlanAPIView(APIView):
     authentication_classes = [JWTAuthentication]
+
     def get(self, request):
         user = request.user
         if user is None:
-            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"error": "You are not logged in"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
         membership = Membership.objects.get_or_create(user=user)[0]
         plan = membership.type
         serializer = SubscriptionPlanSerializer(plan)
@@ -26,11 +29,15 @@ class GetUsersSubscriptionPlanAPIView(APIView):
 
 
 class GetMembershipInfoAPIView(APIView):
-    authentication_classes=[JWTAuthentication]
+    authentication_classes = [JWTAuthentication]
+
     def get(self, request):
         user = request.user
         if user is None:
-            return Response({'error': 'You are not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"error": "You are not logged in"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
         membership = Membership.objects.get_or_create(user=user)[0]
         stripe_id = membership.stripe_id
         stripe_subscription = stripe.Subscription.retrieve(stripe_id)
