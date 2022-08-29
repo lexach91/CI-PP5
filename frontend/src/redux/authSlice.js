@@ -65,7 +65,6 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
   const { email, password } = data;
   try {
     const response = await axios.post("login", { email, password });
-    console.log("Login success");
     const { dispatch } = thunkAPI;
     dispatch(getUser());
     return response.data;      
@@ -170,7 +169,6 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.loading = false;
         state.message = "Login successful";
-        // state.redirect = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -188,7 +186,6 @@ const authSlice = createSlice({
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
-        // state.isAuthenticated = false;
         state.error = action.payload;
       })
       .addCase(logout.pending, (state, action) => {
@@ -215,7 +212,6 @@ const authSlice = createSlice({
       .addCase(checkAuth.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
-        // state.error = action.payload;
       })
       .addCase(refreshToken.pending, (state, action) => {
         state.loading = true;
@@ -227,7 +223,6 @@ const authSlice = createSlice({
       .addCase(refreshToken.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticated = false;
-        // state.error = action.payload;
       })
       .addCase(getMembership.pending, (state, action) => {
         state.membershipLoading = true;
@@ -246,7 +241,3 @@ const authSlice = createSlice({
 export const { resetRedirect, resetError, resetMessage, setError, setMessage } = authSlice.actions;
 
 export default authSlice.reducer;
-
-// export const { setAuth } = authSlice.actions;
-
-// export default authSlice.reducer;
