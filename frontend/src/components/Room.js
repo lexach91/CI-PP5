@@ -1,44 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { resetRedirect, setError, setMessage } from "../redux/authSlice";
-import RotateLoader from "react-spinners/RotateLoader";
 import { useParams } from "react-router-dom";
-import * as ReactDOM from "react-dom";
 import VideoElement from "./Video";
 import Peer from "simple-peer";
-import { ContextMenu } from "primereact/contextmenu";
 import { Button } from "primereact/button";
-import { Dock } from "primereact/dock";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
-import { Carousel } from "primereact/carousel";
 import { Galleria } from "primereact/galleria";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
-
-// const servers = {
-//   iceServers: [
-//     {
-//       urls: "stun:openrelay.metered.ca:80",
-//     },
-//     {
-//       urls: "turn:openrelay.metered.ca:80",
-//       username: "openrelayproject",
-//       credential: "openrelayproject",
-//     },
-//     {
-//       urls: "turn:openrelay.metered.ca:443",
-//       username: "openrelayproject",
-//       credential: "openrelayproject",
-//     },
-//     {
-//       urls: "turn:openrelay.metered.ca:443?transport=tcp",
-//       username: "openrelayproject",
-//       credential: "openrelayproject",
-//     },
-//   ],
-// };
 
 const servers = {
   iceServers: [
@@ -82,6 +53,19 @@ const Room = () => {
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const toast = useRef();
+  const [ restricted, setRestricted ] = useState(false);
+
+  useEffect(() => {
+      if(isAuthenticated === false && loading === false) {
+          dispatch(setError("You must be logged in to access this page."));
+          setRestricted(true);
+        }
+  }, [isAuthenticated, loading]);
+
+  if(restricted) {
+      dispatch(setError("You must be logged in to access this page."));
+      navigate("/");
+  }
 
   useEffect(() => {
     if (redirect) {
@@ -111,11 +95,6 @@ const Room = () => {
           };
           webSocket.current.onerror = (error) => {
             console.log(error, "Websocket error");
-            // toast.current.show({
-            //   severity: "error",
-            //   detail:
-            //     "Something went wrong or you are not allowed to join this room.",
-            // });
             dispatch(setError("Something went wrong or you are not allowed to join this room."));
             // after the toast is hidden, redirect to home page
             setTimeout(() => {
@@ -129,7 +108,6 @@ const Room = () => {
     }
   }, [roomToken, isAuthenticated, user]);
 
-  // set isLoading to false when we have a hostId
   useEffect(() => {
     if (hostId.current) {
       setIsLoading(false);
@@ -137,24 +115,7 @@ const Room = () => {
     }
   }, [hostId.current]);
 
-  // useEffect(() => {
-  //   if (room?.guests_muted === false) {
-  //     console.log(room, "ROOM USE EFFECT");
-  //     setGuestsMicsOn(false);
-  //   }
-  // }, [room]);
-
-  // useEffect(() => {
-  //   if (user?.id) {
-  //     if (mutedGuests.includes(user.id)) {
-  //       if (localMicOn) {
-  //         setLocalMicOn(false);
-  //         sendSignal("mute-peer", { peer: user.id });
-  //       }
-  //     }
-  //   }
-  // }, [mutedGuests]);
-
+  
   const sendSignal = (action, message) => {
     let data = {
       peer: user.id,
@@ -194,96 +155,17 @@ const Room = () => {
           }
         }
       });
-      // let muted_peers = data.muted_peers;
-      // console.log(muted_peers, "muted_peers");
-      // setMutedGuests(muted_peers);
-      // mutedGuestsRef.current = muted_peers;
-      // let guests_muted = data.muted_all;
-      // console.log(guests_muted, "guests_muted");
-      // setGuestsMicsOn(!guests_muted);
-      // roomMutedRef.current = guests_muted;
-      // if (muted_peers) {
-      //   console.log("muted_peers", muted_peers);
-      //   setMutedGuests(prevGuests => {
-      //     return [...prevGuests, ...muted_peers];
-      //   });
-      //   if(muted_peers.includes(user.id)){
-      //     turnOffYourMic();
-      //   }
-      // }
       return;
     }
     let peer = data.peer;
 
-    // if (action === "mute-all") {
-    //   console.log("mute-all");
-    //   if (user.id != hostId.current) {
-    //     console.log("mute-all host");
-    //     turnOffYourMic();
-    //   }
-    //   guestsRef.current.forEach((guest) => {
-    //     if (guest.peer != hostId.current) {
-    //       setMutedGuests((prevGuests) => [...prevGuests, guest.peer]);
-    //     }
-    //   });
-    //   setGuestsMicsOn(false);
-    //   return;
-    // }
-    // if (action === "unmute-all") {
-    //   console.log("unmute-all");
-    //   if (user.id != hostId.current) {
-    //     console.log("unmute-all host");
-    //     turnOnYourMic();
-    //   }
-    //   guestsRef.current.forEach((guest) => {
-    //     setMutedGuests((prevGuests) =>
-    //       prevGuests.filter((peer) => peer != guest.peer)
-    //     );
-    //   });
-    //   setGuestsMicsOn(true);
-    //   return;
-    // }
-    // if (action === "mute-peer") {
-    //   let guestId = data.message.peer;
-    //   console.log("mute-peer" + guestId);
-    //   if (guestId == user.id) {
-    //     console.log("mute-peer self");
-    //     turnOffYourMic();
-    //   } else {
-    //     guestsRef.current
-    //       .find((guest) => guest.peer == guestId)
-    //       .peerConnection._remoteStreams[0].getAudioTracks()[0].enabled = false;
-    //   }
-    //   setMutedGuests((prevGuests) => [...prevGuests, guestId]);
-    //   return;
-    // }
-    // if (action === "unmute-peer") {
-    //   let guestId = data.message.peer;
-    //   console.log("unmute-peer" + guestId);
-    //   if (guestId == user.id) {
-    //     console.log("unmute-peer self");
-    //     turnOnYourMic();
-    //   } else {
-    //     guestsRef.current
-    //       .find((guest) => guest.peer == guestId)
-    //       .peerConnection._remoteStreams[0].getAudioTracks()[0].enabled = true;
-    //   }
-    //   setMutedGuests((prevGuests) =>
-    //     prevGuests.filter((peer) => peer != guestId)
-    //   );
-    //   return;
-    // }
+    
     if (action === "room-deleted") {
       console.log("room-deleted");
       if (user.id != hostId.current) {
-        // toast.current.show({
-        //   severity: "error",
-        //   detail: "This room has been deleted.",
-        // });
+        
         dispatch(setError("This room has been deleted."));
-        // stopLocalVideo();
-        // navigate("/", { replace: true });
-        // after the toast is hidden, redirect to home page
+        
         setTimeout(() => {
           window.location.href = "/";
         }, 3000);
@@ -368,7 +250,6 @@ const Room = () => {
       if (roomMutedRef.current === true) {
         sendDataToPeer(peer, {
           type: "mute-all",
-          // peer: user.id,
         });
         mutedGuestsRef.current.push(peer);
         setMutedGuests((prevGuests) => [...prevGuests, peer]);
@@ -443,7 +324,6 @@ const Room = () => {
   const sendDataToEveryone = (data) => {
     guestsRef.current.forEach((guest) => {
       sendDataToPeer(guest.peer, data);
-      // guest.peerConnection.send(JSON.stringify(data));
     });
   };
 
@@ -584,7 +464,6 @@ const Room = () => {
   // this function can be used by the host only
   // every guest will receive the same signal
   const muteAllGuests = () => {
-    // sendSignal("mute-all", {});
     sendDataToEveryone({
       type: "mute-all",
     });
@@ -597,12 +476,10 @@ const Room = () => {
   const muteAllGuestsHandler = () => {
     if (isHost) {
       muteAllGuests();
-      // setGuestsMicsOn(false);
     }
   };
 
   const unmuteAllGuests = () => {
-    // sendSignal("unmute-all", {});
     sendDataToEveryone({
       type: "unmute-all",
     });
@@ -615,12 +492,10 @@ const Room = () => {
   const unmuteAllGuestsHandler = () => {
     if (isHost) {
       unmuteAllGuests();
-      // setGuestsMicsOn(true);
     }
   };
 
   const turnOnYourCamera = () => {
-    // let localVideoTrack = localVideo.current.srcObject.getVideoTracks()[0];
     guestsRef.current.forEach((guest) => {
       guest.peerConnection.streams[0].getVideoTracks().forEach((track) => {
         track.enabled = true;
@@ -633,7 +508,6 @@ const Room = () => {
   };
 
   const turnOffYourCamera = () => {
-    // let localVideoTrack = localVideo.current.srcObject.getVideoTracks()[0];
     guestsRef.current.forEach((guest) => {
       guest.peerConnection.streams[0].getVideoTracks().forEach((track) => {
         track.enabled = false;
@@ -646,7 +520,6 @@ const Room = () => {
   };
 
   const turnOnYourMic = () => {
-    // let localAudioTrack = localVideo.current.srcObject.getAudioTracks()[0];
     guestsRef.current.forEach((guest) => {
       guest.peerConnection.streams[0].getAudioTracks().forEach((track) => {
         track.enabled = true;
@@ -657,10 +530,8 @@ const Room = () => {
     });
     setLocalMicOn(true);
     selfMutedRef.current = false;
-    // sendSignal("unmute-peer", {peer: user.id});
   };
   const turnOffYourMic = () => {
-    // let localAudioTrack = localVideo.current.srcObject.getAudioTracks()[0];
     guestsRef.current.forEach((guest) => {
       guest.peerConnection.streams[0].getAudioTracks().forEach((track) => {
         track.enabled = false;
@@ -671,7 +542,6 @@ const Room = () => {
     });
     setLocalMicOn(false);
     selfMutedRef.current = true;
-    // sendSignal("mute-peer", {peer: user.id});
   };
 
   const leaveRoom = async () => {
@@ -679,8 +549,6 @@ const Room = () => {
       room_token: roomToken,
     });
     if (response.status === 200) {
-      // toast.current.show({ severity: "success", detail: "You left the room" });
-      // destroy all guests
       guestsRef.current.forEach((guest) => {
         guest.peerConnection.removeAllListeners();
         guest.peerConnection.destroy();
@@ -692,14 +560,11 @@ const Room = () => {
       setLocalMicOn(false);
       setGuestsMicsOn(false);
       dispatch(setMessage("You left the room"));
-      // stopLocalVideo();
-      // navigate("/", { replace: true });
       setTimeout(() => {
         window.location.href = "/";
       }, 3000);
     } else {
       console.log(response);
-      // toast.current.show({ severity: "error", detail: response.data.message });
       dispatch(setError(response.data.message));
     }
   };
@@ -710,13 +575,7 @@ const Room = () => {
     });
     if (response.status === 200) {
       sendSignal("room-deleted", {});
-      // toast.current.show({
-      //   severity: "success",
-      //   detail: "You deleted the room",
-      // });
       dispatch(setMessage("You deleted the room"));
-      // stopLocalVideo();
-      // navigate("/", { replace: true });
       setTimeout(() => {
         window.location.href = "/";
       }, 3000);
@@ -760,7 +619,6 @@ const Room = () => {
   const muteGuest = (peer) => {
     console.log(peer);
     if (isHost) {
-      // sendSignal("mute-peer", { peer });
       sendDataToPeer(peer, {
         type: "mute-peer",
         peer,
@@ -781,7 +639,6 @@ const Room = () => {
   const unmuteGuest = (peer) => {
     console.log(peer);
     if (isHost) {
-      // sendSignal("unmute-peer", { peer });
       sendDataToPeer(peer, {
         type: "unmute-peer",
         peer,
@@ -818,17 +675,14 @@ const Room = () => {
     {
       breakpoint: "1024px",
       numVisible: 5,
-      // numScroll: 1,
     },
     {
       breakpoint: "768px",
       numVisible: 3,
-      // numScroll: 1,
     },
     {
       breakpoint: "560px",
       numVisible: 2,
-      // numScroll: 1,
     },
   ];
 
@@ -925,7 +779,6 @@ const Room = () => {
                   <VideoElement
                     key={index}
                     peerConnection={guest.peerConnection}
-                    // muted={mutedGuests.includes(guest.peer)}
                   />
                   {isHost &&
                     (!peerIsMuted(guest.peer) ? (
@@ -971,7 +824,6 @@ const Room = () => {
               );
             }
           })}
-          {/* need to run for loop max_guests - guests.length times and return empty div */}
           {emptyDivsForAbsentGuests()}
         </>
       );
@@ -988,58 +840,8 @@ const Room = () => {
     setIsFullScreen(false);
   }
   
-  const stopLocalVideo = () => {
-    if(localVideo) {
-      localVideo.current.srcObject.getTracks().forEach(track => {
-        track.stop();
-      });
-    }
-  };
-
-
-  // return isLoading ? (
-  //     <div className="loading">
-  //       <video
-  //         ref={localVideo}
-  //         autoPlay
-  //         playsInline
-  //         muted
-  //         className="video-element"
-  //       />
-  //       <div className="loading-text">
-  //         <h1>
-  //           Loading... <i className="pi pi-spinner pi-spin"></i>
-  //         </h1>
-  //       </div>
-  //     </div>
-
-  //     ) : (
-  //   <div className="room">
-  //     <div className="room-header">
-  //       <h1>{room.id}</h1>
-  //       <h2>{isHost ? "You are host" : "You are guest"}</h2>
-  //     </div>
-  //     <div className="room-body">
-  //       <video
-  //         ref={localVideo}
-  //         autoPlay
-  //         playsInline
-  //         muted
-  //         className="video-element"
-  //       />
-  //       {guests.map((guest, index) => {
-  //         return (
-  //           <VideoElement
-  //             key={index}
-  //             peerConnection={guest.peerConnection}
-  //           />
-  //         );
-  //       })}
-  //     </div>
-  //   </div>
-  // );
   return isLoading ? (
-    <div className="loading">
+    <div className="loading w-12 md:w-4 md:mx-auto overflow-hidden">
       <Toast ref={toast} />
       <video
         ref={localVideo}
@@ -1077,7 +879,6 @@ const Room = () => {
           {isHost && (
             <Button
               icon="pi pi-copy"
-              // label={<i className="pi pi-copy"></i>}
               className="p-button-rounded p-button-secondary p-button-lg"
               tooltip="Copy room token to clipboard to invite others"
               onClick={copyRoomTokenToClipboard}
@@ -1089,7 +890,6 @@ const Room = () => {
               tooltip="Turn off your camera"
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-video"
-              // label={<i className="pi pi-video"></i>}
               onClick={turnOffYourCamera}
               style={{width:"2.5rem", height:"2.5rem"}}
             />
@@ -1098,7 +898,6 @@ const Room = () => {
               tooltip="Turn on your camera"
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-video"
-              // label={<i className="pi pi-video"></i>}
               onClick={turnOnYourCamera}
               style={{width:"2.5rem", height:"2.5rem"}}
             />
@@ -1108,11 +907,9 @@ const Room = () => {
               tooltip="Turn off your mic"
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-volume-up"
-              // label={<i className="pi pi-volume-up"></i>}
               style={{width:"2.5rem", height:"2.5rem"}}
               onClick={() => {
                 turnOffYourMic();
-                // sendSignal("mute-peer", { peer: user.id });
                 sendDataToEveryone({
                   type: "i-am-muted",
                   peer: user.id,
@@ -1124,11 +921,9 @@ const Room = () => {
               tooltip="Turn on your mic"
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-volume-off"
-              // label={<i className="pi pi-volume-off"></i>}
               style={{width:"2.5rem", height:"2.5rem"}}
               onClick={() => {
                 turnOnYourMic();
-                // sendSignal("unmute-peer", { peer: user.id });
                 sendDataToEveryone({
                   type: "i-am-unmuted",
                   peer: user.id,
@@ -1139,13 +934,7 @@ const Room = () => {
           )}
           {isHost &&
             (!roomMutedRef.current ? (
-              <Button
-                // label={
-                //   <span>
-                //     <i className="pi pi-volume-up"></i>
-                //     <i className="pi pi-users"></i>
-                //   </span>
-                // }
+              <Button                
                 tooltip="Turn off all mics"
                 icon="pi pi-user-minus"
                 className="p-button-rounded p-button-secondary p-button-lg"
@@ -1153,13 +942,7 @@ const Room = () => {
                 style={{width:"2.5rem", height:"2.5rem"}}
               />
             ) : (
-              <Button
-                // label={
-                //   <span>
-                //     <i className="pi pi-volume-off"></i>
-                //     <i className="pi pi-users"></i>
-                //   </span>
-                // }
+              <Button                
                 tooltip="Turn on all mics"
                 icon="pi pi-user-plus"
                 className="p-button-rounded p-button-danger p-button-lg"
@@ -1169,21 +952,17 @@ const Room = () => {
             ))}
           {isHost ? (
             <Button
-              // label="Delete room"
               tooltip="Delete room"
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-trash"
-              // label={<i className="pi pi-trash"></i>}
               onClick={deleteRoom}
               style={{width:"2.5rem", height:"2.5rem"}}
             />
           ) : (
             <Button
-              // label="Leave room"
               tooltip="Leave room"
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-power-off"
-              // label={<i className="pi pi-power-off"></i>}
               onClick={leaveRoom}
               style={{width:"2.5rem", height:"2.5rem"}}
             />
@@ -1193,7 +972,6 @@ const Room = () => {
               tooltip="Exit full screen"
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-window-minimize"
-              // label={<i className="pi pi-window-minimize"></i>}
               onClick={exitFullScreen}
               style={{width:"2.5rem", height:"2.5rem"}}
             />
@@ -1202,7 +980,6 @@ const Room = () => {
               tooltip="Full screen"
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-window-maximize"
-              // label={<i className="pi pi-window-maximize"></i>}
               onClick={goFullScreen}
               style={{width:"2.5rem", height:"2.5rem"}}
             />
@@ -1313,73 +1090,7 @@ const Room = () => {
                 </div>
               )}
             </div>
-          )}
-          {/* {guests.map((guest, index) => {
-            if (!guest.isHost) {
-              return (
-                <div
-                  className={
-                    room.max_guests === 3
-                      ? "guest-video-container col-6"
-                      : room.max_guests === 8
-                      ? "guest-video-container col-4"
-                      : "guest-video-container col-3"
-                  }
-                  style={
-                    room.max_guests === 3
-                      ? { height: "50vh" }
-                      : { height: "33vh" }
-                  }>
-                  <VideoElement
-                    key={index}
-                    peerConnection={guest.peerConnection}
-                    // muted={mutedGuests.includes(guest.peer)}
-                  />
-                  {isHost &&
-                    (!peerIsMuted(guest.peer) ? (
-                      <Button
-                        tooltip="Mute guest"
-                        className="p-button-rounded p-button-secondary m-2"
-                        icon="pi pi-volume-up"
-                        onClick={() => muteGuest(guest.peer)}
-                        style={{
-                          position: "absolute",
-                          bottom: "0",
-                          left: "50%",
-                          transform: "translateX(-50%)",
-                        }}
-                      />
-                    ) : (
-                      <Button
-                        tooltip="Unmute guest"
-                        className="p-button-rounded p-button-danger m-2"
-                        icon="pi pi-volume-off"
-                        onClick={() => unmuteGuest(guest.peer)}
-                        style={{
-                          position: "absolute",
-                          bottom: "0",
-                          left: "50%",
-                          transform: "translateX(-50%)",
-                        }}
-                      />
-                    ))}
-                  {peerIsMuted(guest.peer) && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "0",
-                        right: "0",
-                        padding: "5px",
-                      }}>
-                      <i className="pi pi-volume-off"></i>
-                      <span style={{ marginLeft: "5px" }}>Muted</span>
-                    </div>
-                  )}
-                </div>
-              );
-            }
-          })}
-          {emptyDivsForAbsentGuests()} */}
+          )}          
           {renderGuests()}
         </div>
       </div>
