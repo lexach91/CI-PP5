@@ -9,6 +9,7 @@ import { Navigate } from 'react-router-dom';
 import { store } from '../../redux/store';
 import { logout, resetError, resetMessage } from '../../redux/authSlice';
 import { Toast } from 'primereact/toast';
+import { useNavigate } from 'react-router-dom';
 
 
 const VisitorNavbar = () => {
@@ -17,6 +18,7 @@ const VisitorNavbar = () => {
     // const token = useSelector(state => state.auth.token);
     const { isAuthenticated, error, message } = useSelector(state => state.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const navList = [
         { label: 'Home', icon: 'pi pi-home', url: '/' },
         { label: 'Pricing', icon: 'pi pi-dollar', url: '/pricing' },
@@ -92,10 +94,12 @@ const VisitorNavbar = () => {
         <React.Fragment>
             <div className="p-menuitem">
                 <Button label="Login" icon="pi pi-user" className="p-button-info mr-2" onClick={() => {
-                    window.location.href = '/login'
+                    // window.location.href = '/login'
+                    navigate('/login')
                 } } />
                 <Button label="Register" icon="pi pi-user-plus" className="p-button-success" onClick={() => {
-                    window.location.href = '/register'
+                    // window.location.href = '/register'
+                    navigate('/register')
                 } } />
             </div>
         </React.Fragment>
@@ -104,7 +108,7 @@ const VisitorNavbar = () => {
         <React.Fragment>
             <div className="p-menuitem">
                 <Button label="Logout" icon="pi pi-power-off" className="p-button-danger" onClick={async () => {
-                    dispatch(logout());
+                    dispatch(logout());                    
                 } } />
             </div>
         </React.Fragment>
