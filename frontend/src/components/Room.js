@@ -216,6 +216,12 @@ const Room = () => {
   };
 
   const createOffer = (peer, channelName) => {
+    let stream = localVideo.current.srcObject || localVideo.current.mozSrcObject;
+    if (!stream) {
+      reloadLocalVideo();
+      createOffer(peer, channelName);
+      return;
+    };
     let peerConnection = new Peer({
       initiator: true,
       trickle: true,
@@ -268,6 +274,12 @@ const Room = () => {
   };
 
   const createAnswer = (offer, peer, receiverChannelName) => {
+    let stream = localVideo.current.srcObject || localVideo.current.mozSrcObject;
+    if (!stream) {
+      reloadLocalVideo();
+      createAnswer(offer, peer, receiverChannelName);
+      return;
+    };
     let peerConnection = new Peer({
       initiator: false,
       trickle: true,
