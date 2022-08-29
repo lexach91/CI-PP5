@@ -12,9 +12,9 @@ const footer = () => {
         <div className="footer-left">
           <div className="footer-logo">
             <i className="pi pi-chevron-left text-base text-blue-100"></i>
-            <span className="text-xl text-gray-500">Dr</span>
+            <span className="text-xl text-gray-300">Dr</span>
             <span className="text-xl text-indigo-200">.</span>
-            <span className="text-xl text-green-600">Meetings</span>
+            <span className="text-xl text-green-500">Meetings</span>
             <i className="pi pi-chevron-right text-base text-blue-100"></i>
           </div>
           <div className="footer-contact mt-5">
@@ -22,7 +22,7 @@ const footer = () => {
               <i className="text-blue-500 pi pi-send"></i>
               <a
                 href="mailto:dr.meetings@hotmail.com"
-                className="text-gray-500 no-underline"
+                className="text-gray-200 no-underline"
                 aria-label="Email to dr.meetings@hotmail.com">
                 dr@meetings.com
               </a>
@@ -31,7 +31,7 @@ const footer = () => {
               <i className="text-blue-500 pi pi-phone"></i>
               <a
                 href="tel:+1-555-555-5555"
-                className="text-gray-500 no-underline"
+                className="text-gray-200 no-underline"
                 aria-label="Call us">
                 +1-555-555-5555
               </a>
@@ -44,19 +44,19 @@ const footer = () => {
         <div className="footer-center text-center">
           <Link
             to="/contact"
-            className="text-gray-500 no-underline block p-2 m-2"
+            className="text-gray-200 no-underline block p-2 m-2"
             aria-label="Go to contact page">
             Contact
           </Link>
           <Link
             to="/terms-of-use"
-            className="text-gray-500 no-underline block p-2 m-2"
+            className="text-gray-200 no-underline block p-2 m-2"
             aria-label="Go to terms of use page">
             Terms of use
           </Link>
           <Link
             to="/privacy"
-            className="text-gray-500 no-underline block p-2 m-2"
+            className="text-gray-200 no-underline block p-2 m-2"
             aria-label="Go to privacy page">
             Privacy
           </Link>
