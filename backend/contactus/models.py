@@ -10,17 +10,20 @@ class ContactUs(models.Model):
     email = models.EmailField()
     subject = models.CharField(max_length=100)
     message = models.TextField()
-    
+
     def __str__(self):
-        return self.name + ' - ' + self.subject
-    
+        return self.name + " - " + self.subject
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # Send email to the user
-        subject = 'Thank you for contacting us'
-        html_message = render_to_string('contactus/contactus_email.html', {'name': self.name, 'subject': self.subject})
+        subject = "Thank you for contacting us"
+        html_message = render_to_string(
+            "contactus/contactus_email.html",
+            {"name": self.name, "subject": self.subject},
+        )
         plain_message = strip_tags(html_message)
-        
+
         send_mail(
             subject=subject,
             message=plain_message,
@@ -32,18 +35,20 @@ class ContactUs(models.Model):
 
 class NewsletterSubscription(models.Model):
     email = models.EmailField()
-    
+
     def __str__(self):
         return self.email
-    
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # Send email to the user
-        subject = 'Thank you for subscribing to our newsletter'
-        unsubscribe_url = settings.BASE_URL + '/unsubscribe/' + self.email
-        html_message = render_to_string('contactus/newsletter_email.html', {'link': unsubscribe_url})
+        subject = "Thank you for subscribing to our newsletter"
+        unsubscribe_url = settings.BASE_URL + "/unsubscribe/" + self.email
+        html_message = render_to_string(
+            "contactus/newsletter_email.html", {"link": unsubscribe_url}
+        )
         plain_message = strip_tags(html_message)
-        
+
         send_mail(
             subject=subject,
             message=plain_message,
@@ -51,13 +56,13 @@ class NewsletterSubscription(models.Model):
             recipient_list=[self.email],
             html_message=html_message,
         )
-        
+
     def delete(self, *args, **kwargs):
         # Send email to the user
-        subject = 'You have been unsubscribed from our newsletter'
-        html_message = render_to_string('contactus/unsubscribe_email.html')
+        subject = "You have been unsubscribed from our newsletter"
+        html_message = render_to_string("contactus/unsubscribe_email.html")
         plain_message = strip_tags(html_message)
-        
+
         send_mail(
             subject=subject,
             message=plain_message,
