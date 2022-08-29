@@ -1,10 +1,16 @@
 # Dr.Meetings
+
 ## About
+
 This is a meeting app for the people who want to meet virtually. It has a simple interface and easy to use. It allows users to create a meeting and invite other users to join the meeting. The application is accessible from various platforms like web, mobile and desktop.
 To use the application, you need to register an account. Users are encouraged to pay for subscription plan to be able to create a meeting by themselves. The subscription plan's price depends on how many users are going to join the meeting.
+
 ---
+
 ## UX
+
 The website is created to be accessible to all users. The website is designed to be easy to use and intuitive. The navigation is simple to understand and easy to use. The background of the app is consistent with the design and aimed at keeping the user's attention on the app.
+
 ---
 
 ## User stories
@@ -35,13 +41,19 @@ The website is created to be accessible to all users. The website is designed to
 - As a registered user, I want to be able to control microphones of other users, so that I can control them in a meeting I created.
 
 ---
+
 ## Business model
+
 The Business Model is B2C, meaning that the company sells products (subscriptions) to customers only.
 It focuses on individual transactions only at the moment.
+
 ### Target audience
+
 Dr.Meetings is aimed at the diverse population. The target audience is the people who want to meet virtually. It includes friends who simply want to meet when it is temporarily not allowed, colleges who are living in remote areas and have to discuss some urgent matters, and even students who are want to organize a study group.
 It excludes people who are younger than 13 years old.
+
 ### Strategy Trade-Off
+
 The strategy trade-off is to make the application as user friendly as possible.
 - simple interface;
 - easy to use;
@@ -54,11 +66,16 @@ The strategy trade-off is to make the application as user friendly as possible.
 - Tech support.
 
 ---
+
 ## Web Marketing
+
 1. facebook
 Having a page on facebook is a great way to get people to join the meeting on Dr.Meetings. Facebook has millions of users and is a great way to get people to become members of the Dr.Meetings community, it may easily lure new customers and increase the number of members who are purchasing the subscription plans.
-[Facebook mockup](documentation/design/drmeeting_fb.pdf)
+
+[Facebook mockup](documentation/design/dr_meeting_fb.pdf)
+
 2. Newsletter
+
 The newsletter subscription is a great way to deliver the latest news and updates to the users and subscribers.
 
 ---
@@ -80,25 +97,33 @@ It would be nice to widen the scope of the application to include functionality 
 ---
 
 ## Technologies used
+
 - ### Languages:
     
     + [Python 3.10.4](https://www.python.org/downloads/release/python-385/): the primary language used to develop the server-side of the website.
+
     + [JS](https://www.javascript.com/): the primary language used to develop interactive components of the website.
+
     + [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML): the markup language used to create the website.
+
     + [CSS](https://developer.mozilla.org/en-US/docs/Web/css): the styling language used to style the website.
 ​
 - ### Frameworks and libraries:
-​
-    + [Django](https://www.djangoproject.com/): python framework used to create all the logic.
-    + [Django-rest-framework](https://www.django-rest-framework.org/): python framework used to create the API.
-    + [React](https://reactjs.org/): javascript framework used to create the front-end of the website.
-    + [PrimeReact](https://www.primefaces.org/primereact/): a set of components used to create the front-end of the website.
-    + [Primeflex](https://www.primefaces.org/primeflex/): css framework used to style the front-end of the website.
+
+  + [Django](https://www.djangoproject.com/): python framework used to create all the logic.
+
+  + [Django-rest-framework](https://www.django-rest-framework.org/): python framework used to create the API.
+
+  + [React](https://reactjs.org/): javascript framework used to create the front-end of the website.
+
+  + [PrimeReact](https://www.primefaces.org/primereact/): a set of components used to create the front-end of the website.
+
+  + [Primeflex](https://www.primefaces.org/primeflex/): css framework used to style the front-end of the website.
 
 - ### Databases:
-​
-    + [SQLite](https://www.sqlite.org/): was used as a development database.
-    + [PostgreSQL](https://www.postgresql.org/): the database used to store all the data.
+
+  + [SQLite](https://www.sqlite.org/): was used as a development database.
+  + [PostgreSQL](https://www.postgresql.org/): the database used to store all the data.
 ​
 - ### Other tools:
 
@@ -144,7 +169,7 @@ There are 2 types of the navbar:
 ​
   - It has a profile button. If user clicks this button, the user will see a sidebar with the user's profile information:
 ​
-    ![Sidebar](documentation/features/navbar_sidebar.png)
+![Sidebar](documentation/features/navbar_sidebar.png)
 ​
     It also has 3 buttons:
 ​
@@ -154,11 +179,11 @@ There are 2 types of the navbar:
 ​
   **Note:** If user bought a subscription, there will be an additional button "Create Meeting" in the sidebar.
 ​
-  ![Sidebar](documentation/features/sidebar_create_meeting.png)
+![Sidebar](documentation/features/sidebar_create_meeting.png)
 ​
   - "Home" button: takes the user to the User's home page. If user is already on the his/her home page, the button will not be displayed.
 ​
-    ![Home button](documentation/features/navbar_user_home.png)
+![Home button](documentation/features/navbar_user_home.png)
 ​
   - "Logout" button: logs the user out.
 
@@ -173,19 +198,19 @@ It has a logo, email, phone number. It also has the following links:
 - "Privacy policy" button: takes the user to the privacy policy page;
 - "Newsletter" button: opens modal form with the newsletter form;
 ​
-  ![Newsletter](documentation/features/newsletter_form.png)
+![Newsletter](documentation/features/newsletter_form.png)
 ​
   - If the user has already subscribed to the newsletter, the "Newsletter" form will show an error message.
 ​
-    ![Newsletter](documentation/features/newsletter_form_error.png)
+![Newsletter](documentation/features/newsletter_form_error.png)
 ​
   - When the user subscribes to the newsletter, the user will receive an email with a confirmation message.
 ​
-  ![Newsletter](documentation/features/newsletter_form_success.png)
+![Newsletter](documentation/features/newsletter_form_success.png)
 ​
   - If user clicks " unsubscribe" link in thee email, the user will be unsubscribed from the newsletter
 ​
-  ![Newsletter](documentation/features/newsletter_form_unsubscribe.png) 
+![Newsletter](documentation/features/newsletter_form_unsubscribe.png) 
 ​
 - Social media icons (Facebook, Twitter, Instagram, LinkedIn): takes the user to the social media pages.
 
@@ -338,7 +363,7 @@ It has short description of the meeting's card and 2 buttons:
   - "Create meeting" button: takes the user to the create meeting page. *This button is disabled if the user is using free plan.*
   - "Join meeting" button: takes the user to the join meeting page. When the user clicks this button, the user will see a modal window with an input field to enter the meeting's token:
 
-    ![Join meeting modal](documentation/features/join_meeting_with_token.png)
+![Join meeting modal](documentation/features/join_meeting_with_token.png)
 
     If the user enters a valid token, the user will be redirected to the meeting page.
 
@@ -627,7 +652,7 @@ This image was taken from [Unsplash](https://unsplash.com/).
 
 ### GitHub Project Management
 
-  ![GitHub Project Management](documentation/agile/github_project_management.png)
+![GitHub Project Management](documentation/agile/github_project_management.png)
 
 GitHub Project Management was used as the main method to manage the project. It was used to control the project's workflow and to track the project's progress. The project was created using [GitHub](www.github.com).
 
