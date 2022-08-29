@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "primereact/button";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -110,14 +110,6 @@ const NewsletterButton = () => {
 
     
     return (<>
-    {/* <Button
-        label="Newsletter"
-        icon="pi pi-envelope"
-        onClick={() => setDialogVisible(true)}
-        className="p-button-link no-underline text-gray-500"
-        disabled={submitting}
-        loading={submitting}
-    /> */}
     <a href="javascript:void(0)" onClick={() => setDialogVisible(true)} className="block no-underline text-gray-500 p-2 m-2">
         Newsletter
     </a>
