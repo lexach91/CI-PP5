@@ -408,7 +408,7 @@ const Register = () => {
             />
             <p className="text-muted mt-3">
               Already have an account?{" "}
-              <Link className="text-blue-500" to="/login">
+              <Link className="text-blue-500" to="/login" aria-label="Login">
                 Login
               </Link>
             </p>

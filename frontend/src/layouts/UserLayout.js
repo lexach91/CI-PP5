@@ -19,52 +19,85 @@ const footer = () => {
           </div>
           <div className="footer-contact mt-5">
             <p>
-                <i className="text-blue-500 pi pi-send"></i>
-                <a href="mailto:dr@meetings.com" className="text-gray-500 no-underline">
-                    dr@meetings.com
-                </a>
+              <i className="text-blue-500 pi pi-send"></i>
+              <a
+                href="mailto:dr.meetings@hotmail.com"
+                className="text-gray-500 no-underline"
+                aria-label="Email to dr.meetings@hotmail.com">
+                dr@meetings.com
+              </a>
             </p>
             <p>
-                <i className="text-blue-500 pi pi-phone"></i>
-                <a href="tel:+1-555-555-5555" className="text-gray-500 no-underline">
-                    +1-555-555-5555
-                </a>
+              <i className="text-blue-500 pi pi-phone"></i>
+              <a
+                href="tel:+1-555-555-5555"
+                className="text-gray-500 no-underline"
+                aria-label="Call us">
+                +1-555-555-5555
+              </a>
             </p>
           </div>
         </div>
-          <Divider layout="vertical" className="hidden md:block"/>
-          <Divider className="md:hidden"/>
+        <Divider layout="vertical" className="hidden md:block" />
+        <Divider className="md:hidden" />
 
         <div className="footer-center text-center">
-            <Link to="/contact" className="text-gray-500 no-underline block p-2 m-2">
+          <Link
+            to="/contact"
+            className="text-gray-500 no-underline block p-2 m-2"
+            aria-label="Go to contact page">
             Contact
-            </Link>
-          <Link to="/terms-of-use" className="text-gray-500 no-underline block p-2 m-2">
+          </Link>
+          <Link
+            to="/terms-of-use"
+            className="text-gray-500 no-underline block p-2 m-2"
+            aria-label="Go to terms of use page">
             Terms of use
-            </Link>
-            <Link to="/privacy" className="text-gray-500 no-underline block p-2 m-2">
+          </Link>
+          <Link
+            to="/privacy"
+            className="text-gray-500 no-underline block p-2 m-2"
+            aria-label="Go to privacy page">
             Privacy
-            </Link>
-            <NewsletterButton />
+          </Link>
+          <NewsletterButton />
         </div>
-            <Divider layout="vertical" className="hidden md:block"/>
-            <Divider className="md:hidden"/>
+        <Divider layout="vertical" className="hidden md:block" />
+        <Divider className="md:hidden" />
         <div className="footer-right">
-            {/* social media links */}
-            <a href="https://www.facebook.com/" className="no-underline p-2 m-2" rel="noopener noreferrer" target="_blank">
-                <i className="text-blue-300 sm:text-4xl text-2xl pi pi-facebook"></i>
-            </a>
-            <a href="https://www.twitter.com/" className="no-underline p-2 m-2" rel="noopener noreferrer" target="_blank">
-                <i className="text-blue-300 sm:text-4xl text-2xl pi pi-twitter"></i>
-            </a>
-            <a href="https://www.instagram.com/" className="no-underline p-2 m-2" rel="noopener noreferrer" target="_blank">
-                <i className="text-blue-300 sm:text-4xl text-2xl pi pi-instagram"></i>
-            </a>
-            <a href="https://www.linkedin.com/" className="no-underline p-2 m-2" rel="noopener noreferrer" target="_blank">
-                <i className="text-blue-300 sm:text-4xl text-2xl pi pi-linkedin"></i>
-            </a>
+          <a
+            href="https://www.facebook.com/"
+            className="no-underline p-2 m-2"
+            rel="noopener noreferrer"
+            target="_blank"
+            aria-label="Go to Facebook page, opens in new tab">
+            <i className="text-blue-300 sm:text-4xl text-2xl pi pi-facebook"></i>
+          </a>
+          <a
+            href="https://www.twitter.com/"
+            className="no-underline p-2 m-2"
+            rel="noopener noreferrer"
+            target="_blank"
+            aria-label="Go to Twitter page, opens in new tab">
+            <i className="text-blue-300 sm:text-4xl text-2xl pi pi-twitter"></i>
+          </a>
+          <a
+            href="https://www.instagram.com/"
+            className="no-underline p-2 m-2"
+            rel="noopener noreferrer"
+            target="_blank"
+            aria-label="Go to Instagram page, opens in new tab">
+            <i className="text-blue-300 sm:text-4xl text-2xl pi pi-instagram"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/"
+            className="no-underline p-2 m-2"
+            rel="noopener noreferrer"
+            target="_blank"
+            aria-label="Go to LinkedIn page, opens in new tab">
+            <i className="text-blue-300 sm:text-4xl text-2xl pi pi-linkedin"></i>
+          </a>
         </div>
-
       </div>
     </React.Fragment>
   );
