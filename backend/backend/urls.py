@@ -16,11 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import handler404, handler500
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
     path("api/rooms/", include("videorooms.urls")),
+    path("robots.txt", TemplateView.as_view(template_name="build/robots.txt", content_type="text/plain")),
+    path("sitemap.xml", TemplateView.as_view(template_name="build/sitemap.xml", content_type="text/xml")),
     path("", include("frontend.urls")),
 ]
 
