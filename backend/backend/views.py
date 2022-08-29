@@ -5,7 +5,8 @@ base_url = settings.BASE_URL
 
 
 def handler404(request, exception):
-    return HttpResponseRedirect(base_url+'/404')
+    return HttpResponseRedirect(base_url + "/404")
+
 
 def handler500(request):
-    return HttpResponseRedirect(base_url+'/500')
+    return HttpResponseRedirect(base_url + "/500")

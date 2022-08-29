@@ -18,10 +18,10 @@ from django.urls import path, include
 from .views import handler404, handler500
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path('api/rooms/', include('videorooms.urls')),
-    path('', include('frontend.urls')),
+    path("admin/", admin.site.urls),
+    path("api/", include("api.urls")),
+    path("api/rooms/", include("videorooms.urls")),
+    path("", include("frontend.urls")),
 ]
 
 handler404 = handler404
