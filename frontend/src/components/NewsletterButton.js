@@ -109,7 +109,7 @@ const NewsletterButton = () => {
 
     
     return (<>
-    <a href="javascript:void(0)" onClick={() => setDialogVisible(true)} className="block no-underline text-gray-500 p-2 m-2">
+    <a href="javascript:void(0)" onClick={() => setDialogVisible(true)} className="block no-underline text-gray-500 p-2 m-2" aria-label="Subscribe to our newsletter">
         Newsletter
     </a>
     {dialog()}
