@@ -99,7 +99,12 @@ const Room = () => {
           };
         })
         .catch((error) => {
-          console.log(error);          
+          console.log(error);
+          dispatch(setError("Error getting user media."));
+          
+          leaveRoom();
+          
+          navigate("/");       
         });
     }
   }, [roomToken, isAuthenticated, user]);
@@ -201,7 +206,8 @@ const Room = () => {
     });
 
     peerConnection.on("error", (error) => {
-      console.log(error);
+      deleteGuest(peer);
+      createOffer(peer, channelName);
     });
 
     let newGuest = {
@@ -249,7 +255,9 @@ const Room = () => {
       deleteGuest(peer);
     });
     peerConnection.on("error", (error) => {
-      console.log(error);
+      // console.log(error);
+      deleteGuest(peer);
+      createOffer(peer, receiverChannelName);
     });
     let newGuest = {
       peer: peer,
