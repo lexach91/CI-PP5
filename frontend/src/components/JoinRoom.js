@@ -15,12 +15,26 @@ const JoinRoom = () => {
     const { roomToken } = useParams();
     const [joined, setJoined] = useState();
     const [errorMessage, setErrorMessage] = useState();
+    const [ restricted, setRestricted ] = useState(false);
 
+    useEffect(() => {
+        if(isAuthenticated === false && loading === false) {
+            dispatch(setError("You must be logged in to access this page."));
+            setRestricted(true);
+          }
+    }, [isAuthenticated, loading]);
+
+    
     useEffect(() => {
         if (redirect) {
             dispatch(resetRedirect());
         }
     }, [redirect]);
+    
+    if(restricted) {
+        dispatch(setError("You must be logged in to access this page."));
+        return <Navigate to="/"/>;
+    }
     
     const joinRoom = async () => {
         try {
