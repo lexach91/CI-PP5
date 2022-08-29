@@ -3,7 +3,7 @@ import RotateLoader from "react-spinners/RotateLoader";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessage, setError } from "../redux/authSlice";
+import { setMessage, setError, getMembership } from "../redux/authSlice";
 
 
 const Checkout = () => {
@@ -29,12 +29,13 @@ const Checkout = () => {
         const query = new URLSearchParams(window.location.search);
         
         if (query.get('success')) {
-            dispatch(setMessage("Thank you for your purchase! You will receive an email shortly with your receipt."));            
-            navigate("/", { replace: true });            
+            dispatch(setMessage("Thank you for your purchase! You will receive an email shortly with your receipt."));
+            dispatch(getMembership());
+            navigate("/");
         }
         if (query.get('cancelled')) {
-            dispatch(setError("Your purchase was cancelled."));            
-            navigate("/", { replace: true });           
+            dispatch(setError("Your purchase was cancelled."));
+            navigate("/pricing");
         }
     } , []);
 
