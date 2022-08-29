@@ -7,7 +7,6 @@ import { VisitorLayout } from "../layouts/VisitorLayout";
 import { UserLayout } from "../layouts/UserLayout";
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
-import { Avatar } from "primereact/avatar";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
@@ -16,8 +15,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  // const auth = useSelector(state => state.auth.isAuthenticated);
-  // const user = useSelector(state => state.auth.user);
   const {
     isAuthenticated,
     user,
@@ -26,7 +23,6 @@ const Home = () => {
     membershipLoading,
     membership,
   } = useSelector((state) => state.auth);
-  const [message, setMessage] = React.useState("");
   const dispatch = useDispatch();
   const [dialogVisible, setDialogVisible] = useState(false);
   const [roomToken, setRoomToken] = useState("");
@@ -85,7 +81,7 @@ const Home = () => {
         <div className="card grid" style={{width: "100%", padding:"1rem"}}>
         <div className="grid col-12 col-offset-0 md:col-8 md:col-offset-2">
           <h2 className="text-center col-12">
-            {message}
+            Welcome, {`${user.first_name} ${user.last_name}`}
           </h2>
           <div className="col-12 xl:col-6">
             <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
@@ -110,7 +106,6 @@ const Home = () => {
                 icon="pi pi-user"
                 className="p-button-success w-full"
                 onClick={() => {
-                  // window.location.href = "/profile";
                   navigate("/profile");
                 } }
               />
@@ -142,7 +137,6 @@ const Home = () => {
                   icon="pi pi-dollar"
                   className="p-button-success w-full"
                   onClick={() => {
-                    // window.location.href = "/subscription";
                     navigate("/subscription");
                   } }
                 />
@@ -152,7 +146,6 @@ const Home = () => {
                   icon="pi pi-dollar"
                   className="p-button-success w-full"
                   onClick={() => {
-                    // window.location.href = "/pricing";
                     navigate("/pricing");
                   } }
                 />
@@ -191,7 +184,6 @@ const Home = () => {
                 icon="pi pi-cog"
                 className="p-button-success w-full"
                 onClick={() => {
-                  // window.location.href = "/settings";
                   navigate("/settings");
                 } }
               />
@@ -228,7 +220,6 @@ const Home = () => {
                       className="p-button-success w-6"
                       disabled={!membership.can_create_rooms}
                       onClick={() => {
-                        // window.location.href = "/create-room";
                         navigate("/create-room");
                       } }
                     />                    
@@ -273,10 +264,8 @@ const Home = () => {
             if(roomToken && roomToken.length === 32) {
               setDialogVisible(false);
               if(roomPassword) {
-                // window.location.href = "/join-room/" + roomToken + `?password=${roomPassword}`;
                 navigate("/join-room/" + roomToken + `?password=${roomPassword}`);
               } else {
-                // window.location.href = "/join-room/" + roomToken;
                 navigate("/join-room/" + roomToken);
               }
             } else if (!roomToken) {
@@ -320,16 +309,7 @@ const Home = () => {
             onChange={(e) => {
               setRoomToken(e.target.value);
             } }
-          />
-          {/* {roomProtected && (
-            <Password
-              placeholder="Room password"
-              value={roomPassword}
-              onChange={(e) => {
-                setRoomPassword(e.target.value);
-              } }
-            />
-          )} */}
+          />          
           <div className="text-red-500 text-left w-full mt-2">{errorMessage}</div>
           {roomProtected && (
             <div className="flex flex-column">
@@ -418,10 +398,13 @@ const Home = () => {
       <div className="grid grid-nogutter surface-50 text-800 md:h-30rem">
         <div className="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
           <section className="my-0 mx-auto md:mx-0">
-            <span className="block text-6xl font-bold mb-1">
-              Absolutely new level of
+            <span className="block text-5xl font-bold mb-1">
+            <span className="text-gray-500">Dr</span>
+            <span className="text-indigo-200">.</span>
+            <span className="text-green-600">Meetings</span>
+              - is an absolutely new level of
             </span>
-            <div className="text-6xl text-primary font-bold mb-3">
+            <div className="text-5xl text-primary font-bold mb-3">
               cloud meetings
             </div>
             <p className="mt-0 mb-4 text-700 line-height-3">
@@ -434,7 +417,6 @@ const Home = () => {
               type="button"
               className="mr-3 p-button-raised"
               onClick={() => {
-                // scroll to the next section
                 const element = document.getElementById("features");
                 element.scrollIntoView({ behavior: "smooth" });
               }}
@@ -444,7 +426,6 @@ const Home = () => {
               type="button"
               className="p-button-outlined"
               onClick={() => {
-                // window.location.href = "/register";
                 navigate("/register");
               }}
             />
@@ -466,7 +447,7 @@ const Home = () => {
           <span className="text-blue-600">Many Solutions</span>
         </div>
         <div className="text-700 text-sm mb-6">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Find out why our platform is the best place for virtual meetings
         </div>
         <div className="grid grid-nogutter">
           <div className="col-12 md:col-4 mb-4 px-5">
@@ -555,7 +536,6 @@ const Home = () => {
           icon="pi pi-arrow-right"
           className="font-bold px-5 py-3 p-button-raised p-button-rounded white-space-nowrap"
           onClick={() => {
-            // window.location.href = "/pricing";
             navigate("/pricing");
           }}
         />
