@@ -76,7 +76,7 @@ const Home = () => {
 
 
   const userDashboard = () => {
-    if (!membershipLoading && membership) {
+    if (!membershipLoading && membership && user) {
       return (
         <div className="card grid" style={{width: "100%", padding:"1rem"}}>
         <div className="grid col-12 col-offset-0 md:col-8 md:col-offset-2">
