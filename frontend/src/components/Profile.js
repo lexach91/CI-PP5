@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../layouts/UserLayout";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect } from "../redux/authSlice";
-import { Navigate } from "react-router-dom";
+import { resetRedirect, setError } from "../redux/authSlice";
 import { RotateLoader } from "react-spinners";
 import { CountryService } from "../service/CountryService";
 import { Image } from "primereact/image";
-import { Inplace, InplaceContent, InplaceDisplay } from "primereact/inplace";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
@@ -16,6 +14,7 @@ import axios from "axios";
 import { Toast } from "primereact/toast";
 import { Dialog } from "primereact/dialog";
 import { Password } from "primereact/password";
+import { useNavigate } from "react-router-dom";
 
 
 const Profile = () => {
@@ -23,6 +22,7 @@ const Profile = () => {
     (state) => state.auth
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -35,10 +35,8 @@ const Profile = () => {
   const [editAvatar, setEditAvatar] = useState(false);
   const [editFirstName, setEditFirstName] = useState(false);
   const [editLastName, setEditLastName] = useState(false);
-  // const [editEmail, setEditEmail] = useState(false);
   const [editBirthDate, setEditBirthDate] = useState(false);
   const [editCountry, setEditCountry] = useState(false);
-  // const [editPassword, setEditPassword] = useState(false);
   const toast = useRef(null);
   const [avatarFile, setAvatarFile] = useState(null);
   const [formUploading, setFormUploading] = useState(false);
@@ -47,12 +45,23 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [ restricted, setRestricted ] = useState(false);
+
+  useEffect(() => {
+      if(isAuthenticated === false && loading === false) {
+          dispatch(setError("You must be logged in to access this page."));
+          setRestricted(true);
+        }
+  }, [isAuthenticated, loading]);
+
+  if(restricted) {
+      dispatch(setError("You must be logged in to access this page."));
+      navigate("/");
+  }
 
   useEffect(() => {
     countryservice.getCountries().then((data) => {
       setCountriesList(data);
-      // console.log(data);
-      // setCountry(country);
     });
   }, []);
 
@@ -80,20 +89,11 @@ const Profile = () => {
     }
   }, [isAuthenticated, user, redirect]);
 
-  const onSubmit = async (data) => {
-    // const payload = {
-    //   avatar: avatarFile,
-    //   first_name: firstName,
-    //   last_name: lastName,
-    //   email: email,
-    //   birth_date: birthDate,
-    //   country: country,
-    // };
+  const onSubmit = async (data) => {    
     setFormUploading(true);
     const formData = avatarFile || new FormData();
     formData.append("first_name", firstName);
     formData.append("last_name", lastName);
-    // formData.append("email", email);
     formData.append("birth_date", birthDate);
     formData.append("country", country);
 
@@ -120,16 +120,10 @@ const Profile = () => {
   const onChangeAvatar = (e) => {
     console.log(e.files[0]);
     setAvatar(e.files[0].objectURL);
-    // prepare the file for upload to server by axios post method
     const formData = new FormData();
     formData.append("avatar", e.files[0]);
     setAvatarFile(formData);
     setEditAvatar(false);
-    // let fileReader = new FileReader();
-    // fileReader.onload = (e) => {
-    //   setAvatar(e.target.result);
-    // };
-    // fileReader.readAsDataURL(e.target.files[0]);
   };
 
   const onChangeFirstName = (e) => {
@@ -147,15 +141,10 @@ const Profile = () => {
   const onChangeBirthDate = (e) => {
     console.log(e.value);
     console.log(e.target.value);
-    // Mon Aug 22 2022 00:00:00 GMT+0800 (China Standard Time) should be formatted as "2020-08-22"
     let date = e.value.toLocaleDateString();
     date = date.split("/").reverse().join("-");
     setBirthDate(date);
     setEditBirthDate(false);
-    // let formattedDate = date[0].split("-");
-    // formattedDate = formattedDate.join("-");
-    // setBirthDate(formattedDate);
-    // setBirthDate(e.target.value);
   };
 
   const onChangeCountry = (e) => {
@@ -327,13 +316,10 @@ const Profile = () => {
                   mode="basic"
                   onSelect={onChangeAvatar}
                   customUpload={true}
-                  // onChange={onChangeAvatar}
-                  // style={{ width: "100%" }}
                 />
               ) : (
                 <Image
                   src={avatar}
-                  // style={{ height: "150px" }}
                   preview={true}
                   imageStyle={{
                     height: "150px",
@@ -422,7 +408,6 @@ const Profile = () => {
                   dateFormat="yy-mm-dd"
                   mask="9999-99-99"
                   showIcon
-                  // birthDate is in format YYYY-MM-DD so we need to split it
                   value={new Date(birthDate)}
                   onChange={onChangeBirthDate}
                 />
@@ -447,7 +432,6 @@ const Profile = () => {
                   name="country"
                   value={country}
                   options={countriesList}
-                  // optionLabel="name"
                   onChange={onChangeCountry}
                 />
               ) : (
