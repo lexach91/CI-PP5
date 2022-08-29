@@ -11,9 +11,6 @@ import { Divider } from "primereact/divider";
 import { classNames } from "primereact/utils";
 import { CountryService } from "../service/CountryService";
 import { Messages } from "primereact/messages";
-import { Message } from "primereact/message";
-// import './FormDemo.css';
-import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { register, resetRedirect } from "../redux/authSlice";
 import { useSelector } from "react-redux";
@@ -29,12 +26,10 @@ const Register = () => {
   const [formData, setFormData] = useState({});
   const countryservice = new CountryService();
   const messages = useRef(null);
-  // const [redirect, setRedirect] = useState(false);
   const { redirect, loading, isAuthenticated } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
-  const [termsChecked, setTermsChecked] = useState(false);
 
   useEffect(() => {
     countryservice.getCountries().then((data) => setCountries(data));
@@ -183,9 +178,7 @@ const Register = () => {
           style={{ width: "60vw" }}
           contentClassName="p-3"
           >
-          {/* <div className="flex align-items-center flex-column pt-6 px-3"> */}
           <TermsHtml />
-          {/* </div> */}
         </Dialog>
 
         <div className="flex justify-content-center h-full">
