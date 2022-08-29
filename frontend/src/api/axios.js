@@ -19,7 +19,8 @@ axios.interceptors.response.use(
         }
         if (error.response.status === 401) {
             if (refreshing) {
-                return Promise.reject(error);
+                // return Promise.reject(error);
+                return;
             }
             refreshing = true;
             return axios.post("refresh", {withCredentials: true})
@@ -29,10 +30,15 @@ axios.interceptors.response.use(
                 })
                 .catch(error => {
                     refreshing = false;
-                    return Promise.reject(error);
+                    console.clear();
+                    // console.log(error);
+                    return Promise.reject("error");
+                    // return;
                 });
         } else {
-            return Promise.reject(error);
+            console.clear();
+            return Promise.reject("error");
+            // return;
         }
     }
 );
