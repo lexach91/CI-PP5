@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetRedirect, setMessage, setError } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
 import VisitorLayout from "../layouts/VisitorLayout";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -71,9 +70,6 @@ const ResetPassword = () => {
         try {
             const response = await axios.post("forgot-password", payload);
             dispatch(setMessage("If an account exists, you will receive an email with instructions shortly."));
-            // setTimeout(() => {
-            //     // window.location.href = "/";
-            // } , 3000);
             navigate("/");
         }
         catch (error) {
@@ -93,9 +89,6 @@ const ResetPassword = () => {
         try {
             const response = await axios.post("reset-password", payload);
             dispatch(setMessage("Password successfully reset. You can now login."));
-            // setTimeout(() => {
-            //     window.location.href = "/login";
-            // }, 3000);
             navigate("/login");
         }
         catch (error) {
