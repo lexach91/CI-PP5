@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect } from "../redux/authSlice";
+import { resetRedirect, setError, setMessage } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
 import { useParams } from "react-router-dom";
 import * as ReactDOM from "react-dom";
@@ -15,6 +15,7 @@ import { Toast } from "primereact/toast";
 import { Carousel } from "primereact/carousel";
 import { Galleria } from "primereact/galleria";
 import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router-dom";
 
 // const servers = {
 //   iceServers: [
@@ -57,6 +58,7 @@ const Room = () => {
     (state) => state.auth
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { roomToken } = useParams();
   const [room, setRoom] = useState({});
   const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
@@ -109,11 +111,12 @@ const Room = () => {
           };
           webSocket.current.onerror = (error) => {
             console.log(error, "Websocket error");
-            toast.current.show({
-              severity: "error",
-              detail:
-                "Something went wrong or you are not allowed to join this room.",
-            });
+            // toast.current.show({
+            //   severity: "error",
+            //   detail:
+            //     "Something went wrong or you are not allowed to join this room.",
+            // });
+            dispatch(setError("Something went wrong or you are not allowed to join this room."));
             // after the toast is hidden, redirect to home page
             setTimeout(() => {
               window.location.href = "/";
@@ -273,10 +276,13 @@ const Room = () => {
     if (action === "room-deleted") {
       console.log("room-deleted");
       if (user.id != hostId.current) {
-        toast.current.show({
-          severity: "error",
-          detail: "This room has been deleted.",
-        });
+        // toast.current.show({
+        //   severity: "error",
+        //   detail: "This room has been deleted.",
+        // });
+        dispatch(setError("This room has been deleted."));
+        // stopLocalVideo();
+        // navigate("/", { replace: true });
         // after the toast is hidden, redirect to home page
         setTimeout(() => {
           window.location.href = "/";
@@ -673,7 +679,7 @@ const Room = () => {
       room_token: roomToken,
     });
     if (response.status === 200) {
-      toast.current.show({ severity: "success", detail: "You left the room" });
+      // toast.current.show({ severity: "success", detail: "You left the room" });
       // destroy all guests
       guestsRef.current.forEach((guest) => {
         guest.peerConnection.removeAllListeners();
@@ -685,12 +691,16 @@ const Room = () => {
       setLocalCamOn(false);
       setLocalMicOn(false);
       setGuestsMicsOn(false);
+      dispatch(setMessage("You left the room"));
+      // stopLocalVideo();
+      // navigate("/", { replace: true });
       setTimeout(() => {
         window.location.href = "/";
       }, 3000);
     } else {
       console.log(response);
-      toast.current.show({ severity: "error", detail: response.data.message });
+      // toast.current.show({ severity: "error", detail: response.data.message });
+      dispatch(setError(response.data.message));
     }
   };
 
@@ -700,10 +710,13 @@ const Room = () => {
     });
     if (response.status === 200) {
       sendSignal("room-deleted", {});
-      toast.current.show({
-        severity: "success",
-        detail: "You deleted the room",
-      });
+      // toast.current.show({
+      //   severity: "success",
+      //   detail: "You deleted the room",
+      // });
+      dispatch(setMessage("You deleted the room"));
+      // stopLocalVideo();
+      // navigate("/", { replace: true });
       setTimeout(() => {
         window.location.href = "/";
       }, 3000);
@@ -974,7 +987,14 @@ const Room = () => {
     document.exitFullscreen();
     setIsFullScreen(false);
   }
-    
+  
+  const stopLocalVideo = () => {
+    if(localVideo) {
+      localVideo.current.srcObject.getTracks().forEach(track => {
+        track.stop();
+      });
+    }
+  };
 
 
   // return isLoading ? (
