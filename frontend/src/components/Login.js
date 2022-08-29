@@ -4,9 +4,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { classNames } from "primereact/utils";
-import axios from "axios";
 import { Navigate } from "react-router-dom";
-// import { setToken } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { login, resetRedirect } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
@@ -15,7 +13,6 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
-  // const [redirect, setRedirect] = useState(false);
   const dispatch = useDispatch();
   const { loading, redirect, isAuthenticated } = useSelector((state) => state.auth);
 
@@ -48,9 +45,6 @@ const Login = () => {
     if (redirect) {
       dispatch(resetRedirect());
     }
-    // if (isAuthenticated) {
-    //   return <Navigate to="/" />;
-    // }
   }, [redirect]);
 
   if (isAuthenticated) {
