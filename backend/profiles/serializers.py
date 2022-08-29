@@ -6,9 +6,9 @@ class EditProfileSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'country',
-            'avatar',
-            'first_name',
-            'last_name',
-            'birth_date',
+            "country",
+            "avatar",
+            "first_name",
+            "last_name",
+            "birth_date",
         ]
