@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect } from "../redux/authSlice";
+import { resetRedirect, setError } from "../redux/authSlice";
 import RotateLoader from "react-spinners/RotateLoader";
 import UserLayout from "../layouts/UserLayout";
 import { Button } from "primereact/button";
-// import { Checkbox } from "primereact/checkbox";
 import { InputSwitch } from "primereact/inputswitch";
 import { Password } from "primereact/password";
 import { Messages } from "primereact/messages";
@@ -20,22 +19,29 @@ const CreateRoom = () => {
   const [roomProtected, setRoomProtected] = useState(false);
   const [roomPassword, setRoomPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [chatEnabled, setChatEnabled] = useState(false);
-  const [guestControlEnabled, setGuestControlEnabled] = useState(false);
   const [created, setCreated] = useState(false);
   const [token, setToken] = useState("");
-  const [error, setError] = useState("");
   const messageRef = useRef();
   const [maxGuests, setMaxGuests] = useState(3);
   const navigate = useNavigate();
+  const [ restricted, setRestricted ] = useState(false);
+
+  useEffect(() => {
+      if(isAuthenticated === false && loading === false) {
+          dispatch(setError("You must be logged in to access this page."));
+          setRestricted(true);
+        }
+  }, [isAuthenticated, loading]);
+
+  if(restricted) {
+      dispatch(setError("You must be logged in to access this page."));
+      navigate("/");
+  }
 
   useEffect(() => {
     if (redirect) {
       dispatch(resetRedirect());
-    }
-    // if (isAuthenticated) {
-    //   return <Navigate to="/" />;
-    // }
+    }    
   }, [redirect]);
 
   useEffect(() => {
@@ -48,15 +54,8 @@ const CreateRoom = () => {
     if (!membership.can_create_rooms) {
       console.log("cannot create room");
       console.log(membership);
-      setError("You do not have permission to create a room.");
-      messageRef.current.show({
-        severity: "error",
-        detail: "You do not have permission to create a room.",
-      });
-      setTimeout(() => {
-        // window.location.href = "/";
-        navigate("/");        
-      }, 3000);
+      dispatch(setError("You do not have permission to create a room."));      
+      navigate("/");        
     }
   }, [membershipLoading, membership]);
 
@@ -64,8 +63,6 @@ const CreateRoom = () => {
     setSubmitting(true);
     let payload = {
       protected: roomProtected,
-      // chat_enabled: chatEnabled,
-      // guests_input_control: guestControlEnabled,
       max_guests: maxGuests,
     };
     if (roomProtected) {
@@ -96,22 +93,9 @@ const CreateRoom = () => {
   const onError = (error) => {
     setSubmitting(false);
     if (error.response.data.error) {
-      console.log("i failed in if");
-      setError(error.response.data.error);
-      messageRef.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: error.response.data.error,
-      });
+      dispatch(setError(error.response.data.error));      
     } else {
-      for (let key in error.response.data) {
-        console.log("i failed in else");
-        setError(`${error.response.data[key]} - ${key}`);
-        messageRef.current.show({
-          severity: "error",
-          detail: `${key}: ${error.response.data[key]}`,
-        });
-      }
+      dispatch(setError("An error occurred."));      
     }
   };
 
@@ -168,20 +152,7 @@ const CreateRoom = () => {
                 toggleMask={true}
               />
             </div>
-            {/* <div className="flex justify-content-between align-items-center m-2">
-              <p>Chat Enabled</p>
-              <InputSwitch
-                checked={chatEnabled}
-                onChange={(e) => setChatEnabled(e.value)}
-              />
-            </div>
-            <div className="flex justify-content-between align-items-center m-2">
-              <p>Guest Input Controls Enabled</p>
-              <InputSwitch
-                checked={guestControlEnabled}
-                onChange={(e) => setGuestControlEnabled(e.value)}
-              />
-            </div> */}
+            
             <div className="flex justify-content-between align-items-center m-2">
               <p>Max Guests</p>
               <div>
