@@ -2,19 +2,20 @@ import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../layouts/UserLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { resetRedirect, setMessage, setError } from "../redux/authSlice";
-import { Navigate } from "react-router-dom";
 import { RotateLoader } from "react-spinners";
 import { Dropdown } from "primereact/dropdown";
-import { ProgressBar } from "primereact/progressbar";
 import { Knob } from "primereact/knob";
 import axios from "axios";
 import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom";
 
 
 const Settings = () => {
     const { isAuthenticated, user, redirect, loading } = useSelector(
         (state) => state.auth
     );
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const cameraRef = useRef(null);
     const microphoneRef = useRef(null);
     const [cameras, setCameras] = useState([]);
@@ -23,21 +24,30 @@ const Settings = () => {
     const [currentCamera, setCurrentCamera] = useState(null);
     const [currentMicrophone, setCurrentMicrophone] = useState(null);
     const [saving, setSaving] = useState(false);
-    
+    const [ restricted, setRestricted ] = useState(false);
 
-    let volumeBarDraw;
+    useEffect(() => {
+        if(isAuthenticated === false && loading === false) {
+            dispatch(setError("You must be logged in to access this page."));
+            setRestricted(true);
+          }
+    }, [isAuthenticated, loading]);
+
+    if(restricted) {
+        dispatch(setError("You must be logged in to access this page."));
+        navigate("/");
+    }
+
 
 
     const getCameras = async () => {
         const devices = await navigator.mediaDevices.enumerateDevices();
         const cameras = devices.filter(device => device.kind === 'videoinput');
-        // convert to dropdown format
         const cameraOptions = cameras.map(camera => ({
             label: camera.label,
             value: camera.deviceId
         }));
         setCameras(cameraOptions);
-        // setCameras(cameras);
 
     };
 
@@ -45,13 +55,11 @@ const Settings = () => {
         const devices = await navigator.mediaDevices.enumerateDevices();        
         console.log(devices);
         const microphones = devices.filter(device => device.kind === 'audioinput');
-        // convert to dropdown format
         const microphoneOptions = microphones.map(microphone => ({
             label: microphone.label,
             value: microphone.deviceId
         }));
         setMicrophones(microphoneOptions);
-        // setMicrophones(microphones);
     };
 
     const usersPermission = async () => {
@@ -59,7 +67,6 @@ const Settings = () => {
             {audio: true, video: true},
             (stream) => {
                 console.log(stream);
-                // set default camera and microphone
                 cameraRef.current.srcObject = stream;
                 microphoneRef.current.srcObject = stream;
             },
@@ -70,12 +77,10 @@ const Settings = () => {
         console.log(permission);
         getCameras();
         getMicrophones();
-        // stop stream
         permission.getTracks().forEach(track => track.stop());
     };
 
 
-    const dispatch = useDispatch();
 
     useEffect(() => {
         if (redirect) {
@@ -84,30 +89,10 @@ const Settings = () => {
     }, [redirect, dispatch]);
 
     useEffect(() => {
-        // if (isAuthenticated && user) {
-            usersPermission();            
-        // }
+        usersPermission();            
     }, []);
 
-    // const handleCameraChange = (event) => {
-    //     setCurrentCamera(event.value);
-    //     const camera = event.target.value;
-    //     console.log(camera);
-    //     // setCurrentCamera(camera.label);
-    //     console.log(currentCamera);
-    //     // stop stream if it exists
-    //     if (cameraRef.current.srcObject) {
-    //         cameraRef.current.srcObject.getTracks().forEach(track => track.stop());
-    //         cameraRef.current.srcObject = null;
-    //     }
-    //     navigator.mediaDevices.getUserMedia({video: {deviceId: camera.deviceId }}).then(stream => {
-    //         cameraRef.current.srcObject = stream;
-    //     }
-    //     ).catch(error => {
-    //         console.log(error);
-    //     }
-    //     );
-    // };
+    
 
     const handleCameraChange = (event) => {
         setCurrentCamera(event.value);
@@ -131,7 +116,7 @@ const Settings = () => {
         );
     };
 
-
+    let volumeBarDraw;
 
     const handleMicrophoneChange = (event) => {
         setCurrentMicrophone(event.value);
@@ -321,19 +306,6 @@ const Settings = () => {
                     )}
 
                 </div>
-                {/* microphone volume meter */}
-                {/* <ProgressBar
-                    value={volumeLvl}
-                    showValue={true}
-                    style={{
-                        transition: "none",
-                        width: "100%",
-                        height: "10px",
-                    }}
-                /> */}
-                {/* <div className="volume-bar" style={{width: "300px", height: "10px", backgroundColor: "white"}}>
-                    <div className="volume-bar-inner" style={{ width: `${volumeLvl}%` , height: "100%", backgroundColor: "red"}}></div>
-                </div> */}
                 <Button style={{margin:"0 auto"}} onClick={saveSettings} className="mt-2" loading={saving} disabled={saving}>Save settings</Button>
             </div>
 
