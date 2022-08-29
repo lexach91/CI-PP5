@@ -1,10 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
 import "primereact/resources/themes/mdc-dark-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
-import Navbar from './components/navigation/VisitorNavbar';
 import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -30,9 +28,10 @@ import Privacy from './privacy/Privacy';
 import ContactUs from './components/ContactUs';
 import UnsubscribeNewsletter from './components/NewsletterUnsubscribe';
 import axios from 'axios';
-// import { Navigate } from 'react-router-dom';
 import Pricing from './components/Pricing';
 import Subscription from './components/Subscription';
+import Page404 from './errors/Page404';
+import Page500 from './errors/Page500';
 import { Toast } from 'primereact/toast';
 
 
@@ -92,9 +91,7 @@ const App = () => {
   const checkUserInRoom = async () => {
     await axios.get('/rooms/check-user-in-room')
       .then(res => {
-        console.log(res);
         if (res.data.room_token && window.location.pathname !== `/room/${res.data.room_token}`) {
-          console.log('user is in room');
           window.location.href = `/room/${res.data.room_token}`;
         }
       }
@@ -136,7 +133,8 @@ const App = () => {
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/unsubscribe/:email" element={<UnsubscribeNewsletter />} />
             <Route path="/unsubscribe" element={<UnsubscribeNewsletter />} />
-            <Route path="*" element={<div>Page not found</div>} />
+            <Route path="/500" element={<Page500 />} />
+            <Route path="*" element={<Page404 />} />
           </Routes>
         </Router>
 
