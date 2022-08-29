@@ -13,6 +13,10 @@ axios.interceptors.response.use(
     response => {
         return response;
     }, error => {
+        if(error.response.status === 500) {
+            window.location.href = "/500";
+            return;
+        }
         if (error.response.status === 401) {
             if (refreshing) {
                 return Promise.reject(error);
