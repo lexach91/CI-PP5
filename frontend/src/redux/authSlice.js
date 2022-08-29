@@ -93,9 +93,7 @@ export const checkAuth = createAsyncThunk(
       dispatch(getUser());
       return response.data;
     } catch (error) {
-      const { dispatch } = thunkAPI;
-      dispatch(refreshToken());
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
 );
@@ -109,8 +107,6 @@ export const refreshToken = createAsyncThunk(
         dispatch(checkAuth());
         return response.data;
     } catch (error) {
-        // const { dispatch } = thunkAPI;
-        // dispatch(logout());
       return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
