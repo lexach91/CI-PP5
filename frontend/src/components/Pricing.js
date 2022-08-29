@@ -61,7 +61,6 @@ const Pricing = () => {
                 severity: "error",
                 detail: error.response.data.error,
             });
-            console.log(error);
         });
     };
 

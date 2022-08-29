@@ -100,7 +100,6 @@ const Profile = () => {
     await axios
       .post("edit-profile", formData)
       .then((data) => {
-        console.log(data);
         toast.current.show({
           severity: "success",
           detail: "Profile updated successfully",
@@ -108,7 +107,6 @@ const Profile = () => {
         setFormUploading(false);
       })
       .catch((error) => {
-        console.log(error);
         toast.current.show({
           severity: "error",
           detail: "Error updating profile",
@@ -118,7 +116,6 @@ const Profile = () => {
   };
 
   const onChangeAvatar = (e) => {
-    console.log(e.files[0]);
     setAvatar(e.files[0].objectURL);
     const formData = new FormData();
     formData.append("avatar", e.files[0]);
@@ -139,8 +136,6 @@ const Profile = () => {
   };
 
   const onChangeBirthDate = (e) => {
-    console.log(e.value);
-    console.log(e.target.value);
     let date = e.value.toLocaleDateString();
     date = date.split("/").reverse().join("-");
     setBirthDate(date);
@@ -174,7 +169,6 @@ const Profile = () => {
       confirm_password: confirmPassword,
     };
     await axios.post("change-password", payload).then((data) => {
-      console.log(data);
       toast.current.show({
         severity: "success",
         detail: "Password changed successfully",
@@ -185,7 +179,6 @@ const Profile = () => {
       setConfirmPassword("");
       setDialogVisible(false);
     }).catch((error) => {
-      console.log(error);
       toast.current.show({
         severity: "error",
         detail: error.response.data.error,

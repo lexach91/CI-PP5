@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Menubar } from "primereact/menubar";
+import React, { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Chip } from "primereact/chip";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
-import { logout, resetError, resetMessage } from "../../redux/authSlice";
-import { Toast } from "primereact/toast";
+import { logout } from "../../redux/authSlice";
 import { Card } from "primereact/card";
 import { Avatar } from "primereact/avatar";
 import { Divider } from "primereact/divider";
@@ -18,56 +15,13 @@ const UserNavbar = () => {
   const {
     isAuthenticated,
     user,
-    error,
-    message,
-    loading,
-    redirect,
     membershipLoading,
     membership,
   } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  // const toast = useRef(null);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     if(error.length > 0){
-  //       for(let i = 0; i < error.length; i++){
-  //         toast.current.show({
-  //           severity: 'error',
-  //           summary: 'Error',
-  //           detail: error[i],
-  //           life: 7000
-  //         });
-  //       }
-  //     } else {
-  //       toast.current.show({
-  //         severity: "error",
-  //         summary: "Error",
-  //         detail: error,
-  //         life: 7000,
-  //       });
-  //     }
-  //     setTimeout(() => {
-  //       dispatch(resetError());
-  //     }, 7000);
-  //   }
-  // }, [error]);
-
-  // useEffect(() => {
-  //   if (message) {
-  //     toast.current.show({
-  //       severity: "success",
-  //       summary: "Success",
-  //       detail: message,
-  //       life: 7000,
-  //     });
-  //     setTimeout(() => {
-  //       dispatch(resetMessage());
-  //     }, 7000);
-  //   }
-  // } , [message]);
+ 
 
   const logoutButton = (
     <React.Fragment>
@@ -79,9 +33,6 @@ const UserNavbar = () => {
           onClick={async () => {
             await dispatch(logout());
             navigate("/");
-            // if (window.location.pathname !== "/") {
-            //   window.location.href = "/";
-            // }
           }}
         />
       </div>
@@ -120,12 +71,10 @@ const UserNavbar = () => {
     <React.Fragment>
       <div className="p-menuitem">
         <Button
-          // label="Home"
           icon="pi pi-home"
           tooltip="Home page"
           className="p-button-secondary ml-3 p-button-rounded"
           onClick={() => {
-            // window.location.href = "/";
             navigate("/");
           }}
         />
@@ -148,19 +97,17 @@ const UserNavbar = () => {
   );
   return (isAuthenticated && user) && (
     <header className="navbar">
-      {/* <Toast ref={toast} style={{ zIndex: "10000" }} /> */}
       <nav className="navbar-nav">
         <Toolbar left={userButton} right={logoutButton} />
       </nav>
       <Sidebar
         visible={sidebarVisible}
         onHide={() => setSidebarVisible(false)}
-        // style={{ width: "fit-content" }}
         >
         <div className="grid">
           <div className="col-12">
             <Card
-              // style={{wordBreak:"break-all"}}
+              style={{wordBreak:"break-all"}}
               >
               <div className="flex">
                 <div className="flex justify-content-center align-items-center">
@@ -187,7 +134,6 @@ const UserNavbar = () => {
               icon="pi pi-home"
               className="p-button-secondary mb-2 w-full"
               onClick={() => {
-                // window.location.href = "/";
                 navigate("/");
               }}
             />
@@ -198,7 +144,6 @@ const UserNavbar = () => {
               icon="pi pi-user"
               className="p-button-secondary mb-2 w-full"
               onClick={() => {
-                // window.location.href = "/profile";
                 navigate("/profile");
               }}
             />
@@ -209,7 +154,6 @@ const UserNavbar = () => {
               icon="pi pi-cog"
               className="p-button-secondary mb-2 w-full"
               onClick={() => {
-                // window.location.href = "/settings";
                 navigate("/settings");
               }}
             />
@@ -221,7 +165,6 @@ const UserNavbar = () => {
                 icon="pi pi-plus"
                 className="p-button-secondary mb-2 w-full"
                 onClick={() => {
-                  // window.location.href = "/create-room";
                   navigate("/create-room");
                 }}
               />

@@ -16,7 +16,7 @@ import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Subscription = () => {
-  const { isAuthenticated, user, redirect, loading, membership, membershipLoading } = useSelector(
+  const { isAuthenticated, user, redirect, loading, membership } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
@@ -40,12 +40,10 @@ const Subscription = () => {
       axios
         .get("membership-stripe")
         .then((res) => {
-          console.log(res);
           setSubscription(res.data);
           setLoadingSubscription(false);
         })
         .catch((err) => {
-          console.log(err);
           toast.current.show({
             severity: "error",
             detail: err.response.data.error,
@@ -53,7 +51,7 @@ const Subscription = () => {
           setLoadingSubscription(false);
         });
     }
-  }, [redirect, isAuthenticated, user, membership]);
+  }, [redirect, isAuthenticated, user, membership, dispatch]);
 
   useEffect(() => {
     if(membership?.name === "Free") {
@@ -64,7 +62,7 @@ const Subscription = () => {
       dispatch(setError("You must be logged in to access this page."));
       setRestricted(true);
     }
-  } , [membership, isAuthenticated, loading]);
+  } , [membership, isAuthenticated, loading, dispatch]);
 
   if(restricted) {
     return <Navigate to="/" />
@@ -90,8 +88,6 @@ const Subscription = () => {
         responsive={true}
         emptyMessage="No payments found"
       >
-        {/* <Column field="created_at" header="Date" sortable={true} /> */}
-        {/* created_at should be converted to locale date and time string */}
         <Column header="Date" sortable={true} body={(rowData) => {
           return new Date(rowData.created_at).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"});
         } } />
@@ -107,7 +103,6 @@ const Subscription = () => {
       window.location.href = res.data.sessionUrl;
     }
     catch (err) {
-      console.log(err);
       toast.current.show({
         severity: "error",
         detail: err.response.data.error,
@@ -117,36 +112,22 @@ const Subscription = () => {
   };
 
   const confirmDeletion = (e) => {
-    console.log("deleting");
-    const popup = confirmPopup({
+    confirmPopup({
       target: e.currentTarget,
       message: "Are you sure you want to cancel your subscription?",
       icon: "pi pi-exclamation-triangle",
       accept: async () => deleteSubscription(),
-      // reject: () => {popup.hide();},
     });
-    console.log(popup);
-    // popup.show();
   }
 
   const deleteSubscription = async () => {
     setDeleteLoading(true);
     try {
-      const res = await axios.post("cancel-subscription");
-      // toast.current.show({
-      //   severity: "success",
-      //   detail: "Subscription cancelled",
-      // });
+      await axios.post("cancel-subscription");
       dispatch(setMessage("Subscription cancelled. You will receive a confirmation email shortly."));
-      navigate("/");
-      // setSubscription({});
-      // setTimeout(() => {
-      //   window.location.href = "/";
-      // }, 2000);
-      
+      navigate("/");      
     }
     catch (err) {
-      console.log(err);
       toast.current.show({
         severity: "error",
         detail: err.response.data.error,

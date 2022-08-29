@@ -81,20 +81,16 @@ const Room = () => {
         .then((stream) => {
           webSocket.current = new WebSocket(wsUrl);
           localVideo.current.srcObject = stream;
-          console.log(stream);
           webSocket.current.onopen = () => {
-            console.log("Websocket connected");
             wsOnOpen();
           };
           webSocket.current.onmessage = (event) => {
             wsOnMessage(event);
           };
           webSocket.current.onclose = (event) => {
-            console.log(event);
-            console.log("Websocket disconnected");
+            window.location.reload();
           };
           webSocket.current.onerror = (error) => {
-            console.log(error, "Websocket error");
             dispatch(setError("Something went wrong or you are not allowed to join this room."));
             // after the toast is hidden, redirect to home page
             setTimeout(() => {
@@ -103,7 +99,7 @@ const Room = () => {
           };
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error);          
         });
     }
   }, [roomToken, isAuthenticated, user]);
@@ -131,13 +127,8 @@ const Room = () => {
 
   const wsOnMessage = (event) => {
     let data = JSON.parse(event.data);
-    console.log(data);
-    console.log("Currently in room: ", guests);
-    console.log("Currently in room: ", guestsRef.current);
     let action = data.action;
     if (action === "joined") {
-      console.log("joined");
-      console.log(data);
       let room = data.room;
       setRoom(room);
       setIsHost(data.is_host);
@@ -145,11 +136,7 @@ const Room = () => {
 
       let connectedPeers = data.connected_peers;
       Object.entries(connectedPeers).forEach(([peer, channelName]) => {
-        console.log(peer, channelName);
         if (peer != user.id) {
-          console.log("new peer huiyr");
-          console.log(peer);
-          console.log(user.id);
           if (!guestsRef.current.find((guest) => guest.peer == peer)) {
             createOffer(peer, channelName);
           }
@@ -161,7 +148,6 @@ const Room = () => {
 
     
     if (action === "room-deleted") {
-      console.log("room-deleted");
       if (user.id != hostId.current) {
         
         dispatch(setError("This room has been deleted."));
@@ -181,27 +167,17 @@ const Room = () => {
     let receiverChannelName = data.message.receiver_channel_name;
 
     if (action === "new-offer") {
-      console.log("new-offer");
       let offer = message.sdp;
       if (!guestsRef.current.find((guest) => guest.peer == peer)) {
         createAnswer(offer, peer, receiverChannelName);
       }
-      console.log(guestsRef.current);
-      console.log(guests);
     }
     if (action === "new-answer") {
-      console.log("new-answer");
       let answer = message.sdp;
-      console.log(guestsRef.current);
-      console.log(peer);
       let guest = guestsRef.current.find((guest) => guest.peer == peer);
-      console.log(guest);
       guest.peerConnection.signal(answer);
-      console.log(guestsRef.current);
-      console.log(guests);
     }
     if (action === "disconnected") {
-      console.log(`${peer} disconnected`);
       deleteGuest(peer);
     }
   };
@@ -221,7 +197,6 @@ const Room = () => {
     });
 
     peerConnection.on("close", () => {
-      console.log("peerConnection closed");
       deleteGuest(peer);
     });
 
@@ -238,8 +213,6 @@ const Room = () => {
     };
     guestsRef.current.push(newGuest);
     setGuests((prevGuests) => [...prevGuests, newGuest]);
-    console.log(guestsRef.current);
-    console.log(guests);
     peerConnection.on("connect", () => {
       if (selfMutedRef.current === true) {
         sendDataToPeer(peer, {
@@ -273,7 +246,6 @@ const Room = () => {
     });
     peerConnection.signal(offer);
     peerConnection.on("close", () => {
-      console.log("peerConnection closed");
       deleteGuest(peer);
     });
     peerConnection.on("error", (error) => {
@@ -288,8 +260,6 @@ const Room = () => {
     };
     guestsRef.current.push(newGuest);
     setGuests((prevGuests) => [...prevGuests, newGuest]);
-    console.log(guestsRef.current);
-    console.log(guests);
     peerConnection.on("connect", () => {
       if (selfMutedRef.current === true) {
         sendDataToPeer(peer, {
@@ -332,7 +302,6 @@ const Room = () => {
     let type = parsedData.type;
 
     if (type === "mute-peer") {
-      console.log("mute-peer by data channel");
       let peer = parsedData.peer;
       if (peer == user.id && hostId.current != user.id) {
         turnOffYourMic();
@@ -354,7 +323,6 @@ const Room = () => {
       }
     }
     if (type === "unmute-peer") {
-      console.log("unmute-peer by data channel");
       let peer = parsedData.peer;
       if (peer == user.id && hostId.current != user.id) {
         turnOnYourMic();
@@ -375,7 +343,6 @@ const Room = () => {
       }
     }
     if (type === "i-am-muted") {
-      console.log("i-am-muted by data channel");
       let peer = parsedData.peer;
       setMutedGuests((prevGuests) => [...prevGuests, peer]);
       mutedGuestsRef.current.push(peer);
@@ -390,7 +357,6 @@ const Room = () => {
       }
     }
     if (type === "i-am-unmuted") {
-      console.log("i-am-unmuted by data channel");
       let peer = parsedData.peer;
       setMutedGuests((prevGuests) =>
         prevGuests.filter((guest) => guest != peer)
@@ -404,7 +370,6 @@ const Room = () => {
       }
     }
     if (type === "mute-all") {
-      console.log("mute-all by data channel");
       setGuestsMicsOn(false);
       roomMutedRef.current = true;
       turnOffYourMic();
@@ -418,7 +383,6 @@ const Room = () => {
       }
     }
     if (type === "unmute-all") {
-      console.log("unmute-all by data channel");
       setGuestsMicsOn(true);
       roomMutedRef.current = false;
       turnOnYourMic();
@@ -441,8 +405,6 @@ const Room = () => {
     setGuests((prevGuests) => prevGuests.filter((guest) => guest.peer != peer));
     peerConnection?.removeAllListeners();
     peerConnection?.destroy();
-    console.log(guestsRef.current);
-    console.log(guests);
   };
 
   const reloadLocalVideo = () => {
@@ -564,7 +526,6 @@ const Room = () => {
         window.location.href = "/";
       }, 3000);
     } else {
-      console.log(response);
       dispatch(setError(response.data.message));
     }
   };
@@ -580,7 +541,6 @@ const Room = () => {
         window.location.href = "/";
       }, 3000);
     } else {
-      console.log(response);
       toast.current.show({ severity: "error", detail: response.data.message });
     }
   };
@@ -596,9 +556,6 @@ const Room = () => {
   const emptyDivsForAbsentGuests = () => {
     let divs = [];
     for (let i = 0; i < room.max_guests - guests.length; i++) {
-      console.log(i);
-      console.log(guests.length);
-      console.log(room.max_guests);
       divs.push(
         <div
           className={
@@ -617,7 +574,6 @@ const Room = () => {
   };
 
   const muteGuest = (peer) => {
-    console.log(peer);
     if (isHost) {
       sendDataToPeer(peer, {
         type: "mute-peer",
@@ -637,7 +593,6 @@ const Room = () => {
   };
 
   const unmuteGuest = (peer) => {
-    console.log(peer);
     if (isHost) {
       sendDataToPeer(peer, {
         type: "unmute-peer",

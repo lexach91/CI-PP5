@@ -401,7 +401,7 @@ const Home = () => {
             <span className="block text-5xl font-bold mb-1">
             <span className="text-gray-500">Dr</span>
             <span className="text-indigo-200">.</span>
-            <span className="text-green-600">Meetings</span>
+            <span className="text-green-600">Meetings</span>{" "}
               - is an absolutely new level of
             </span>
             <div className="text-5xl text-primary font-bold mb-3">

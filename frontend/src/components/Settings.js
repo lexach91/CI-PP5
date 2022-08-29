@@ -53,7 +53,6 @@ const Settings = () => {
 
     const getMicrophones = async () => {
         const devices = await navigator.mediaDevices.enumerateDevices();        
-        console.log(devices);
         const microphones = devices.filter(device => device.kind === 'audioinput');
         const microphoneOptions = microphones.map(microphone => ({
             label: microphone.label,
@@ -66,7 +65,6 @@ const Settings = () => {
         const permission = await navigator.mediaDevices.getUserMedia(
             {audio: true, video: true},
             (stream) => {
-                console.log(stream);
                 cameraRef.current.srcObject = stream;
                 microphoneRef.current.srcObject = stream;
             },
@@ -74,7 +72,6 @@ const Settings = () => {
                 console.log(error);
             }
         );
-        console.log(permission);
         getCameras();
         getMicrophones();
         permission.getTracks().forEach(track => track.stop());
@@ -147,7 +144,6 @@ const Settings = () => {
                 volumeBarDraw = requestAnimationFrame(listenVolume);
                 analyser.getByteFrequencyData(volumes);
                 let volume = volumes.reduce((acc, cur) => acc + cur, 0) / volumes.length;
-                // volume should be between 0 and 100, and should be a number (integer)
                 volume = Math.round(volume);
                 setVolumeLvl(volume);
             }
@@ -182,7 +178,6 @@ const Settings = () => {
             if (camera) {
                 handleCameraChange({value: camera.value});                
             }
-            // setCurrentCamera(camera.value);
         }
         if(user?.microphone_id){
             const microphone = microphones.find(microphone => microphone.value === user.microphone_id);
@@ -192,38 +187,6 @@ const Settings = () => {
         }
     }, [user, cameras, microphones]);
 
-    // }, [user]);
-    
-    
-
-    // const handleMicrophoneChange = (event) => {
-    //     setCurrentMicrophone(event.value);
-    //     const microphone = event.target.value;
-    //     console.log(microphone);
-    //     // setCurrentMicrophone(microphone.label);
-    //     console.log(currentMicrophone);
-    //     // stop stream if it exists
-    //     // if (microphoneRef.current !== null) {
-    //     //     microphoneRef.current.srcObject.getTracks().forEach(track => track.stop());
-    //     //     microphoneRef.current.srcObject = null;
-    //     // }
-    //     navigator.mediaDevices.getUserMedia({audio: {deviceId: microphone.deviceId }}).then(stream => {
-    //         microphoneRef.current.srcObject = stream;
-    //     }
-    //     ).catch(error => {
-    //         console.log(error);
-    //     }
-    //     );
-    // };
-
-
-    // need to demonstrate to the user microphone volume meter as a progress bar, that changes when the user speaks
-    
-    
-
-
- 
-    
     
 
     return loading ? (
@@ -252,10 +215,8 @@ const Settings = () => {
         <UserLayout title="Settings">
             <div className="grid grid-nogutter p-4 md:w-8 md:mx-auto">
                 <div className="col-12 text-center">
-                    {/* <span>Choose camera:</span> */}
                     <Dropdown
                         value={currentCamera}
-                        // optionLabel="label"
                         options={cameras}
                         onChange={handleCameraChange}
                         placeholder="Choose camera"
@@ -277,7 +238,6 @@ const Settings = () => {
                     )}
                 </div>
                 <div className="col-12 mt-3 text-center">
-                    {/* <span>Choose microphone:</span> */}
                     <Dropdown
                         value={currentMicrophone}
                         // optionLabel="label"
@@ -301,7 +261,6 @@ const Settings = () => {
                     ) : (
                         <div style={{ textAlign: "center"}}>
                             <p>No microphone selected</p>
-                            {/* <audio style={{visibility: "hidden", width:"0px", height: "0px"}} autoPlay playsInline muted ref={microphoneRef} /> */}
                         </div>
                     )}
 

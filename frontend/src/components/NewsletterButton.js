@@ -35,7 +35,6 @@ const NewsletterButton = () => {
             setDialogVisible(false);
         }
         catch (error) {
-            console.log(error);
             dispatch(setError(error.response.data.error));
         }
         setSubmitting(false);

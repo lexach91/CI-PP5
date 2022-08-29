@@ -52,8 +52,6 @@ const CreateRoom = () => {
       return;
     }
     if (!membership.can_create_rooms) {
-      console.log("cannot create room");
-      console.log(membership);
       dispatch(setError("You do not have permission to create a room."));      
       navigate("/");        
     }
@@ -76,7 +74,6 @@ const CreateRoom = () => {
         setCreated(true);
       })
       .catch((err) => {
-        console.log(err);
         onError(err);
       });
     // if (response.status === 200) {
