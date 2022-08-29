@@ -17,6 +17,34 @@ const servers = {
       urls: "stun:stun.l.google.com:19302",
     },
     {
+      urls: "stun:openrelay.metered.ca:80",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:80",
+      credential: "openrelayproject",
+      username: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443",
+      credential: "openrelayproject",
+      username: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:80?transport=tcp",
+      credential: "openrelayproject",
+      username: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443?transport=tcp",
+      credential: "openrelayproject",
+      username: "openrelayproject",
+    },
+    {
+      urls: "turns:openrelay.metered.ca:443",
+      credential: "openrelayproject",
+      username: "openrelayproject",
+    },
+    {
       urls: "turn:numb.viagenie.ca",
       credential: "muazkh",
       username: "webrtc@live.com",
@@ -193,6 +221,8 @@ const Room = () => {
       trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
+      reconnectTimer: 1000,
+      iceTransportPolicy: "relay",
     });
     peerConnection.on("signal", (signal) => {
       sendSignal("new-offer", {
@@ -243,6 +273,8 @@ const Room = () => {
       trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
+      reconnectTimer: 1000,
+      iceTransportPolicy: "relay",
     });
     peerConnection.on("signal", (signal) => {
       sendSignal("new-answer", {
