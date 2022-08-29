@@ -139,9 +139,10 @@ class LeaveRoomAPIView(APIView):
         room = VideoRoom.objects.get(token=room_token)
         
         if room.host == user:
+            room.delete()
             return Response(
-                {'error': 'You cannot leave your own room'},
-                status=status.HTTP_400_BAD_REQUEST
+                {'success': 'You have left the room'},
+                status=status.HTTP_200_OK
             )
         
         if not room.guests.filter(id=user.id).exists():
