@@ -221,8 +221,8 @@ const Room = () => {
       trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
-      reconnectTimer: 1000,
-      iceTransportPolicy: "relay",
+      reconnectTimer: 8000,
+      // iceTransportPolicy: "relay",
     });
     peerConnection.on("signal", (signal) => {
       sendSignal("new-offer", {
@@ -273,8 +273,8 @@ const Room = () => {
       trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
-      reconnectTimer: 1000,
-      iceTransportPolicy: "relay",
+      reconnectTimer: 8000,
+      // iceTransportPolicy: "relay",
     });
     peerConnection.on("signal", (signal) => {
       sendSignal("new-answer", {
