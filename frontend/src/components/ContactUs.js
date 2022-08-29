@@ -46,7 +46,7 @@ const ContactUs = () => {
         { label: "Other", value: "Other" },
     ];
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data, form) => {
         setFormData(data);
         setSubmitting(true);
         try {
@@ -54,6 +54,7 @@ const ContactUs = () => {
             dispatch(setMessage("We have received your message. We will get back to you shortly."));
             setSubmitting(false);
             setFormData({});
+            form.restart();
         }
         catch (err) {
             dispatch(setError(err.response.data));
