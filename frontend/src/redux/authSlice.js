@@ -88,11 +88,13 @@ export const checkAuth = createAsyncThunk(
     try {
       const response = await axios.get("verify-token", {
         withCredentials: true,
-      });
+      });      
       const { dispatch } = thunkAPI;
       dispatch(getUser());
+      console.clear();
       return response.data;
     } catch (error) {
+      console.clear();
       return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
@@ -107,6 +109,7 @@ export const refreshToken = createAsyncThunk(
         dispatch(checkAuth());
         return response.data;
     } catch (error) {
+      console.clear();
       return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
