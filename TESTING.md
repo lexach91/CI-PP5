@@ -138,9 +138,16 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 
 ### JS Validation:
 
+- Since the application's frontend is written in React, I could not use the JSHint validator to validate the application.
+- But React itself validates the code on each build, and if there were any errors, the application would not be able to run.
+- Since it runs correctly, we can consider all the code to be valid.
 
 
 
+### Python Validation:
+
+- [Full Python Validation Report](documentation/testing/python_validation.pdf)
+- For python validation I have used the official [Pep8Online](http://pep8online.com/) validator
 
 ---
 ## Lighthouse Report
@@ -187,6 +194,17 @@ The responsiveness was checked manually by using devtools (Chrome) throughout th
 | working functionality for users to register and log in and out of the application without issues. | Y  |     |
 | working E-commerce functionality for users to make purchases within the application. | Y  |     |
 | detailed testing write ups, beyond results of validation tools. | Y  |     |
+
+---
+
+## Automated testing
+
+### Django testing
+
+### JavaScript testing (react)
+
+---
+
 
 
 ---
