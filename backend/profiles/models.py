@@ -101,10 +101,10 @@ class User(AbstractUser):
     def age(self):
         today = date.today()
         return (
-            today.year
-            - self.birth_date.year
-            - (
-                (today.month, today.day)
-                < (self.birth_date.month, self.birth_date.day)
+            today.year -
+            self.birth_date.year -
+            (
+                (today.month, today.day) <
+                (self.birth_date.month, self.birth_date.day)
             )
         )
