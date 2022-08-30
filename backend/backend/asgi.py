@@ -16,11 +16,11 @@ django.setup()
 
 # application = get_asgi_application()
 
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-from channels.security.websocket import AllowedHostsOriginValidator
-from django.core.asgi import get_asgi_application
-import videorooms.routing
+from channels.routing import ProtocolTypeRouter, URLRouter  # noqa isort:skip
+from channels.auth import AuthMiddlewareStack  # noqa isort:skip
+from channels.security.websocket import AllowedHostsOriginValidator  # noqa isort:skip
+from django.core.asgi import get_asgi_application  # noqa isort:skip
+import videorooms.routing  # noqa isort:skip
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
