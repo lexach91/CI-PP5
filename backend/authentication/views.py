@@ -61,6 +61,12 @@ class LoginAPIView(APIView):
         email = request.data["email"]
         password = request.data["password"]
 
+        if email is None or password is None:
+            return Response(
+                {"error": "Please provide both email and password"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         user = User.objects.filter(email=email).first()
 
         if user is None:
@@ -177,7 +183,6 @@ class RefreshTokenAPIView(APIView):
 
 class LogoutAPIView(APIView):
     def post(self, request):
-        print(request.COOKIES)
 
         access_token = request.COOKIES.get("access_token")
         refresh_token = request.COOKIES.get("refresh_token")
