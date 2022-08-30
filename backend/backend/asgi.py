@@ -14,8 +14,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
 
-# application = get_asgi_application()
-
 from channels.routing import ProtocolTypeRouter, URLRouter  # noqa isort:skip
 from channels.auth import AuthMiddlewareStack  # noqa isort:skip
 from channels.security.websocket import AllowedHostsOriginValidator  # noqa isort:skip
