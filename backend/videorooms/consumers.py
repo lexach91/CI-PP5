@@ -52,8 +52,8 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         if (
-            self.room["guests_muted"]
-            and not self.user["id"] in self.muted_peers
+            self.room["guests_muted"] and not
+            self.user["id"] in self.muted_peers
         ):
             self.muted_peers.append(self.user["id"])
 

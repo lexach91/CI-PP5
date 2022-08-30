@@ -1,4 +1,5 @@
-import random, string
+import random
+import string
 from django.db import models
 from profiles.models import User
 
