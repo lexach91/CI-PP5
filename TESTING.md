@@ -138,7 +138,10 @@ Usability was tested with the below user acceptance testing to ensure testing fr
 
 ### JS Validation:
 
-- Since the application's frontend is written in React, I could not use the JSHint validator to validate the application.
+- Since the application's frontend is written in React, I could not use the JSHint validator to validate the application. As you can down below, JSHint just doesn't understand JSX syntax.
+
+![JSHint freaks out](documentation/testing/jshint_freak_out.png)
+
 - But React itself validates the code on each build, and if there were any errors, the application would not be able to run.
 - Since it runs correctly, we can consider all the code to be valid.
 
