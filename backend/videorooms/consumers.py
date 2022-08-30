@@ -78,7 +78,6 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
         action = data["action"]
 
         if action == "mute-all":
-            print("Muting all")
             await self.mute_all()
             self.room = await self.get_room()
             await self.channel_layer.group_send(
@@ -91,13 +90,9 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
                     },
                 },
             )
-            print("Connected peers:", self.connected_peers)
-            print("Muted peers:", self.muted_peers)
-            print("Muted all:", self.room["guests_muted"])
             return
 
         if action == "unmute-all":
-            print("Unmuting all")
             await self.unmute_all()
             self.room = await self.get_room()
             await self.channel_layer.group_send(
@@ -110,24 +105,15 @@ class VideoRoomConsumer(AsyncWebsocketConsumer):
                     },
                 },
             )
-            print("Connected peers:", self.connected_peers)
-            print("Muted peers:", self.muted_peers)
-            print("Muted all:", self.room["guests_muted"])
             return
 
         if action == "mute-peer":
             if message["peer"] not in self.muted_peers:
                 self.muted_peers.append(message["peer"])
-            print("Connected peers:", self.connected_peers)
-            print("Muted peers:", self.muted_peers)
-            print("Muted all:", self.room["guests_muted"])
 
         if action == "unmute-peer":
             if message["peer"] in self.muted_peers:
                 self.muted_peers.remove(message["peer"])
-            print("Connected peers:", self.connected_peers)
-            print("Muted peers:", self.muted_peers)
-            print("Muted all:", self.room["guests_muted"])
 
         if action == "room-deleted":
             await self.channel_layer.group_send(

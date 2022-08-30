@@ -46,7 +46,6 @@ class UserManager(BaseUserManager):
     def create_superuser(
         self, email, password, birth_date, first_name, last_name, country
     ):
-        print(email, password, birth_date, first_name, last_name, country)
         if not email:
             raise ValueError("Users must have an email address")
         if not password:

@@ -52,7 +52,6 @@ class CreateCheckoutSessionView(APIView):
             )
         # create checkout session
         customer = stripe.Customer.list(email=user.email)
-        print(customer)
         if len(customer.data) == 0:
             customer = stripe.Customer.create(email=user.email)
         else:
@@ -211,7 +210,6 @@ class StripeWebhookListener(APIView):
                 json.loads(payload), webhook_secret
             )
         except Exception as e:
-            print(e, "error")
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
