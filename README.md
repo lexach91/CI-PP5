@@ -1,5 +1,7 @@
 # Dr.Meetings
 
+![Readme hero image](documentation/readme_hero.png)
+
 ## About
 
 This is a meeting app for the people who want to meet virtually. It has a simple interface and easy to use. It allows users to create a meeting and invite other users to join the meeting. The application is accessible from various platforms like web, mobile and desktop.
