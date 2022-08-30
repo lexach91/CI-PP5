@@ -42,9 +42,9 @@ class CreateCheckoutSessionView(APIView):
             )
         user_membership = Membership.objects.get_or_create(user=user)[0]
         if (
-            user_membership is not None
-            and user_membership.type.name != "Free"
-            and (user_membership.expires_at - localtime()).days > 0
+            user_membership is not None and
+            user_membership.type.name != "Free" and
+            (user_membership.expires_at - localtime()).days > 0
         ):
             return Response(
                 {"error": "You already have a membership"},
@@ -68,8 +68,8 @@ class CreateCheckoutSessionView(APIView):
                     ],
                 },
                 customer=customer.id,
-                success_url=base_url
-                + "/checkout?success=true&session_id={CHECKOUT_SESSION_ID}",
+                success_url=base_url +
+                "/checkout?success=true&session_id={CHECKOUT_SESSION_ID}",
                 cancel_url=base_url + "/checkout?cancelled=true",
             )
         except Exception as e:
