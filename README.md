@@ -797,6 +797,8 @@ Please refer to the [TESTING.md](TESTING.md) file for all test-related documenta
 
 ## Deployment
 
+Note: For both local and heroku deployments, python and node packages should be installed on your machine.
+
 ### Local Development
 
 1. On your local machine, open a terminal window, and go to desired directory.
@@ -1063,6 +1065,146 @@ python manage.py runserver
 48. You can create a new user and test the website functionality now.
 
 ### Heroku Deployment
+
+1. First, follow the local deployment steps 1-19.
+
+2. Go to [Heroku](https://www.heroku.com/).
+
+3. Register an account if you haven't done so already.
+
+4. Create a new app at [Heroku Dashboard](https://dashboard.heroku.com/).
+
+5. Go to newly created app.
+
+6. Click on `Resources` tab.
+
+7. Search for `Heroku Postgres` and add it's free tier to the app.
+
+8. Search for `Heroku Data for Redis` and add its free tier to the app. Note that Heroku may ask you for your credit card details, but they won't charge you for this service.
+
+9. Go to `Settings` tab.
+
+10. Click on `Reveal Config Vars` button.
+
+11. `DATABASE_URL`, `REDIS_URL`, and `REDIS_TLS_URL` should already be set automatically by Heroku.
+
+12. Copy all variables from your local `env.py` file to the newly created app. Also, add `DEBUG` variable set to `True`, and `DISABLE_COLLECTSTATIC` variable set to `1`.
+
+13. Go to [Outlook.com](https://outlook.com/) and create a new account if you haven't done so already.
+
+14. Open your Outlook email.
+
+15. At the top right corner, click on `Settings` icon.
+
+16. At the opened sidebar, click `View all Outlook settings`.
+
+17. At the opened window, click `Email` tab.
+
+18. Click `Sync` button.
+
+19. Choose `Yes` for the option `Let devices and apps use POP`.
+
+20. Copy your outlook address and replace my address to yours in all python files that use send_mail function.
+
+21. Also, create a variables `EMAIL_HOST_USER` and `EMAIL_HOST_PASSWORD` in your heroku app's  config vars. Paste your email address and password in the corresponding fields.
+
+22. Go back to your local environment.
+
+23. Go to the root directory of the project.
+
+24. Add, commit, and push all changes to github.
+
+```bash
+git add .
+git commit -m "<your commit message>"
+git push
+```
+
+25. Go back to the Heroku dashboard, to your app.
+
+26. Click on `Deploy` tab.
+
+27. Choose `GitHub` as a deployment method, and connect it to your github repository.
+
+28. At the bottom of the page, choose the branch you want to deploy.
+
+29. Click on `Deploy Branch` button.
+
+30. After the deployment is done, at the top right corner, click on `More` tab.
+
+31. Choose `Run console` option.
+
+32. Execute the command `heroku run bash`.
+
+33. In the opened terminal window, go to the backend/ directory.
+
+```bash
+cd backend
+```
+
+34. Create superuser.
+
+```bash
+python manage.py createsuperuser
+```
+
+36. Open the browser and go to `<your-heroku-app-address>/admin`.
+
+37. Follow the steps 24-26 of local deployment to create Subscription plans.
+
+38. Once the Subscription plans are created, follow the steps 27-35 of local deployment.
+
+39. Copy Stripe credentials to your Heroku app config vars instead of local env.py file.
+
+40. Go to [https://dashboard.stripe.com/test/webhooks](https://dashboard.stripe.com/test/webhooks).
+
+41. Click `Add endpoint` button.
+
+42. In the `Endpoint URL` field, paste `http://<your-heroku-app-address>/api/stripe-webhooks/`.
+
+43. Click `Add events` button.
+
+44. Choose the following events:
+
+- `charge.refunded`
+- `customer.subscription.created`
+- `customer.subscription.deleted`
+- `invoice.finalized`
+- `invoice.paid`
+- `invoice.payment_failed`
+
+45. Copy the `endpoint_secret` key and paste it in the `STRIPE_WEBHOOK_KEY` config var on Heroku.
+
+46. Click `Add endpoint` button on Webhooks page.
+
+47. Go to [Cloudinary](https://cloudinary.com/) and create a new account if you haven't done so already.
+
+48. Go to [Cloudinary console](https://cloudinary.com/console).
+
+49. Copy the `Cloud Name`, `API Key`, and `API Secret` and paste them in the corresponding fields in the Heroku app's config vars.
+
+50. Go to your local development environment.
+
+51. Go to the root directory of the project.
+
+52. Add, commit, and push all changes to github.
+
+```bash
+git add .
+git commit -m "<your commit message>"
+git push
+```
+
+53. Go back to the Heroku dashboard, to your app.
+
+54. Click on `Deploy` tab.
+
+55. As your app is already connected to your github repository, click on `Deploy Branch` button.
+
+56. After the deployment is done, open the browser and go to `<your-heroku-app-address>`.
+
+57. You can create a new user and test the website functionality now.
+
 
 ---
 
