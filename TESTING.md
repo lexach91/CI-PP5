@@ -201,13 +201,21 @@ The responsiveness was checked manually by using devtools (Chrome) throughout th
 
 ### Django testing
 
+- Due to the lack of time, automated testing was done only for several apps with the use of the Django unit testing.
+
+![Django testing report](documentation/testing/django_unit_testing.png)
+
 ### JavaScript testing (react)
 
+- Due to the lack of time and documentation, automated testing was done only for the Home page with the use of the Jest testing library.
+
+![React testing report](documentation/testing/jest_unit_testing.png)
+
 ---
 
 
 
----
+
 
 ## BUGS
 
