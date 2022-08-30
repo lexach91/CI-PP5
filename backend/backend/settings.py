@@ -264,6 +264,7 @@ else:
             "CONFIG": {
                 "hosts": [(os.environ.get("REDIS_URL"))],
                 "capacity": 3000,
+                "expiry": 600,
                 "channel_capacity": {
                     "http.request": 3000,
                     "http.response": 3000,
