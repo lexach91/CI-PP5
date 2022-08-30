@@ -18,7 +18,6 @@ axios.interceptors.response.use(
     }
     if (error.response.status === 401) {
       if (refreshing) {
-        // return Promise.reject(error);
         return;
       }
       refreshing = true;
@@ -31,14 +30,11 @@ axios.interceptors.response.use(
         .catch((error) => {
           refreshing = false;
           console.clear();
-          // console.log(error);
           return Promise.reject("error");
-          // return;
         });
     } else {
       console.clear();
       return Promise.reject("error");
-      // return;
     }
   }
 );
