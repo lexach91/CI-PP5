@@ -6,12 +6,12 @@ def status_code_handler(exc, context):
     # print(response)
 
     if (
-        response is not None
-        and response.status_code == 403
-        and (
-            response.data["detail"] == "No access token"
-            or response.data["detail"] == "Invalid access token"
-            or response.data["detail"] == "User not found"
+        response is not None and
+        response.status_code == 403 and
+        (
+            response.data["detail"] == "No access token" or
+            response.data["detail"] == "Invalid access token" or
+            response.data["detail"] == "User not found"
         )
     ):
         response.status_code = 401

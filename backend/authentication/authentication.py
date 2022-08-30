@@ -1,4 +1,5 @@
-import jwt, datetime
+import jwt
+import datetime
 from rest_framework import status, exceptions
 from rest_framework.response import Response
 from rest_framework.authentication import BaseAuthentication
@@ -54,8 +55,8 @@ def create_access_token(user_id):
     return jwt.encode(
         {
             "user_id": user_id,
-            "exp": datetime.datetime.utcnow()
-            + datetime.timedelta(seconds=600),
+            "exp": datetime.datetime.utcnow() +
+            datetime.timedelta(seconds=600),
             "iat": datetime.datetime.utcnow(),
         },
         "access_secret",

@@ -100,8 +100,8 @@ class LoginAPIView(APIView):
             key="access_token",
             value=access_token,
             httponly=True,
-            expires=datetime.datetime.utcnow()
-            + datetime.timedelta(seconds=600),
+            expires=datetime.datetime.utcnow() +
+            datetime.timedelta(seconds=600),
         )
 
         response.status_code = status.HTTP_200_OK
@@ -166,8 +166,8 @@ class RefreshTokenAPIView(APIView):
             key="access_token",
             value=access_token,
             httponly=True,
-            expires=datetime.datetime.utcnow()
-            + datetime.timedelta(seconds=600),
+            expires=datetime.datetime.utcnow() +
+            datetime.timedelta(seconds=600),
         )
 
         response.status_code = status.HTTP_200_OK
@@ -219,9 +219,9 @@ class ForgotPasswordAPIView(APIView):
         if user:
             token = "".join(
                 random.choices(
-                    string.ascii_lowercase
-                    + string.ascii_uppercase
-                    + string.digits,
+                    string.ascii_lowercase +
+                    string.ascii_uppercase +
+                    string.digits,
                     k=32,
                 )
             )
