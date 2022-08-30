@@ -48,7 +48,7 @@ const Home = () => {
       let camera = devices.find((device) => device.deviceId === cameraId);
       if (camera) {
         setCameraName(camera.label);
-      }      
+      }
     } else {
       setCameraName("Not set");
     }
@@ -58,7 +58,9 @@ const Home = () => {
     let microphoneId = user?.microphone_id;
     if (microphoneId) {
       let devices = await navigator.mediaDevices.enumerateDevices();
-      let microphone = devices.find((device) => device.deviceId === microphoneId);
+      let microphone = devices.find(
+        (device) => device.deviceId === microphoneId
+      );
       if (microphone) {
         setMicrophoneName(microphone.label);
       }
@@ -68,175 +70,176 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (user){
+    if (user) {
       getCameraName();
       getMicrophoneName();
     }
-  } , [user]);
-
+  }, [user]);
 
   const userDashboard = () => {
     if (!membershipLoading && membership && user) {
       return (
-        <div className="card grid" style={{width: "100%", padding:"1rem"}}>
-        <div className="grid col-12 col-offset-0 md:col-8 md:col-offset-2">
-          <h2 className="text-center col-12">
-            Welcome, {`${user.first_name} ${user.last_name}`}
-          </h2>
-          <div className="col-12 xl:col-6">
-            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
-              <div className="flex justify-content-between mb-3">
-                <div style={{ wordBreak:"break-all"}}>
-                  <span className="block text-green-500 font-medium mb-3">
-                    Profile
-                  </span>
-                  <div className="block font-medium text-xl">
-                    <p className="text-500">{user.first_name} {user.last_name}</p>
-                    <p className="text-500">{user.email}</p>
+        <div className="card grid" style={{ width: "100%", padding: "1rem" }}>
+          <div className="grid col-12 col-offset-0 md:col-8 md:col-offset-2">
+            <h2 className="text-center col-12">
+              Welcome, {`${user.first_name} ${user.last_name}`}
+            </h2>
+            <div className="col-12 xl:col-6">
+              <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+                <div className="flex justify-content-between mb-3">
+                  <div style={{ wordBreak: "break-all" }}>
+                    <span className="block text-green-500 font-medium mb-3">
+                      Profile
+                    </span>
+                    <div className="block font-medium text-xl">
+                      <p className="text-500">
+                        {user.first_name} {user.last_name}
+                      </p>
+                      <p className="text-500">{user.email}</p>
+                    </div>
+                  </div>
+                  <div
+                    className="flex flex-shrink-0 align-items-center justify-content-center bg-blue-100 border-round"
+                    style={{ width: "2.5rem", height: "2.5rem" }}>
+                    <i className="pi pi-user text-blue-500 text-xl"></i>
                   </div>
                 </div>
-                <div
-                  className="flex flex-shrink-0 align-items-center justify-content-center bg-blue-100 border-round"
-                  style={{ width: "2.5rem", height: "2.5rem" }}>
-                  <i className="pi pi-user text-blue-500 text-xl"></i>
-                </div>
-              </div>
-              <Button
-                label="Profile page"
-                icon="pi pi-user"
-                className="p-button-success w-full"
-                onClick={() => {
-                  navigate("/profile");
-                } }
-              />
-            </div>
-          </div>
-          <div className="col-12 xl:col-6">
-            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
-              <div className="flex justify-content-between mb-3">
-              <div style={{ wordBreak:"break-all"}}>
-                  <span className="block text-green-500 font-medium mb-3">
-                    Membership plan
-                  </span>
-                  <div className="block font-medium text-xl">
-                    <p className="text-500">{membership.name}</p>
-                    <p className="text-500">
-                      You can {membership.can_create_rooms ? "join and create" : "only join"} rooms
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="flex flex-shrink-0 align-items-center justify-content-center bg-orange-100 border-round"
-                  style={{ width: "2.5rem", height: "2.5rem" }}>
-                  <i className="pi pi-dollar text-orange-500 text-xl"></i>
-                </div>
-              </div>
-              {membership.can_create_rooms ? (
                 <Button
-                  label="See subscription"
-                  icon="pi pi-dollar"
+                  label="Profile page"
+                  icon="pi pi-user"
                   className="p-button-success w-full"
                   onClick={() => {
-                    navigate("/subscription");
-                  } }
+                    navigate("/profile");
+                  }}
                 />
-              ) : (
+              </div>
+            </div>
+            <div className="col-12 xl:col-6">
+              <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+                <div className="flex justify-content-between mb-3">
+                  <div style={{ wordBreak: "break-all" }}>
+                    <span className="block text-green-500 font-medium mb-3">
+                      Membership plan
+                    </span>
+                    <div className="block font-medium text-xl">
+                      <p className="text-500">{membership.name}</p>
+                      <p className="text-500">
+                        You can{" "}
+                        {membership.can_create_rooms
+                          ? "join and create"
+                          : "only join"}{" "}
+                        rooms
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="flex flex-shrink-0 align-items-center justify-content-center bg-orange-100 border-round"
+                    style={{ width: "2.5rem", height: "2.5rem" }}>
+                    <i className="pi pi-dollar text-orange-500 text-xl"></i>
+                  </div>
+                </div>
+                {membership.can_create_rooms ? (
+                  <Button
+                    label="See subscription"
+                    icon="pi pi-dollar"
+                    className="p-button-success w-full"
+                    onClick={() => {
+                      navigate("/subscription");
+                    }}
+                  />
+                ) : (
+                  <Button
+                    label="See pricing"
+                    icon="pi pi-dollar"
+                    className="p-button-success w-full"
+                    onClick={() => {
+                      navigate("/pricing");
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+            <div className="col-12 xl:col-6">
+              <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+                <div className="flex justify-content-between mb-3">
+                  <div style={{ wordBreak: "break-all" }}>
+                    <span className="block text-green-500 font-medium mb-3">
+                      Settings
+                    </span>
+                    <div className="block font-medium text-xl">
+                      <p className="text-500">
+                        Current camera:
+                        <Tooltip target=".pi-video" showDelay={100} />
+                        <i
+                          className="pi pi-video text-green-500 text-xl"
+                          data-pr-tooltip={cameraName}></i>
+                      </p>
+                      <p className="text-500">
+                        Current microphone:
+                        <Tooltip target=".pi-volume-up" showDelay={100} />
+                        <i
+                          className="pi pi-volume-up text-green-500 text-xl"
+                          data-pr-tooltip={microphoneName}></i>
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="flex flex-shrink-0 align-items-center justify-content-center bg-cyan-100 border-round"
+                    style={{ width: "2.5rem", height: "2.5rem" }}>
+                    <i className="pi pi-cog text-cyan-500 text-xl"></i>
+                  </div>
+                </div>
                 <Button
-                  label="See pricing"
-                  icon="pi pi-dollar"
+                  label="Settings"
+                  icon="pi pi-cog"
                   className="p-button-success w-full"
                   onClick={() => {
-                    navigate("/pricing");
-                  } }
+                    navigate("/settings");
+                  }}
                 />
-              )}
-
+              </div>
             </div>
-          </div>
-          <div className="col-12 xl:col-6">
-            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
-              <div className="flex justify-content-between mb-3">
-              <div style={{ wordBreak:"break-all"}}>
-                  <span className="block text-green-500 font-medium mb-3">
-                    Settings
-                  </span>
-                  <div className="block font-medium text-xl">
-                    <p className="text-500">
-                      Current camera: 
-                      <Tooltip target=".pi-video" showDelay={100}/>
-                      <i className="pi pi-video text-green-500 text-xl" data-pr-tooltip={cameraName}></i>
-                    </p>
-                    <p className="text-500">
-                      Current microphone:
-                      <Tooltip target=".pi-volume-up" showDelay={100}/>
-                      <i className="pi pi-volume-up text-green-500 text-xl" data-pr-tooltip={microphoneName}></i>
-                    </p>
+            <div className="col-12 xl:col-6">
+              <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
+                <div className="flex justify-content-between mb-3">
+                  <div style={{ wordBreak: "break-all" }}>
+                    <span className="block text-green-500 font-medium mb-3">
+                      Meetings
+                    </span>
+                    <div className="block font-medium text-xl">
+                      <p className="text-500">Start or join a meeting</p>
+                      <p className="text-500">Use the buttons bellow</p>
+                    </div>
+                  </div>
+                  <div
+                    className="flex flex-shrink-0 align-items-center justify-content-center bg-purple-100 border-round"
+                    style={{ width: "2.5rem", height: "2.5rem" }}>
+                    <i className="pi pi-video text-purple-500 text-xl"></i>
                   </div>
                 </div>
-                <div
-                  className="flex flex-shrink-0 align-items-center justify-content-center bg-cyan-100 border-round"
-                  style={{ width: "2.5rem", height: "2.5rem" }}>
-                  <i className="pi pi-cog text-cyan-500 text-xl"></i>
-                </div>
-              </div>
-              <Button
-                label="Settings"
-                icon="pi pi-cog"
-                className="p-button-success w-full"
-                onClick={() => {
-                  navigate("/settings");
-                } }
-              />
-            </div>
-          </div>
-          <div className="col-12 xl:col-6">
-            <div className="surface-0 shadow-2 p-3 border-1 border-50 border-round h-full">
-              <div className="flex justify-content-between mb-3">
-              <div style={{ wordBreak:"break-all"}}>
-                  <span className="block text-green-500 font-medium mb-3">
-                    Meetings
-                  </span>
-                  <div className="block font-medium text-xl">
-                    <p className="text-500">
-                      Start or join a meeting
-                    </p>
-                    <p className="text-500">
-                      Use the buttons bellow
-                    </p>
-                  </div>
-                  
-
-                </div>
-                <div
-                  className="flex flex-shrink-0 align-items-center justify-content-center bg-purple-100 border-round"
-                  style={{ width: "2.5rem", height: "2.5rem" }}>
-                  <i className="pi pi-video text-purple-500 text-xl"></i>
-                </div>
-              </div>
-                <span className="p-buttonset w-full">     
-                    <Button
-                      label="Create meeting"
-                      icon="pi pi-plus"
-                      className="p-button-success w-6"
-                      disabled={!membership.can_create_rooms}
-                      onClick={() => {
-                        navigate("/create-room");
-                      } }
-                    />                    
-                    <Button
-                      label="Join meeting"
-                      icon="pi pi-link"
-                      className="p-button-success w-6"
-                      onClick={() => {
-                        setDialogVisible(true);
-                      }}
-                    />
+                <span className="p-buttonset w-full">
+                  <Button
+                    label="Create meeting"
+                    icon="pi pi-plus"
+                    className="p-button-success w-6"
+                    disabled={!membership.can_create_rooms}
+                    onClick={() => {
+                      navigate("/create-room");
+                    }}
+                  />
+                  <Button
+                    label="Join meeting"
+                    icon="pi pi-link"
+                    className="p-button-success w-6"
+                    onClick={() => {
+                      setDialogVisible(true);
+                    }}
+                  />
                 </span>
                 {dialog()}
-              
+              </div>
             </div>
           </div>
-        </div>
         </div>
       );
     }
@@ -253,7 +256,7 @@ const Home = () => {
             setDialogVisible(false);
             setErrorMessage("");
             setRoomToken("");
-          } }
+          }}
         />
         <Button
           label="Join"
@@ -261,10 +264,12 @@ const Home = () => {
           className="p-button-success w-6 m-2"
           disabled={!readyToJoin}
           onClick={() => {
-            if(roomToken && roomToken.length === 32) {
+            if (roomToken && roomToken.length === 32) {
               setDialogVisible(false);
-              if(roomPassword) {
-                navigate("/join-room/" + roomToken + `?password=${roomPassword}`);
+              if (roomPassword) {
+                navigate(
+                  "/join-room/" + roomToken + `?password=${roomPassword}`
+                );
               } else {
                 navigate("/join-room/" + roomToken);
               }
@@ -278,14 +283,11 @@ const Home = () => {
             setTimeout(() => {
               setErrorMessage("");
             }, 3000);
-
-
-          } }
+          }}
         />
       </div>
-            
-    )
-  }
+    );
+  };
 
   const dialog = () => {
     return (
@@ -298,8 +300,7 @@ const Home = () => {
           setDialogVisible(false);
           setRoomToken("");
           setErrorMessage("");
-        } }
-      >
+        }}>
         <div className="flex flex-column">
           <InputText
             placeholder="Room token"
@@ -308,9 +309,11 @@ const Home = () => {
             loading={checkingRoom}
             onChange={(e) => {
               setRoomToken(e.target.value);
-            } }
-          />          
-          <div className="text-red-500 text-left w-full mt-2">{errorMessage}</div>
+            }}
+          />
+          <div className="text-red-500 text-left w-full mt-2">
+            {errorMessage}
+          </div>
           {roomProtected && (
             <div className="flex flex-column">
               <Password
@@ -322,22 +325,24 @@ const Home = () => {
                 feedback={false}
                 onChange={(e) => {
                   setRoomPassword(e.target.value);
-                } }
+                }}
               />
               <div className="text-red-500 text-left w-full mt-2">
                 This room is protected. Enter the password
-                </div>
+              </div>
             </div>
           )}
         </div>
       </Dialog>
     );
-  }
+  };
 
   const checkRoom = async (token) => {
     try {
-      const response = await axios.get(`rooms/is-protected?room_token=${token}`);
-      if(response.data.protected) {
+      const response = await axios.get(
+        `rooms/is-protected?room_token=${token}`
+      );
+      if (response.data.protected) {
         setRoomProtected(true);
       } else {
         setRoomProtected(false);
@@ -349,25 +354,22 @@ const Home = () => {
       setErrorMessage("Something went wrong");
       setTimeout(() => {
         setErrorMessage("");
-      } , 3000);
+      }, 3000);
     }
-  }
+  };
 
   useEffect(() => {
-    if(roomToken && roomToken.length === 32) {
+    if (roomToken && roomToken.length === 32) {
       setCheckingRoom(true);
       checkRoom(roomToken);
     }
-  } , [roomToken]);
+  }, [roomToken]);
 
   useEffect(() => {
-    if(roomPassword && roomPassword.length > 0) {
+    if (roomPassword && roomPassword.length > 0) {
       setReadyToJoin(true);
     }
-  } , [roomPassword]);
-
-
-
+  }, [roomPassword]);
 
   return loading ? (
     <div
@@ -399,10 +401,10 @@ const Home = () => {
         <div className="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
           <section className="my-0 mx-auto md:mx-0">
             <span className="block text-5xl font-bold mb-1">
-            <span className="text-gray-500">Dr</span>
-            <span className="text-indigo-200">.</span>
-            <span className="text-green-600">Meetings</span>{" "}
-              - is an absolutely new level of
+              <span className="text-gray-500">Dr</span>
+              <span className="text-indigo-200">.</span>
+              <span className="text-green-600">Meetings</span> - is an
+              absolutely new level of
             </span>
             <div className="text-5xl text-primary font-bold mb-3">
               cloud meetings

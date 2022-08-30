@@ -12,16 +12,12 @@ import { Toolbar } from "primereact/toolbar";
 import { useNavigate } from "react-router-dom";
 
 const UserNavbar = () => {
-  const {
-    isAuthenticated,
-    user,
-    membershipLoading,
-    membership,
-  } = useSelector((state) => state.auth);
+  const { isAuthenticated, user, membershipLoading, membership } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [sidebarVisible, setSidebarVisible] = useState(false);
- 
 
   const logoutButton = (
     <React.Fragment>
@@ -92,87 +88,87 @@ const UserNavbar = () => {
         style={{ cursor: "pointer", userSelect: "none" }}>
         {userAvatar()}
       </div>
-        {window.location.pathname !== "/" ? homeButton : null}
+      {window.location.pathname !== "/" ? homeButton : null}
     </React.Fragment>
   );
-  return (isAuthenticated && user) && (
-    <header className="navbar">
-      <nav className="navbar-nav">
-        <Toolbar left={userButton} right={logoutButton} />
-      </nav>
-      <Sidebar
-        visible={sidebarVisible}
-        onHide={() => setSidebarVisible(false)}
-        >
-        <div className="grid">
-          <div className="col-12">
-            <Card
-              style={{wordBreak:"break-all"}}
-              >
-              <div className="flex">
-                <div className="flex justify-content-center align-items-center">
-                  <Avatar
-                    size="xlarge"
-                    image={
-                      user.avatar
-                        ? user.avatar
-                        : "https://res.cloudinary.com/lexach91/image/upload/v1653724113/lklqlcqgl2pklvdi9rbt.svg"
-                    }
-                  />
+  return (
+    isAuthenticated &&
+    user && (
+      <header className="navbar">
+        <nav className="navbar-nav">
+          <Toolbar left={userButton} right={logoutButton} />
+        </nav>
+        <Sidebar
+          visible={sidebarVisible}
+          onHide={() => setSidebarVisible(false)}>
+          <div className="grid">
+            <div className="col-12">
+              <Card style={{ wordBreak: "break-all" }}>
+                <div className="flex">
+                  <div className="flex justify-content-center align-items-center">
+                    <Avatar
+                      size="xlarge"
+                      image={
+                        user.avatar
+                          ? user.avatar
+                          : "https://res.cloudinary.com/lexach91/image/upload/v1653724113/lklqlcqgl2pklvdi9rbt.svg"
+                      }
+                    />
+                  </div>
+                  <Divider layout="vertical" />
+                  <div>
+                    <h5>{user.first_name + " " + user.last_name}</h5>
+                    <p>{user.email}</p>
+                  </div>
                 </div>
-                <Divider layout="vertical" />
-                <div>
-                  <h5>{user.first_name + " " + user.last_name}</h5>
-                  <p>{user.email}</p>
-                </div>
-              </div>
-            </Card>
-          </div>
-          <div className="col-12">
-            <Button
-              label="Home"
-              icon="pi pi-home"
-              className="p-button-secondary mb-2 w-full"
-              onClick={() => {
-                navigate("/");
-              }}
-            />
-          </div>
-          <div className="col-12">
-            <Button
-              label="Profile"
-              icon="pi pi-user"
-              className="p-button-secondary mb-2 w-full"
-              onClick={() => {
-                navigate("/profile");
-              }}
-            />
-          </div>
-          <div className="col-12">
-            <Button
-              label="Settings"
-              icon="pi pi-cog"
-              className="p-button-secondary mb-2 w-full"
-              onClick={() => {
-                navigate("/settings");
-              }}
-            />
-          </div>
-          {!membershipLoading && membership && membership.can_create_rooms && (
+              </Card>
+            </div>
             <div className="col-12">
               <Button
-                label="Create Room"
-                icon="pi pi-plus"
+                label="Home"
+                icon="pi pi-home"
                 className="p-button-secondary mb-2 w-full"
                 onClick={() => {
-                  navigate("/create-room");
+                  navigate("/");
                 }}
               />
             </div>
-          )}
-        </div>
-      </Sidebar>
-    </header>
+            <div className="col-12">
+              <Button
+                label="Profile"
+                icon="pi pi-user"
+                className="p-button-secondary mb-2 w-full"
+                onClick={() => {
+                  navigate("/profile");
+                }}
+              />
+            </div>
+            <div className="col-12">
+              <Button
+                label="Settings"
+                icon="pi pi-cog"
+                className="p-button-secondary mb-2 w-full"
+                onClick={() => {
+                  navigate("/settings");
+                }}
+              />
+            </div>
+            {!membershipLoading && membership && membership.can_create_rooms && (
+              <div className="col-12">
+                <Button
+                  label="Create Room"
+                  icon="pi pi-plus"
+                  className="p-button-secondary mb-2 w-full"
+                  onClick={() => {
+                    navigate("/create-room");
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </Sidebar>
+      </header>
+    )
   );
 };
 

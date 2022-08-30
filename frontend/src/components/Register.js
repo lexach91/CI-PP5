@@ -123,7 +123,7 @@ const Register = () => {
         className="p-button-text"
         autoFocus
         onClick={() => {
-          setShowMessage(false);          
+          setShowMessage(false);
         }}
       />
     </div>
@@ -176,8 +176,7 @@ const Register = () => {
           header="Terms and Conditions"
           breakpoints={{ "960px": "80vw", "650px": "100vw" }}
           style={{ width: "60vw" }}
-          contentClassName="p-3"
-          >
+          contentClassName="p-3">
           <TermsHtml />
         </Dialog>
 
@@ -371,7 +370,7 @@ const Register = () => {
                     render={({ input, meta }) => (
                       <div className="field-checkbox">
                         <Checkbox
-                          inputId="accept"                          
+                          inputId="accept"
                           {...input}
                           className={classNames({
                             "p-invalid": isFormFieldValid(meta),
@@ -382,16 +381,15 @@ const Register = () => {
                           className={classNames({
                             "p-error": isFormFieldValid(meta),
                           })}>
-                          I agree to the 
-                          <a 
+                          I agree to the
+                          <a
                             href="javascript:(void(0))"
                             onClick={() => setShowMessage(true)}
                             className="text-blue-500"
-                            aria-label="Terms and Conditions"
-                          > {" "}Terms and Conditions</a>
-                            
-
-
+                            aria-label="Terms and Conditions">
+                            {" "}
+                            Terms and Conditions
+                          </a>
                         </label>
                       </div>
                     )}

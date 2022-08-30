@@ -35,7 +35,7 @@ export const register = createAsyncThunk(
         country,
         birth_date,
       });
-        return response.data;        
+      return response.data;
     } catch (error) {
       let errorsData = error.response.data;
       let errors = [];
@@ -53,7 +53,7 @@ export const getUser = createAsyncThunk("auth/getUser", async (_, thunkAPI) => {
     const response = await axios.get("user");
     const { dispatch } = thunkAPI;
     dispatch(getMembership());
-    return response.data;    
+    return response.data;
   } catch (error) {
     const { dispatch } = thunkAPI;
     dispatch(refreshToken());
@@ -67,7 +67,7 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
     const response = await axios.post("login", { email, password });
     const { dispatch } = thunkAPI;
     dispatch(getUser());
-    return response.data;      
+    return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.error);
   }
@@ -88,7 +88,7 @@ export const checkAuth = createAsyncThunk(
     try {
       const response = await axios.get("verify-token", {
         withCredentials: true,
-      });      
+      });
       const { dispatch } = thunkAPI;
       dispatch(getUser());
       console.clear();
@@ -105,9 +105,9 @@ export const refreshToken = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.post("refresh", { withCredentials: true });
-        const { dispatch } = thunkAPI;
-        dispatch(checkAuth());
-        return response.data;
+      const { dispatch } = thunkAPI;
+      dispatch(checkAuth());
+      return response.data;
     } catch (error) {
       console.clear();
       return thunkAPI.rejectWithValue(error.response.data.error);
@@ -120,7 +120,7 @@ export const getMembership = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get("membership");
-        return response.data;
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.error);
     }
@@ -138,14 +138,14 @@ const authSlice = createSlice({
       state.error = null;
     },
     resetMessage: (state) => {
-        state.message = null;
-        },
+      state.message = null;
+    },
     setError: (state, action) => {
       state.error = action.payload;
     },
     setMessage: (state, action) => {
-        state.message = action.payload;
-    }
+      state.message = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -237,6 +237,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetRedirect, resetError, resetMessage, setError, setMessage } = authSlice.actions;
+export const { resetRedirect, resetError, resetMessage, setError, setMessage } =
+  authSlice.actions;
 
 export default authSlice.reducer;

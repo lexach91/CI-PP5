@@ -14,7 +14,9 @@ import { Link } from "react-router-dom";
 const Login = () => {
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
-  const { loading, redirect, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading, redirect, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
 
   const validate = (data) => {
     let errors = {};
@@ -82,85 +84,97 @@ const Login = () => {
     </div>
   ) : (
     <VisitorLayout title="Login">
-    <div className="form-login p-5">
-      <div className="flex justify-content-center h-full">
-        <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6">
-          <h5 className="text-center">Login</h5>
-          <Form
-            onSubmit={onSubmit}
-            initialValues={{ email: "", password: "" }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <form onSubmit={handleSubmit} className="p-fluid">
-                <Field
-                  name="email"
-                  render={({ input, meta }) => (
-                    <div className="field">
-                      <span className="p-float-label">
-                        <InputText
-                          id="email"
-                          {...input}
-                          className={classNames({
-                            "p-invalid": isFormFieldValid(meta),
-                          })}
-                        />
-                        <label
-                          htmlFor="email"
-                          className={classNames({
-                            "p-error": isFormFieldValid(meta),
-                          })}>
-                          Email*
-                        </label>
-                      </span>
-                      {getFormErrorMessage(meta)}
-                    </div>
-                  )}
-                />
-                <Field
-                  name="password"
-                  render={({ input, meta }) => (
-                    <div className="field">
-                      <span className="p-float-label">
-                        <Password
-                          id="password"
-                          {...input}
-                          toggleMask
-                          feedback={false}
-                          className={classNames({
-                            "p-invalid": isFormFieldValid(meta),
-                          })}
-                        />
-                        <label
-                          htmlFor="password"
-                          className={classNames({
-                            "p-error": isFormFieldValid(meta),
-                          })}>
-                          Password*
-                        </label>
-                      </span>
-                      {getFormErrorMessage(meta)}
-                    </div>
-                  )}
-                />
+      <div className="form-login p-5">
+        <div className="flex justify-content-center h-full">
+          <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+            <h5 className="text-center">Login</h5>
+            <Form
+              onSubmit={onSubmit}
+              initialValues={{ email: "", password: "" }}
+              validate={validate}
+              render={({ handleSubmit }) => (
+                <form onSubmit={handleSubmit} className="p-fluid">
+                  <Field
+                    name="email"
+                    render={({ input, meta }) => (
+                      <div className="field">
+                        <span className="p-float-label">
+                          <InputText
+                            id="email"
+                            {...input}
+                            className={classNames({
+                              "p-invalid": isFormFieldValid(meta),
+                            })}
+                          />
+                          <label
+                            htmlFor="email"
+                            className={classNames({
+                              "p-error": isFormFieldValid(meta),
+                            })}>
+                            Email*
+                          </label>
+                        </span>
+                        {getFormErrorMessage(meta)}
+                      </div>
+                    )}
+                  />
+                  <Field
+                    name="password"
+                    render={({ input, meta }) => (
+                      <div className="field">
+                        <span className="p-float-label">
+                          <Password
+                            id="password"
+                            {...input}
+                            toggleMask
+                            feedback={false}
+                            className={classNames({
+                              "p-invalid": isFormFieldValid(meta),
+                            })}
+                          />
+                          <label
+                            htmlFor="password"
+                            className={classNames({
+                              "p-error": isFormFieldValid(meta),
+                            })}>
+                            Password*
+                          </label>
+                        </span>
+                        {getFormErrorMessage(meta)}
+                      </div>
+                    )}
+                  />
 
-                <Button
-                  type="submit"
-                  label="Login"
-                  className="mt-2"
-                  icon="pi pi-user"
-                />
-              </form>
-            )}
-          />
-          <p className="text-muted mt-3">
-            Don't have an account? <Link className="text-blue-500" to="/register" aria-label="Register">Register</Link>
-          </p>
-          <p className="text-muted mt-3">
-            Forgot your password? <Link className="text-blue-500" to="/reset-password" aria-label="Reset Password">Reset Password</Link>
-          </p>
+                  <Button
+                    type="submit"
+                    label="Login"
+                    className="mt-2"
+                    icon="pi pi-user"
+                  />
+                </form>
+              )}
+            />
+            <p className="text-muted mt-3">
+              Don't have an account?{" "}
+              <Link
+                className="text-blue-500"
+                to="/register"
+                aria-label="Register">
+                Register
+              </Link>
+            </p>
+            <p className="text-muted mt-3">
+              Forgot your password?{" "}
+              <Link
+                className="text-blue-500"
+                to="/reset-password"
+                aria-label="Reset Password">
+                Reset Password
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
     </VisitorLayout>
   );
 };

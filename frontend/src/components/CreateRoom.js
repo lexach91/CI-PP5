@@ -24,24 +24,24 @@ const CreateRoom = () => {
   const messageRef = useRef();
   const [maxGuests, setMaxGuests] = useState(3);
   const navigate = useNavigate();
-  const [ restricted, setRestricted ] = useState(false);
+  const [restricted, setRestricted] = useState(false);
 
   useEffect(() => {
-      if(isAuthenticated === false && loading === false) {
-          dispatch(setError("You must be logged in to access this page."));
-          setRestricted(true);
-        }
+    if (isAuthenticated === false && loading === false) {
+      dispatch(setError("You must be logged in to access this page."));
+      setRestricted(true);
+    }
   }, [isAuthenticated, loading]);
 
-  if(restricted) {
-      dispatch(setError("You must be logged in to access this page."));
-      navigate("/");
+  if (restricted) {
+    dispatch(setError("You must be logged in to access this page."));
+    navigate("/");
   }
 
   useEffect(() => {
     if (redirect) {
       dispatch(resetRedirect());
-    }    
+    }
   }, [redirect]);
 
   useEffect(() => {
@@ -52,8 +52,8 @@ const CreateRoom = () => {
       return;
     }
     if (!membership.can_create_rooms) {
-      dispatch(setError("You do not have permission to create a room."));      
-      navigate("/");        
+      dispatch(setError("You do not have permission to create a room."));
+      navigate("/");
     }
   }, [membershipLoading, membership]);
 
@@ -90,9 +90,9 @@ const CreateRoom = () => {
   const onError = (error) => {
     setSubmitting(false);
     if (error.response.data.error) {
-      dispatch(setError(error.response.data.error));      
+      dispatch(setError(error.response.data.error));
     } else {
-      dispatch(setError("An error occurred."));      
+      dispatch(setError("An error occurred."));
     }
   };
 
@@ -149,7 +149,7 @@ const CreateRoom = () => {
                 toggleMask={true}
               />
             </div>
-            
+
             <div className="flex justify-content-between align-items-center m-2">
               <p>Max Guests</p>
               <div>
@@ -167,7 +167,11 @@ const CreateRoom = () => {
               <div>
                 <RadioButton
                   className="mr-1"
-                  tooltip={membership?.guest_limit < 8 ? "Your membership does not allow you to use this layout" : "Host + 8 guests"}
+                  tooltip={
+                    membership?.guest_limit < 8
+                      ? "Your membership does not allow you to use this layout"
+                      : "Host + 8 guests"
+                  }
                   name="max_guests"
                   value={8}
                   onChange={(e) => setMaxGuests(e.value)}
@@ -179,7 +183,11 @@ const CreateRoom = () => {
               <div>
                 <RadioButton
                   className="mr-1"
-                  tooltip={membership?.guest_limit < 11 ? "Your membership does not allow you to use this layout" : "Host + 11 guests"}
+                  tooltip={
+                    membership?.guest_limit < 11
+                      ? "Your membership does not allow you to use this layout"
+                      : "Host + 11 guests"
+                  }
                   name="max_guests"
                   value={11}
                   onChange={(e) => setMaxGuests(e.value)}

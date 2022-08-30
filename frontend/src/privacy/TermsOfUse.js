@@ -6,7 +6,8 @@ import UserLayout from "../layouts/UserLayout";
 import { Button } from "primereact/button";
 
 const TermsHtml = () => {
-  return (<>
+  return (
+    <>
       <h2>Website Terms of Use</h2>
 
       <p>Version 1.0</p>
@@ -635,38 +636,40 @@ const TermsOfUse = () => {
   const [buttonVisible, setButtonVisible] = useState(false);
   const goToTopButton = () => {
     return (
-        <Button
-            className={!buttonVisible ? "hidden" : "p-button-secondary p-button-rounded"}
-            icon="pi pi-arrow-up"
-            onClick={() => {
-                window.scrollTo({
-                    top:0,
-                    behavior: 'smooth'
-                });
-            }}
-            style={{
-                position: "fixed",
-                bottom: "20px",
-                right: "20px",
-                zIndex: "1000",
-            }}
-            />            
-    )
+      <Button
+        className={
+          !buttonVisible ? "hidden" : "p-button-secondary p-button-rounded"
         }
-
-    useEffect(() => {
-        window.addEventListener("scroll", () => {
-            if (window.pageYOffset > 500) {
-                setButtonVisible(true);
-            } else {
-                setButtonVisible(false);
-            }
+        icon="pi pi-arrow-up"
+        onClick={() => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
           });
-        window.scrollTo({
-            top:0,
-            behavior: 'smooth'
-        });
-    }, []);
+        }}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          zIndex: "1000",
+        }}
+      />
+    );
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset > 500) {
+        setButtonVisible(true);
+      } else {
+        setButtonVisible(false);
+      }
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   return loading ? (
     <div

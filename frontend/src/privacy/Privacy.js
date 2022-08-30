@@ -271,9 +271,9 @@ const Privacy = () => {
       }
     });
     window.scrollTo({
-      top:0,
-      behavior: 'smooth'
-  });
+      top: 0,
+      behavior: "smooth",
+    });
   }, []);
 
   return loading ? (

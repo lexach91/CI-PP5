@@ -16,7 +16,6 @@ import { Dialog } from "primereact/dialog";
 import { Password } from "primereact/password";
 import { useNavigate } from "react-router-dom";
 
-
 const Profile = () => {
   const { isAuthenticated, user, redirect, loading } = useSelector(
     (state) => state.auth
@@ -45,18 +44,18 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [ restricted, setRestricted ] = useState(false);
+  const [restricted, setRestricted] = useState(false);
 
   useEffect(() => {
-      if(isAuthenticated === false && loading === false) {
-          dispatch(setError("You must be logged in to access this page."));
-          setRestricted(true);
-        }
+    if (isAuthenticated === false && loading === false) {
+      dispatch(setError("You must be logged in to access this page."));
+      setRestricted(true);
+    }
   }, [isAuthenticated, loading]);
 
-  if(restricted) {
-      dispatch(setError("You must be logged in to access this page."));
-      navigate("/");
+  if (restricted) {
+    dispatch(setError("You must be logged in to access this page."));
+    navigate("/");
   }
 
   useEffect(() => {
@@ -89,7 +88,7 @@ const Profile = () => {
     }
   }, [isAuthenticated, user, redirect]);
 
-  const onSubmit = async (data) => {    
+  const onSubmit = async (data) => {
     setFormUploading(true);
     const formData = avatarFile || new FormData();
     formData.append("first_name", firstName);
@@ -168,23 +167,26 @@ const Profile = () => {
       new_password: newPassword,
       confirm_password: confirmPassword,
     };
-    await axios.post("change-password", payload).then((data) => {
-      toast.current.show({
-        severity: "success",
-        detail: "Password changed successfully",
+    await axios
+      .post("change-password", payload)
+      .then((data) => {
+        toast.current.show({
+          severity: "success",
+          detail: "Password changed successfully",
+        });
+        setPasswordUpdating(false);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setDialogVisible(false);
+      })
+      .catch((error) => {
+        toast.current.show({
+          severity: "error",
+          detail: error.response.data.error,
+        });
+        setPasswordUpdating(false);
       });
-      setPasswordUpdating(false);
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setDialogVisible(false);
-    }).catch((error) => {
-      toast.current.show({
-        severity: "error",
-        detail: error.response.data.error,
-      });
-      setPasswordUpdating(false);
-    });
   };
 
   const onChangeOldPassword = (e) => {
@@ -229,8 +231,7 @@ const Profile = () => {
               }}
             />
           </div>
-        }
-      >
+        }>
         <div className="form-group">
           <label htmlFor="oldPassword">Old Password</label>
           <Password
@@ -266,7 +267,6 @@ const Profile = () => {
       </Dialog>
     );
   };
-
 
   return loading ? (
     <div
@@ -443,12 +443,8 @@ const Profile = () => {
           <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
             <div className="text-500 w-6 md:w-2 font-medium">Password</div>
             <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 line-height-3">
-              
-              <div className="text-900">
-                *********  
-              </div>
+              <div className="text-900">*********</div>
               {passwordDialog()}
-              
             </div>
             <div className="w-6 md:w-2 flex justify-content-end">
               <Button

@@ -81,18 +81,18 @@ const Room = () => {
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const toast = useRef();
-  const [ restricted, setRestricted ] = useState(false);
+  const [restricted, setRestricted] = useState(false);
 
   useEffect(() => {
-      if(isAuthenticated === false && loading === false) {
-          dispatch(setError("You must be logged in to access this page."));
-          setRestricted(true);
-        }
+    if (isAuthenticated === false && loading === false) {
+      dispatch(setError("You must be logged in to access this page."));
+      setRestricted(true);
+    }
   }, [isAuthenticated, loading]);
 
-  if(restricted) {
-      dispatch(setError("You must be logged in to access this page."));
-      navigate("/");
+  if (restricted) {
+    dispatch(setError("You must be logged in to access this page."));
+    navigate("/");
   }
 
   useEffect(() => {
@@ -119,7 +119,11 @@ const Room = () => {
             window.location.reload();
           };
           webSocket.current.onerror = (error) => {
-            dispatch(setError("Something went wrong or you are not allowed to join this room."));
+            dispatch(
+              setError(
+                "Something went wrong or you are not allowed to join this room."
+              )
+            );
             // after the toast is hidden, redirect to home page
             setTimeout(() => {
               window.location.href = "/";
@@ -129,10 +133,10 @@ const Room = () => {
         .catch((error) => {
           console.log(error);
           dispatch(setError("Error getting user media."));
-          
+
           leaveRoom();
-          
-          navigate("/");       
+
+          navigate("/");
         });
     }
   }, [roomToken, isAuthenticated, user]);
@@ -144,7 +148,6 @@ const Room = () => {
     }
   }, [hostId.current]);
 
-  
   const sendSignal = (action, message) => {
     let data = {
       peer: user.id,
@@ -179,12 +182,10 @@ const Room = () => {
     }
     let peer = data.peer;
 
-    
     if (action === "room-deleted") {
       if (user.id != hostId.current) {
-        
         dispatch(setError("This room has been deleted."));
-        
+
         setTimeout(() => {
           window.location.href = "/";
         }, 3000);
@@ -216,19 +217,19 @@ const Room = () => {
   };
 
   const createOffer = (peer, channelName) => {
-    let stream = localVideo.current.srcObject || localVideo.current.mozSrcObject;
+    let stream =
+      localVideo.current.srcObject || localVideo.current.mozSrcObject;
     if (!stream) {
       reloadLocalVideo();
       createOffer(peer, channelName);
       return;
-    };
+    }
     let peerConnection = new Peer({
       initiator: true,
       trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
       reconnectTimer: 8000,
-      // iceTransportPolicy: "relay",
     });
     peerConnection.on("signal", (signal) => {
       sendSignal("new-offer", {
@@ -274,19 +275,19 @@ const Room = () => {
   };
 
   const createAnswer = (offer, peer, receiverChannelName) => {
-    let stream = localVideo.current.srcObject || localVideo.current.mozSrcObject;
+    let stream =
+      localVideo.current.srcObject || localVideo.current.mozSrcObject;
     if (!stream) {
       reloadLocalVideo();
       createAnswer(offer, peer, receiverChannelName);
       return;
-    };
+    }
     let peerConnection = new Peer({
       initiator: false,
       trickle: true,
       stream: localVideo.current.srcObject,
       config: servers,
       reconnectTimer: 8000,
-      // iceTransportPolicy: "relay",
     });
     peerConnection.on("signal", (signal) => {
       sendSignal("new-answer", {
@@ -299,7 +300,6 @@ const Room = () => {
       deleteGuest(peer);
     });
     peerConnection.on("error", (error) => {
-      // console.log(error);
       deleteGuest(peer);
       createOffer(peer, receiverChannelName);
     });
@@ -338,8 +338,7 @@ const Room = () => {
     } else {
       guest.peerConnection.on("open", () => {
         guest.peerConnection.send(JSON.stringify(data));
-      }
-      );
+      });
     }
   };
 
@@ -749,7 +748,11 @@ const Room = () => {
   const renderGuests = () => {
     let windowWidth = window.innerWidth;
     let screenOrientation = window.window.screen.orientation.type;
-    if (windowWidth < 1025 && (screenOrientation === "portrait-primary" || screenOrientation === "portrait-secondary")) {
+    if (
+      windowWidth < 1025 &&
+      (screenOrientation === "portrait-primary" ||
+        screenOrientation === "portrait-secondary")
+    ) {
       return (
         <Galleria
           value={guests.filter((guest) => !guest.isHost)}
@@ -760,7 +763,7 @@ const Room = () => {
           autoPlay={false}
           circular={false}
           verticalThumbnailViewPortHeight={"50px"}
-          style={{width: "100%"}}
+          style={{ width: "100%" }}
           showThumbnails={guests.filter((guest) => !guest.isHost).length > 1}
         />
       );
@@ -840,13 +843,13 @@ const Room = () => {
   const goFullScreen = () => {
     document.getElementsByClassName("room")[0].requestFullscreen();
     setIsFullScreen(true);
-  }
+  };
 
   const exitFullScreen = () => {
     document.exitFullscreen();
     setIsFullScreen(false);
-  }
-  
+  };
+
   return isLoading ? (
     <div className="loading w-12 md:w-4 md:mx-auto overflow-hidden">
       <Toast ref={toast} />
@@ -881,15 +884,27 @@ const Room = () => {
       <Toast ref={toast} />
       <div className="grid grid-nogutter h-full">
         <div
-          className={`${(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? "col-fixed flex-column p-auto  gap-2" : "col-12 flex-row p-3 gap-2"}  room-controls flex justify-content-center align-items-center`}
-          style={(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? { width: "100px" } : {height:"7%"}}>
+          className={`${
+            window.innerWidth > 1024 ||
+            window.screen.orientation.type === "landscape-primary" ||
+            window.screen.orientation.type === "landscape-secondary"
+              ? "col-fixed flex-column p-auto  gap-2"
+              : "col-12 flex-row p-3 gap-2"
+          }  room-controls flex justify-content-center align-items-center`}
+          style={
+            window.innerWidth > 1024 ||
+            window.screen.orientation.type === "landscape-primary" ||
+            window.screen.orientation.type === "landscape-secondary"
+              ? { width: "100px" }
+              : { height: "7%" }
+          }>
           {isHost && (
             <Button
               icon="pi pi-copy"
               className="p-button-rounded p-button-secondary p-button-lg"
               tooltip="Copy room token to clipboard to invite others"
               onClick={copyRoomTokenToClipboard}
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
             />
           )}
           {localCamOn ? (
@@ -898,7 +913,7 @@ const Room = () => {
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-video"
               onClick={turnOffYourCamera}
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
             />
           ) : (
             <Button
@@ -906,7 +921,7 @@ const Room = () => {
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-video"
               onClick={turnOnYourCamera}
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
             />
           )}
           {!selfMutedRef.current ? (
@@ -914,7 +929,7 @@ const Room = () => {
               tooltip="Turn off your mic"
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-volume-up"
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
               onClick={() => {
                 turnOffYourMic();
                 sendDataToEveryone({
@@ -928,7 +943,7 @@ const Room = () => {
               tooltip="Turn on your mic"
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-volume-off"
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
               onClick={() => {
                 turnOnYourMic();
                 sendDataToEveryone({
@@ -941,20 +956,20 @@ const Room = () => {
           )}
           {isHost &&
             (!roomMutedRef.current ? (
-              <Button                
+              <Button
                 tooltip="Turn off all mics"
                 icon="pi pi-user-minus"
                 className="p-button-rounded p-button-secondary p-button-lg"
                 onClick={muteAllGuestsHandler}
-                style={{width:"2.5rem", height:"2.5rem"}}
+                style={{ width: "2.5rem", height: "2.5rem" }}
               />
             ) : (
-              <Button                
+              <Button
                 tooltip="Turn on all mics"
                 icon="pi pi-user-plus"
                 className="p-button-rounded p-button-danger p-button-lg"
                 onClick={unmuteAllGuestsHandler}
-                style={{width:"2.5rem", height:"2.5rem"}}
+                style={{ width: "2.5rem", height: "2.5rem" }}
               />
             ))}
           {isHost ? (
@@ -963,7 +978,7 @@ const Room = () => {
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-trash"
               onClick={deleteRoom}
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
             />
           ) : (
             <Button
@@ -971,7 +986,7 @@ const Room = () => {
               className="p-button-rounded p-button-danger p-button-lg"
               icon="pi pi-power-off"
               onClick={leaveRoom}
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
             />
           )}
           {isFullScreen ? (
@@ -980,7 +995,7 @@ const Room = () => {
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-window-minimize"
               onClick={exitFullScreen}
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
             />
           ) : (
             <Button
@@ -988,30 +1003,47 @@ const Room = () => {
               className="p-button-rounded p-button-secondary p-button-lg"
               icon="pi pi-window-maximize"
               onClick={goFullScreen}
-              style={{width:"2.5rem", height:"2.5rem"}}
+              style={{ width: "2.5rem", height: "2.5rem" }}
             />
           )}
         </div>
-        <div 
-          className={`${(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? "col" : "col-12"} grid grid-nogutter`} 
-          style={(window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? { height: "100%" } : {height:"93%"}}
-          >
+        <div
+          className={`${
+            window.innerWidth > 1024 ||
+            window.screen.orientation.type === "landscape-primary" ||
+            window.screen.orientation.type === "landscape-secondary"
+              ? "col"
+              : "col-12"
+          } grid grid-nogutter`}
+          style={
+            window.innerWidth > 1024 ||
+            window.screen.orientation.type === "landscape-primary" ||
+            window.screen.orientation.type === "landscape-secondary"
+              ? { height: "100%" }
+              : { height: "93%" }
+          }>
           <div
             className={
-              (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
-                room.max_guests === 3
-                ? "host-video-container col-6"
-                : room.max_guests === 8
-                ? "host-video-container col-4"
-                : "host-video-container col-3"
-                ) : (
-                "host-video-container col-12"
-                )
+              window.innerWidth > 1024 ||
+              window.screen.orientation.type === "landscape-primary" ||
+              window.screen.orientation.type === "landscape-secondary"
+                ? room.max_guests === 3
+                  ? "host-video-container col-6"
+                  : room.max_guests === 8
+                  ? "host-video-container col-4"
+                  : "host-video-container col-3"
+                : "host-video-container col-12"
             }
             style={
-              (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
-                room.max_guests === 3 ? { height: "50vh" } : { height: "33vh" }
-                ) : (isHost ? { height: "50%" } : { height: "auto" })
+              window.innerWidth > 1024 ||
+              window.screen.orientation.type === "landscape-primary" ||
+              window.screen.orientation.type === "landscape-secondary"
+                ? room.max_guests === 3
+                  ? { height: "50vh" }
+                  : { height: "33vh" }
+                : isHost
+                ? { height: "50%" }
+                : { height: "auto" }
             }>
             {isHost ? (
               <video
@@ -1062,20 +1094,24 @@ const Room = () => {
           {!isHost && (
             <div
               className={
-                (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
-                  room.max_guests === 3
-                  ? "guest-video-container col-6"
-                  : room.max_guests === 8
-                  ? "guest-video-container col-4"
-                  : "guest-video-container col-3"
-                  ) : (
-                  "guest-video-container col-12"
-                  )
+                window.innerWidth > 1024 ||
+                window.screen.orientation.type === "landscape-primary" ||
+                window.screen.orientation.type === "landscape-secondary"
+                  ? room.max_guests === 3
+                    ? "guest-video-container col-6"
+                    : room.max_guests === 8
+                    ? "guest-video-container col-4"
+                    : "guest-video-container col-3"
+                  : "guest-video-container col-12"
               }
               style={
-                (window.innerWidth > 1024 || (window.screen.orientation.type === "landscape-primary" || window.screen.orientation.type === "landscape-secondary")) ? (
-                  room.max_guests === 3 ? { height: "50vh" } : { height: "33vh" }
-                  ) : { height: "auto" }
+                window.innerWidth > 1024 ||
+                window.screen.orientation.type === "landscape-primary" ||
+                window.screen.orientation.type === "landscape-secondary"
+                  ? room.max_guests === 3
+                    ? { height: "50vh" }
+                    : { height: "33vh" }
+                  : { height: "auto" }
               }>
               <video
                 ref={localVideo}
@@ -1097,7 +1133,7 @@ const Room = () => {
                 </div>
               )}
             </div>
-          )}          
+          )}
           {renderGuests()}
         </div>
       </div>
