@@ -15,12 +15,12 @@ const TermsHtml = () => {
       <p>
         The Dr.Meetings website located at
         <a
-          href="https://django-react-video-meetings.herokuapp.com/"
+          href="https://dr-meetings.onrender.com/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500"
           aria-label="Dr.Meetings website">
-          https://django-react-video-meetings.herokuapp.com/
+          https://dr-meetings.onrender.com/
         </a>{" "}
         is a copyrighted work belonging to Dr.Meetings. Certain features of the
         Site may be subject to additional guidelines, terms, or rules, which

@@ -13,12 +13,12 @@ const PrivacyHtml = () => {
       <p>
         At Dr.Meetings, accessible from{" "}
         <a
-          href="https://django-react-video-meetings.herokuapp.com/"
+          href="https://dr-meetings.onrender.com/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500"
           aria-label="Dr.Meetings website">
-          https://django-react-video-meetings.herokuapp.com/
+          https://dr-meetings.onrender.com/
         </a>
         , one of our main priorities is the privacy of our visitors. This
         Privacy Policy document contains types of information that is collected

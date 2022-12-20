@@ -103,20 +103,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8080",
     # 'localhost:8080',
     # '127.0.0.1:8080',
-    # 'django-react-video-meetings.herokuapp.com',
-    "https://django-react-video-meetings.herokuapp.com",
+    # 'https://dr-meetings.onrender.com',
+    "https://dr-meetings.onrender.com",
 ]
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
-    "https://django-react-video-meetings.herokuapp.com",
+    "https://dr-meetings.onrender.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
-    "https://django-react-video-meetings.herokuapp.com",
+    "https://dr-meetings.onrender.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

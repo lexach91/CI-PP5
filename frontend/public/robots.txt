@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin/
 Disallow: /api/
 Disallow: /profile/
-Sitemap: https://django-react-video-meetings.herokuapp.com/sitemap.xml
+Sitemap: https://dr-meetings.onrender.com/sitemap.xml

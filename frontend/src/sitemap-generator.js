@@ -7,7 +7,7 @@ const Sitemap = require("react-router-sitemap").default;
 
 function generateSitemap() {
   return new Sitemap(router)
-    .build("https://django-react-video-meetings.herokuapp.com/")
+    .build("https://dr-meetings.onrender.com/")
     .save("./public/sitemap.xml");
 }
 
