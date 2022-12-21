@@ -19,8 +19,15 @@ class EditProfileAPIView(APIView):
         serializer = EditProfileSerializer(user, data=new_data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            user_data = serializer.data
+            if user.avatar:
+                user_data['avatar'] = user.avatar.url
             return Response(
-                {"success": "Profile updated"}, status=status.HTTP_200_OK
+                {
+                    "success": "Profile updated",
+                    "user": user_data,
+                },
+                status=status.HTTP_200_OK,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
