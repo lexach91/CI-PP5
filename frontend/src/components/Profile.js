@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../layouts/UserLayout";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRedirect, setError } from "../redux/authSlice";
+import { resetRedirect, setError, setUser } from "../redux/authSlice";
 import { RotateLoader } from "react-spinners";
 import { CountryService } from "../service/CountryService";
 import { Image } from "primereact/image";
@@ -103,6 +103,8 @@ const Profile = () => {
           severity: "success",
           detail: "Profile updated successfully",
         });
+        let user = data.data.user;
+        dispatch(setUser(user));
         setFormUploading(false);
       })
       .catch((error) => {
