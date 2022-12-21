@@ -19,7 +19,6 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import dj_database_url
-import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -223,13 +222,16 @@ STRIPE_WEBHOOK_KEY = os.environ.get("STRIPE_WEBHOOK_KEY")
 BASE_URL = os.environ.get("BASE_URL")
 
 
+DATABASES = {"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))}
+
+
 if "DEVELOPMENT" in os.environ:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        },
-    }
+    # DATABASES = {
+    #     "default": {
+    #         "ENGINE": "django.db.backends.sqlite3",
+    #         "NAME": BASE_DIR / "db.sqlite3",
+    #     },
+    # }
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -255,13 +257,13 @@ else:
     EMAIL_HOST = "smtp.office365.com"
     EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-    DATABASES = {
-        "default": dj_database_url.parse(
-            os.environ.get("DATABASE_URL"),
-            conn_max_age=600,
-            conn_health_checks=True,
-        ),
-    }
+    # DATABASES = {
+    #     "default": dj_database_url.parse(
+    #         os.environ.get("DATABASE_URL"),
+    #         conn_max_age=600,
+    #         conn_health_checks=True,
+    #     ),
+    # }
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -281,4 +283,3 @@ else:
             },
         },
     }
-    django_heroku.settings(locals())
