@@ -51,6 +51,35 @@ class Membership(models.Model):
         User, on_delete=models.CASCADE, related_name="membership"
     )
     is_active = models.BooleanField(default=True)
+    if SubscriptionPlan.objects.count() == 0:
+        SubscriptionPlan.objects.create(
+            name="Free",
+            price=0,
+            description="Free plan",
+            guest_limit=0,
+            can_create_rooms=False,
+        )
+        SubscriptionPlan.objects.create(
+            name="Basic",
+            price=10,
+            description="Basic plan",
+            guest_limit=3,
+            can_create_rooms=True,
+        )
+        SubscriptionPlan.objects.create(
+            name="Premium",
+            price=30,
+            description="Premium plan",
+            guest_limit=8,
+            can_create_rooms=True,
+        )
+        SubscriptionPlan.objects.create(
+            name="Enterprise",
+            price=60,
+            description="Enterprise plan",
+            guest_limit=11,
+            can_create_rooms=True,
+        )
     type = models.ForeignKey(
         SubscriptionPlan,
         on_delete=models.CASCADE,
