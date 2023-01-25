@@ -804,7 +804,6 @@ Please refer to the [TESTING.md](TESTING.md) file for all test-related documenta
 ## Deployment
 
 - The app was deployed to [Render](https://render.com/).
-- The database was deployed to [ElephantSQL](https://www.elephantsql.com/).
 
 *The app was initially deployed to Heroku then moved to Render since Heroku has removed its free tier services from November 29 2022*
 
