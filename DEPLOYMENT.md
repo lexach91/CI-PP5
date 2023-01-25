@@ -343,11 +343,11 @@ Link to the deployed application on Render: [Cool School](https://cool-school.on
 15. Copy the following code into the `build.sh` file:
 
     ```bash
-        set -o errexit
-        npm run heroku-prebuild
-        pip install -r requirements.txt
-        python backend/manage.py collectstatic --noinput
-        python backend/manage.py makemigrations && python backend/manage.py migrate
+    set -o errexit
+    npm run heroku-prebuild
+    pip install -r requirements.txt
+    python backend/manage.py collectstatic --noinput
+    python backend/manage.py makemigrations && python backend/manage.py migrate
     ```
 
     -*pip install -r requirements.txt installs the packages detailed in your requirements.txt file.*
